@@ -151,4 +151,11 @@ public final class Constants {
         new TrapezoidProfile.Constraints(
             kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
   }
+
+  public static final class IntakeConstants {
+    // Set these to real constants when robot is built
+    public static final double intakeDeployID = 0;
+    public static final double intakeRetractID = 1;
+    public static final double intakeRollerID = 2;
+  }
 }

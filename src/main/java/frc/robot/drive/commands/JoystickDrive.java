@@ -4,9 +4,8 @@
 
 package frc.robot.drive.commands;
 
+import frc.robot.OI;
 import frc.robot.drive.Drivetrain;
-import frc.robot.oi.OI;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.Curve;
 import frc.lib.LinCurve;

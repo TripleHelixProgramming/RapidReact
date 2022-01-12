@@ -1,4 +1,4 @@
-package frc.robot.oi;
+package frc.robot;
 
 import static com.team2363.utilities.ControllerMap.*;
 
