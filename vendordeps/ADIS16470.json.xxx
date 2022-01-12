@@ -3,6 +3,7 @@
     "name": "ADIS16470-IMU",
     "version": "2020.r4",
     "uuid": "6606dc7e-fb96-436f-a804-c07a5d841a14",
+    "allowInsecureProtocol": true,
     "mavenUrls": [
         "http://maven.highcurrent.io/maven"
     ],

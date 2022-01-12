@@ -48,7 +48,7 @@ public class RobotContainer {
 
   // The robot's subsystems
   private final Drivetrain m_robotDrive = new Drivetrain();
-  private final PowerDistribution m_PDP = new PowerDistribution(0, new ModuleType());
+  private final PowerDistribution m_PDP = new PowerDistribution(0, ModuleType.kCTRE);
   private final OI m_OI = OI.getInstance();
 
   /**

@@ -4,7 +4,7 @@
 
 package frc.robot.drive;
 
-import com.analog.adis16470.frc.ADIS16470_IMU;
+// import com.analog.adis16470.frc.ADIS16470_IMU;
 
 import edu.wpi.first.math.controller.PIDController;
 //import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -21,11 +21,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.Preferences;
 
 @SuppressWarnings("PMD.ExcessiveImports")
 public class Drivetrain extends SubsystemBase {
 
-  private Preferences prefs = Preferences.getInstance();
   // Robot swerve modules
   private final SwerveModule m_frontLeft =
       new SwerveModule(
@@ -62,7 +63,7 @@ public class Drivetrain extends SubsystemBase {
   private SwerveModule[] modules = {m_frontLeft, m_frontRight, m_rearLeft, m_rearRight};
 
   // The gyro sensor
-  private final Gyro m_gyro =  new ADIS16470_IMU(); // new ADXRS450_Gyro();
+//  private final Gyro m_gyro =  new ADIS16470_IMU(); // new ADXRS450_Gyro();
   // private final PigeonIMU m_pigeon = new PigeonIMU(DriveConstants.kPigeonPort);
 
   // Odometry class for tracking robot pose
@@ -78,8 +79,8 @@ public class Drivetrain extends SubsystemBase {
   public Drivetrain() {
 
     // Zero out the gyro.
-    m_gyro.calibrate();
-    m_gyro.reset();
+//    m_gyro.calibrate();
+//    m_gyro.reset();
 
     m_odometry = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getHeading());
 
@@ -235,7 +236,7 @@ public class Drivetrain extends SubsystemBase {
   public void setModuleStates(SwerveModuleState[] desiredStates) {
 
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        desiredStates, prefs.getDouble("kMaxSpeedMetersPerSecond",DriveConstants.kMaxSpeedMetersPerSecond));
+        desiredStates, Preferences.getDouble("kMaxSpeedMetersPerSecond",DriveConstants.kMaxSpeedMetersPerSecond));
 
         for (int i = 0; i <= 3; i++) {
           modules[i].setDesiredState(desiredStates[i]);
@@ -263,7 +264,7 @@ public class Drivetrain extends SubsystemBase {
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
-    m_gyro.reset();
+//    m_gyro.reset();
     m_targetPose = new Pose2d(new Translation2d(), new Rotation2d());
 //    m_pigeon.setYaw(0.0);
   }
@@ -274,7 +275,8 @@ public class Drivetrain extends SubsystemBase {
    * @return the robot's heading as a Rotation2d
    */
   public Rotation2d getHeading() {
-    return m_gyro.getRotation2d();
+      return Rotation2d.fromDegrees(0.0);
+//    return m_gyro.getRotation2d();
     // double[] ypr_deg = {0.0, 0.0, 0.0};
     // m_pigeon.getYawPitchRoll(ypr_deg);
     // return new Rotation2d(Math.toRadians(ypr_deg[0]));
@@ -287,6 +289,6 @@ public class Drivetrain extends SubsystemBase {
    * @return The turn rate of the robot, in degrees per second
    */
   public double getTurnRate() {
-    return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return 0.0; // m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 }
