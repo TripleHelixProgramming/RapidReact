@@ -6,10 +6,14 @@ package frc.robot.intake;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
-  private DoubleSolenoid solenoid = new DoubleSolenoid(IntakeConstants.intakeDeployID, IntakeConstants.intakeRetractID);
+  private DoubleSolenoid solenoid = new DoubleSolenoid(
+                                        ElectricalConstants.kPneumaticHub,
+                                        ElectricalConstants.kIntakeDeployPort, 
+                                        ElectricalConstants.kIntakeRetractPort);
 
   public Intake() {
 

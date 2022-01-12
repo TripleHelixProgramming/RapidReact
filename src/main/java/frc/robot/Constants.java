@@ -5,6 +5,10 @@
 package frc.robot;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 /**
@@ -16,6 +20,37 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static final class ElectricalConstants {
+    public static final PneumaticsModuleType kPneumaticHub = PneumaticsModuleType.REVPH;
+    public static final ModuleType kPowerDistributionModule = ModuleType.kRev;
+
+    public static final int kPowerDistributionPort = 1;
+
+    public static final int kRearRightDriveMotorPort = 10;
+    public static final int kFrontRightDriveMotorPort = 12;
+    public static final int kFrontLeftDriveMotorPort = 22;
+    public static final int kRearLeftDriveMotorPort = 24;
+
+    public static final int kRearRightTurningMotorPort = 11;  
+    public static final int kFrontRightTurningMotorPort = 13;
+    public static final int kFrontLeftTurningMotorPort = 23;
+    public static final int kRearLeftTurningMotorPort = 25;
+
+    public static final int kRearRightTurningEncoderPort = 31;
+    public static final int kFrontRightTurningEncoderPort = 33;
+    public static final int kFrontLefTurningEncoderPort = 43;
+    public static final int kRearLeftTurningEncoderPort = 45;
+    
+    public static final int kGyroPort = 20;
+
+    public static final int kIntakeDeployPort = 0;
+    public static final int kIntakeRetractPort = 1;
+    public static final int kIntakeRollerPort = 2;
+
+    public static final int kIndexerPort = 2;
+
+    public static final int kShooterPort = 1;
+  }
 
   public static final class DriveConstants {
 
@@ -25,32 +60,7 @@ public final class Constants {
     public static final int REAR_LEFT =2;
     public static final int REAR_RIGHT =3;
 
-    public static final int kPigeonPort = 20;
-
-    public static final class SparkCAN {
-      public static final int kRearRightDriveMotorPort = 10;
-      public static final int kFrontRightDriveMotorPort = 12;
-      public static final int kFrontLeftDriveMotorPort = 22;
-      public static final int kRearLeftDriveMotorPort = 24;
-  
-      public static final int kRearRightTurningMotorPort = 11;  
-      public static final int kFrontRightTurningMotorPort = 13;
-      public static final int kFrontLeftTurningMotorPort = 23;
-      public static final int kRearLeftTurningMotorPort = 25;
-    }
-
     public static final class CANCoder {
-      // Below provided by SparkMAX motors API.
-      // public static final int kFrontLeftDriveEncoderPort = 
-      // public static final int kRearLeftDriveEncoderPort =
-      // public static final int kFrontRightDriveEncoderPort =
-      // public static final int kRearRightDriveEncoderPort =
-
-      public static final int kRearRightTurningEncoderPort = 31;
-      public static final int kFrontRightTurningEncoderPort = 33;
-      public static final int kFrontLefTurningEncoderPort = 43;
-      public static final int kRearLeftTurningEncoderPort = 45;
-
       public static final double kRearRightTurningEncoderOffset = 180.0;
       public static final double kFrontRightTurningEncoderOffset = 180.0;
       public static final double kFrontLefTurningEncoderOffset = 180.0;
@@ -93,16 +103,6 @@ public final class Constants {
 
     public static final boolean kGyroReversed = false;
 
-    // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
-    // These characterization values MUST be determined either experimentally or theoretically
-    // for *your* robot's drive.
-    // The RobotPy Characterization Toolsuite provides a convenient tool for obtaining these
-    // values for your robot.
-    /* I don't know if these are needed. They only appear here in the project. i.e. They are never used.
-    public static final double ksVolts = 1.0;
-    public static final double kvVoltSecondsPerMeter = 0.8;
-    public static final double kaVoltSecondsSquaredPerMeter = 0.15;
-    */
     public static final double kMaxSpeedMetersPerSecond = 3.0;
   }
 
@@ -132,6 +132,19 @@ public final class Constants {
     public static final double kTurnPositionConversionFactor = 12.8;
   }
 
+  public static final class IntakeConstants {
+    public static final double kRollerSpeed = 0.7; // power percentage
+  }
+
+  public static final class IndexerConstants {
+    public static final double kShootSpeed = 0.7; // power percentage
+  }
+
+  public static final class ShooterConstants {
+    public static final double kShootHighSpeed = 3500;
+    public static final double kShootLowSpeed = 2000;
+  }
+
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
   }
@@ -150,12 +163,5 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
         new TrapezoidProfile.Constraints(
             kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
-  }
-
-  public static final class IntakeConstants {
-    // Set these to real constants when robot is built
-    public static final double intakeDeployID = 0;
-    public static final double intakeRetractID = 1;
-    public static final double intakeRollerID = 2;
   }
 }

@@ -21,6 +21,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ElectricalConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Preferences;
 
@@ -30,33 +31,33 @@ public class Drivetrain extends SubsystemBase {
   // Robot swerve modules
   private final SwerveModule m_frontLeft =
       new SwerveModule(
-          DriveConstants.SparkCAN.kFrontLeftDriveMotorPort,
-          DriveConstants.SparkCAN.kFrontLeftTurningMotorPort,
-          DriveConstants.CANCoder.kFrontLefTurningEncoderPort,
+          ElectricalConstants.kFrontLeftDriveMotorPort,
+          ElectricalConstants.kFrontLeftTurningMotorPort,
+          ElectricalConstants.kFrontLefTurningEncoderPort,
           DriveConstants.CANCoder.kFrontLefTurningEncoderOffset
           );
 
   private final SwerveModule m_frontRight =
       new SwerveModule(
-          DriveConstants.SparkCAN.kFrontRightDriveMotorPort,
-          DriveConstants.SparkCAN.kFrontRightTurningMotorPort,
-          DriveConstants.CANCoder.kFrontRightTurningEncoderPort,
+          ElectricalConstants.kFrontRightDriveMotorPort,
+          ElectricalConstants.kFrontRightTurningMotorPort,
+          ElectricalConstants.kFrontRightTurningEncoderPort,
           DriveConstants.CANCoder.kFrontRightTurningEncoderOffset
           );
 
   private final SwerveModule m_rearLeft =
       new SwerveModule(
-          DriveConstants.SparkCAN.kRearLeftDriveMotorPort,
-          DriveConstants.SparkCAN.kRearLeftTurningMotorPort,
-          DriveConstants.CANCoder.kRearLeftTurningEncoderPort,
+          ElectricalConstants.kRearLeftDriveMotorPort,
+          ElectricalConstants.kRearLeftTurningMotorPort,
+          ElectricalConstants.kRearLeftTurningEncoderPort,
           DriveConstants.CANCoder.kRearLeftTurningEncoderOffset
           );
 
   private final SwerveModule m_rearRight =
       new SwerveModule(
-          DriveConstants.SparkCAN.kRearRightDriveMotorPort,
-          DriveConstants.SparkCAN.kRearRightTurningMotorPort,
-          DriveConstants.CANCoder.kRearRightTurningEncoderPort,
+          ElectricalConstants.kRearRightDriveMotorPort,
+          ElectricalConstants.kRearRightTurningMotorPort,
+          ElectricalConstants.kRearRightTurningEncoderPort,
           DriveConstants.CANCoder.kRearRightTurningEncoderOffset
           );
 
