@@ -22,7 +22,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 public final class Constants {
   public static final class ElectricalConstants {
     public static final PneumaticsModuleType kPneumaticHub = PneumaticsModuleType.REVPH;
-    public static final ModuleType kPowerDistributionModule = ModuleType.kRev;
+    public static final ModuleType kPowerDistributionType = ModuleType.kRev;
 
     public static final int kPowerDistributionPort = 1;
 
