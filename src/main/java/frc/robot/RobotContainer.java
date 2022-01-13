@@ -4,11 +4,11 @@
 
 package frc.robot;
 
-import com.team2363.utilities.ControllerMap;
+import static com.team2363.utilities.ControllerMap.*;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -69,19 +69,17 @@ public class RobotContainer {
     
     driver = ControllerPatroller.getPatroller().get(OIConstants.kDriverControllers, OIConstants.kDriverPort);
     operator = ControllerPatroller.getPatroller().get(OIConstants.kOperatorControllers, OIConstants.kOperatorPort);
-    joysticks = new HelixJoysticks(driver, ControllerMap.X_BOX_RIGHT_STICK_Y, 
-                                          ControllerMap.X_BOX_RIGHT_STICK_X, 
-                                          ControllerMap.X_BOX_LEFT_STICK_X);
+    joysticks = new HelixJoysticks(driver, X_BOX_RIGHT_STICK_Y, X_BOX_RIGHT_STICK_X, X_BOX_LEFT_STICK_X);
 
     if (driver.getName().contains(OIConstants.kRadioMaster)) {
-      new JoystickButton(driver, ControllerMap.RM_SF).whenPressed(new ZeroHeading(mDrive));
+      new JoystickButton(driver, RM_SF).whenPressed(new ZeroHeading(mDrive));
     } else { // Assume XBox Controller
-      new JoystickButton(driver, ControllerMap.X_BOX_LOGO_LEFT).whenPressed(new ZeroHeading(mDrive));
+      new JoystickButton(driver, X_BOX_LOGO_LEFT).whenPressed(new ZeroHeading(mDrive));
 
-      new JoystickButton(driver, ControllerMap.X_BOX_A);
-      new JoystickButton(driver, ControllerMap.X_BOX_B);
-      new JoystickButton(driver, ControllerMap.X_BOX_X);
-      new JoystickButton(driver, ControllerMap.X_BOX_Y);
+      new JoystickButton(driver, X_BOX_A);
+      new JoystickButton(driver, X_BOX_B);
+      new JoystickButton(driver, X_BOX_X);
+      new JoystickButton(driver, X_BOX_Y);
     }
   }
 }
