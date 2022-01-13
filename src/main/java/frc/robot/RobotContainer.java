@@ -4,14 +4,21 @@
 
 package frc.robot;
 
+import com.team2363.utilities.ControllerMap;
+
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.lib.ControllerPatroller;
 import frc.robot.Constants.ElectricalConstants;
+import frc.robot.Constants.OIConstants;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.JoystickDrive;
 import frc.robot.drive.commands.ResetEncoders;
+import frc.robot.drive.commands.ZeroHeading;
 import frc.robot.indexer.Indexer;
 import frc.robot.intake.Intake;
 import frc.robot.shooter.Shooter;
@@ -32,12 +39,15 @@ public class RobotContainer {
   private final PowerDistribution mPDP = new PowerDistribution(
                                                             ElectricalConstants.kPowerDistributionPort, 
                                                             ElectricalConstants.kPowerDistributionType);
-  private final OI m_OI = OI.getInstance();
+
+  private Joystick driver;
+  private Joystick operator;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    configureButtonBindings();
     mDrive.setDefaultCommand(new JoystickDrive(mDrive));
     mDrive.resetEncoders();
   }
@@ -54,22 +64,19 @@ public class RobotContainer {
 
   public void configureButtonBindings() {
     CommandScheduler.getInstance().clearButtons();
+    
+    driver = ControllerPatroller.getPatroller().get(OIConstants.kDriverControllers, OIConstants.kDriverPort);
+    operator = ControllerPatroller.getPatroller().get(OIConstants.kOperatorControllers, OIConstants.kOperatorPort);
 
-    SmartDashboard.putString("Driver Joystick", driver.getName());
-    if (driver.getName().contains(RADIO_MASTER)) {
-      new JoystickButton(driver, ControllerMap.RM_SF).whenPressed(new ZeroHeading(dt));
+    if (driver.getName().contains(OIConstants.kRadioMaster)) {
+      new JoystickButton(driver, ControllerMap.RM_SF).whenPressed(new ZeroHeading(mDrive));
     } else { // Assume XBox Controller
-      new JoystickButton(driver, ControllerMap.X_BOX_LOGO_LEFT).whenPressed(new ZeroHeading(dt));
+      new JoystickButton(driver, ControllerMap.X_BOX_LOGO_LEFT).whenPressed(new ZeroHeading(mDrive));
 
       new JoystickButton(driver, ControllerMap.X_BOX_A);
       new JoystickButton(driver, ControllerMap.X_BOX_B);
       new JoystickButton(driver, ControllerMap.X_BOX_X);
       new JoystickButton(driver, ControllerMap.X_BOX_Y);
     }
-
-    // Below moved to a button on ShuffleBoard.
-    // new JoystickButton(driver, ControllerMap.X_BOX_LOGO_RIGHT).whenPressed(new ResetEncoders(dt));
-
-  }
   }
 }

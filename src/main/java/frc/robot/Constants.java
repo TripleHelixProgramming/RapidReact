@@ -146,7 +146,14 @@ public final class Constants {
   }
 
   public static final class OIConstants {
-    public static final int kDriverControllerPort = 0;
+    public static final String kXbox = "XBOX";
+    public static final String kPS4 = "P";
+    public static final String kRadioMaster = "TX16S";
+    public static final String[] kDriverControllers = new String[]{kXbox, kRadioMaster};
+    public static final String[] kOperatorControllers = new String[]{kPS4};
+
+    public static final int kDriverPort = 0;
+    public static final int kOperatorPort = 1;
   }
 
   public static final class AutoConstants {
