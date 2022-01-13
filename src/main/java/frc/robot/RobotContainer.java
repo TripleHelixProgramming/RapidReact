@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.ControllerPatroller;
+import frc.lib.HelixJoysticks;
 import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.drive.Drivetrain;
@@ -42,13 +43,14 @@ public class RobotContainer {
 
   private Joystick driver;
   private Joystick operator;
+  private HelixJoysticks joysticks;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     configureButtonBindings();
-    mDrive.setDefaultCommand(new JoystickDrive(mDrive));
+    mDrive.setDefaultCommand(new JoystickDrive(mDrive, joysticks));
     mDrive.resetEncoders();
   }
 
@@ -67,6 +69,9 @@ public class RobotContainer {
     
     driver = ControllerPatroller.getPatroller().get(OIConstants.kDriverControllers, OIConstants.kDriverPort);
     operator = ControllerPatroller.getPatroller().get(OIConstants.kOperatorControllers, OIConstants.kOperatorPort);
+    joysticks = new HelixJoysticks(driver, ControllerMap.X_BOX_RIGHT_STICK_Y, 
+                                          ControllerMap.X_BOX_RIGHT_STICK_X, 
+                                          ControllerMap.X_BOX_LEFT_STICK_X);
 
     if (driver.getName().contains(OIConstants.kRadioMaster)) {
       new JoystickButton(driver, ControllerMap.RM_SF).whenPressed(new ZeroHeading(mDrive));
