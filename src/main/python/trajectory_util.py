@@ -55,27 +55,22 @@ def draw_trajectory(x_coords, y_coords, angular_coords, obstacles, drive, title)
     draw_robot(zip(x_coords, y_coords, angular_coords)[0])
     draw_robot(zip(x_coords, y_coords, angular_coords)[-1])
 
-def load_init_trajectory(init_json, initial_heading, final_heading, num_states):
-    x_init = []
-    y_init = []
-    theta_init = []
+def generate_initial_trajectory(start_pose, end_pose, balls, num_states):
+    x_points, y_points, theta_points = [start_pose[0]], [start_pose[1]], [start_pose[2]]
 
-    file = json.load(open(init_json))
+    for k in range(len(balls)):
+        x_points.append(balls[k][0])
+        y_points.append(balls[k][1])
+    x_points.append(end_pose[0])
+    y_points.append(end_pose[1])
+    for k in range(len(balls)):
+        theta_points.append(math.atan2(y_points[k+2]-y_points[k+1],x_points[k+2]-x_points[k+1]))
+    theta_points.append(end_pose[2])
 
-    ls = []
-    ls.append([file[0][0],file[0][1],initial_heading,0])
-    for i in range(len(file)-2):
-        ls.append([file[i+1][0],file[i+1][1],ls[i][2]+short(ls[i][2], math.atan2(file[i+2][1]-file[i+1][1],file[i+2][0]-file[i+1][0])),ls[-1][3]+math.hypot(file[i],file[i+1])])
-    ls.append([file[-1][0],file[-1][1],final_heading,ls[-1][3]+math.hypot(file[-1],file[-2])])
+    lengths = [0]
+    for k in range(len(x_points)-1):
+        lengths.append(lengths[k] + math.hypot(x_points[k+1]-x_points[k],y_points[k+1]-y_points[k]))
+    ds = lengths[-1] / num_states
 
-    ds = ls[-1][3]/(num_states-1)
-    index = 0
-    for i in range(num_states):
-        s = i * ds
-        while (s-0.0001>ls[index+1][3]):
-            index += 1
-        t = (s - ls[index][3]) / (ls[index+1][3]-ls[index][3])
-        x_init.append((ls[index+1][0]-ls[index][0]) * t + ls[index][0])
-        y_init.append((ls[index+1][1]-ls[index][1]) * t + ls[index][1])
-        theta_init.append(short(ls[index][2],ls[index+1][2]) * t + ls[index][2])
-    return x_init,y_init,theta_init
+    for k in range(num_states):
+        

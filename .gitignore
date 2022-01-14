@@ -157,6 +157,7 @@ gradle-app.setting
 .project
 .settings/
 bin/
+src/main/python/__pycache__
 
 # Simulation GUI and other tools window save file
 *-window.json
