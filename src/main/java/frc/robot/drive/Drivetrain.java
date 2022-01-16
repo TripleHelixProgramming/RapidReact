@@ -5,6 +5,7 @@
 package frc.robot.drive;
 
 // import com.analog.adis16470.frc.ADIS16470_IMU;
+import  com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
 //import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -64,6 +65,7 @@ public class Drivetrain extends SubsystemBase {
   private SwerveModule[] modules = {m_frontLeft, m_frontRight, m_rearLeft, m_rearRight};
 
   // The gyro sensor
+  private final AHRS m_ahrs = new AHRS();
 //  private final Gyro m_gyro =  new ADIS16470_IMU(); // new ADXRS450_Gyro();
   // private final PigeonIMU m_pigeon = new PigeonIMU(DriveConstants.kPigeonPort);
 
@@ -80,6 +82,7 @@ public class Drivetrain extends SubsystemBase {
   public Drivetrain() {
 
     // Zero out the gyro.
+    m_ahrs.calibrate();
 //    m_gyro.calibrate();
 //    m_gyro.reset();
 
@@ -126,6 +129,11 @@ public class Drivetrain extends SubsystemBase {
 
     // SmartDashboard.putNumber("FronLeft Turning CANcoder Mag Offset", modules[0].getTurnCANcoder().configGetMagnetOffset());
     // SmartDashboard.putNumber("FronLeft Turning CANcoder Abs Position", modules[0].getTurnCANcoder().getAbsolutePosition());
+
+    SmartDashboard.putNumber("Distance 0", modules[0].getDriveDistanceMeters());
+    SmartDashboard.putNumber("Distance 1", modules[1].getDriveDistanceMeters());
+    SmartDashboard.putNumber("Distance 2", modules[2].getDriveDistanceMeters());
+    SmartDashboard.putNumber("Distance 3", modules[3].getDriveDistanceMeters());
   }
 
   /**
@@ -265,9 +273,10 @@ public class Drivetrain extends SubsystemBase {
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
+    m_ahrs.zeroYaw();
 //    m_gyro.reset();
-    m_targetPose = new Pose2d(new Translation2d(), new Rotation2d());
 //    m_pigeon.setYaw(0.0);
+    m_targetPose = new Pose2d(new Translation2d(), new Rotation2d());
   }
 
   /**
@@ -276,7 +285,13 @@ public class Drivetrain extends SubsystemBase {
    * @return the robot's heading as a Rotation2d
    */
   public Rotation2d getHeading() {
-      return Rotation2d.fromDegrees(0.0);
+    float raw_yaw = m_ahrs.getYaw(); // Returns yaw as -180 to +180.
+    float calc_yaw = raw_yaw;
+
+    if (0.0 > raw_yaw ) { // yaw is negative
+      calc_yaw += 360.0;
+    }
+    return Rotation2d.fromDegrees(calc_yaw);
 //    return m_gyro.getRotation2d();
     // double[] ypr_deg = {0.0, 0.0, 0.0};
     // m_pigeon.getYawPitchRoll(ypr_deg);
@@ -290,6 +305,7 @@ public class Drivetrain extends SubsystemBase {
    * @return The turn rate of the robot, in degrees per second
    */
   public double getTurnRate() {
-    return 0.0; // m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return m_ahrs.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    // return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 }

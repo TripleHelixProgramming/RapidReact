@@ -21,8 +21,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
  */
 public final class Constants {
   public static final class ElectricalConstants {
-    public static final PneumaticsModuleType kPneumaticHub = PneumaticsModuleType.REVPH;
-    public static final ModuleType kPowerDistributionModule = ModuleType.kRev;
+    public static final PneumaticsModuleType kPneumaticHub = PneumaticsModuleType.CTREPCM;
+    public static final ModuleType kPowerDistributionModule = ModuleType.kCTRE;
 
     public static final int kPowerDistributionPort = 1;
 
@@ -122,7 +122,7 @@ public final class Constants {
 
     // public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.254, 0.137);
     
-    public static final double kWheelDiameterMeters = 0.09398; // 3.7 in
+    public static final double kWheelDiameterMeters = 0.098; // 0.09398; // 3.7 in
 
     // The drive encoder reports in RPM by default. Calculate the conversion factor
     // to make it report in meters per second.
