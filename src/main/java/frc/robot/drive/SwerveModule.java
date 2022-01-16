@@ -62,8 +62,11 @@ public class SwerveModule extends SubsystemBase {
         
         m_CANCoderOffset = Rotation2d.fromDegrees(turningCANCoderOffsetDegrees);
 
-        m_driveMotor.setIdleMode(IdleMode.kBrake);
-        m_turningMotor.setIdleMode(IdleMode.kCoast);
+        // m_driveMotor.setIdleMode(IdleMode.kBrake);
+        // m_turningMotor.setIdleMode(IdleMode.kCoast);
+
+        m_driveMotor.setIdleMode(IdleMode.kCoast);
+        m_turningMotor.setIdleMode(IdleMode.kBrake);
 
         // m_driveEncoder returns RPM by default. Use setVelocityConversionFactor() to
         // convert that to meters per second.
