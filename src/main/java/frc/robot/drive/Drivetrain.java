@@ -151,6 +151,9 @@ public class Drivetrain extends SubsystemBase {
    * @param pose The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose) {
+    for (SwerveModule module: modules) {
+      module.resetDistance();
+    }
     m_odometry.resetPosition(pose, getHeading());
   }
 

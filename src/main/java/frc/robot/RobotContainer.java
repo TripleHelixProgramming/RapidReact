@@ -39,7 +39,7 @@ public class RobotContainer {
   private final Shooter mShooter = new Shooter();
   private final PowerDistribution mPDP = new PowerDistribution(
                                                             ElectricalConstants.kPowerDistributionPort, 
-                                                            ElectricalConstants.kPowerDistributionType);
+                                                            ElectricalConstants.kPowerDistributionModule);
 
   private Joystick driver;
   private Joystick operator;
