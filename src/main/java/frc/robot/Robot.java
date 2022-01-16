@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  // private RobotContainer m_robotContainer;
+  private RobotContainer mRobotContainer;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -30,13 +30,12 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-    Preferences prefs = Preferences.getInstance();
-    prefs.initDouble("kMaxSpeedMetersPerSecond", Constants.DriveConstants.kMaxSpeedMetersPerSecond);
+    Preferences.initDouble("kMaxSpeedMetersPerSecond", Constants.DriveConstants.kMaxSpeedMetersPerSecond);
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    RobotContainer.getInstance();
-    // m_robotContainer = new RobotContainer();
+    mRobotContainer = new RobotContainer();
+    // mRobotContainer = new RobotContainer();
   }
 
   /**
@@ -63,18 +62,15 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
     // Scan the USB devices. If they change, remap the buttons.
     if (ControllerPatroller.getPatroller().controllersChanged()) {
-      // SmartDashboard.putBoolean("Controllers Changed",true);
       // Reset the joysticks & button mappings.
-      OI.getInstance().configureJoysticks();
-      OI.getInstance().configureButtonBindings();
+      mRobotContainer.configureButtonBindings();
     }
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = RobotContainer.getInstance().getAutonomousCommand();
-    //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = mRobotContainer.getAutonomousCommand();
 
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",
