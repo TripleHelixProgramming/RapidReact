@@ -30,8 +30,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-    Preferences prefs = Preferences.getInstance();
-    prefs.initDouble("kMaxSpeedMetersPerSecond", Constants.DriveConstants.kMaxSpeedMetersPerSecond);
+    Preferences.initDouble("kMaxSpeedMetersPerSecond", Constants.DriveConstants.kMaxSpeedMetersPerSecond);
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
@@ -72,7 +71,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = mRobotContainer.getAutonomousCommand();
-    //m_autonomousCommand = mRobotContainer.getAutonomousCommand();
 
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",
