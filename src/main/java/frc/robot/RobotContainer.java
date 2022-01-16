@@ -67,8 +67,8 @@ public class RobotContainer {
   public void configureButtonBindings() {
     CommandScheduler.getInstance().clearButtons();
     
-    driver = ControllerPatroller.getPatroller().get(OIConstants.kDriverControllers, OIConstants.kDriverPort);
-    operator = ControllerPatroller.getPatroller().get(OIConstants.kOperatorControllers, OIConstants.kOperatorPort);
+    driver = ControllerPatroller.getInstance().get(OIConstants.kDriverControllers, OIConstants.kDriverPort);
+    operator = ControllerPatroller.getInstance().get(OIConstants.kOperatorControllers, OIConstants.kOperatorPort);
     joysticks = new HelixJoysticks(driver, X_BOX_RIGHT_STICK_Y, X_BOX_RIGHT_STICK_X, X_BOX_LEFT_STICK_X);
 
     if (driver.getName().contains(OIConstants.kRadioMaster)) {

@@ -18,7 +18,7 @@ public class ControllerPatroller {
      * 
      * @return the instance of the ControllerPatroller
      */
-    public static ControllerPatroller getPatroller() {
+    public static ControllerPatroller getInstance() {
         if (patroller == null) {
             patroller = new ControllerPatroller();
         }
