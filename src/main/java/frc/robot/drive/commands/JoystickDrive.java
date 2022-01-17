@@ -19,30 +19,30 @@ public class JoystickDrive extends Drive {
     Curve xyJoyMap = new LinCurve(0.0, 1.0, 0.2);
     Curve thetaJoyMap = new LinCurve(0.0, 1.0, 0.2);
 
-    HelixJoysticks controller;
+    HelixJoysticks m_controller;
 
-    public JoystickDrive(Drivetrain subsystem, HelixJoysticks controller){
+    public JoystickDrive(Drivetrain subsystem, HelixJoysticks joysticks){
         super(subsystem);
-        controller = this.controller;
+        this.m_controller = joysticks;
     }
  
     @Override
     public double getX() {
-        double xRaw = controller.getX();
+        double xRaw = m_controller.getX();
         SmartDashboard.putNumber("JoystickX",  xyJoyMap.calculateMappedVal(xRaw));
         return xyJoyMap.calculateMappedVal(xRaw);
     }
 
     @Override
     public double getY() {
-        double yRaw = controller.getY();
+        double yRaw = m_controller.getY();
         SmartDashboard.putNumber("JoystickY",  xyJoyMap.calculateMappedVal(yRaw));
         return xyJoyMap.calculateMappedVal(yRaw);
     }
 
     @Override
     public double getTheta() {
-        double thetaRaw = controller.getRotation();
+        double thetaRaw = m_controller.getRotation();
         SmartDashboard.putNumber("JoystickTheta",  xyJoyMap.calculateMappedVal(thetaRaw));
         return thetaJoyMap.calculateMappedVal(thetaRaw);
     }

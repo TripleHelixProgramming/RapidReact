@@ -22,7 +22,6 @@ public class ControllerPatroller {
         if (patroller == null) {
             patroller = new ControllerPatroller();
         }
-
         return patroller;
     }
 
