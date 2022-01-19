@@ -51,7 +51,10 @@ public class RobotContainer {
   public RobotContainer() {
     configureButtonBindings();
     mDrive.setDefaultCommand(new JoystickDrive(mDrive, joysticks));
-    mDrive.resetEncoders();
+
+    // Create a button on Smart Dashboard to reset the encoders.
+    SmartDashboard.putData("Reset Encoders", new ResetEncoders(mDrive));
+    // SmartDashboard.putString("Foo", "Hi mom");
   }
 
   /**
