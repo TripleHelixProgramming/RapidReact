@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
 
   private RobotContainer mRobotContainer;
 
-  private static final int NUM_LOOPS = 10;
+  private static final int NUM_LOOPS = 40;
   private int delay = NUM_LOOPS;
 
   /**
