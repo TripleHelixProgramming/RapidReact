@@ -19,6 +19,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.JoystickDrive;
 import frc.robot.drive.commands.ResetEncoders;
+import frc.robot.drive.commands.TestDrive;
 import frc.robot.drive.commands.ZeroHeading;
 // import frc.robot.indexer.Indexer;
 // import frc.robot.intake.Intake;
@@ -52,6 +53,7 @@ public class RobotContainer {
   public RobotContainer() {
     configureButtonBindings();
     mDrive.setDefaultCommand(new JoystickDrive(mDrive, joysticks));
+    // mDrive.setDefaultCommand(new TestDrive(mDrive));
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Reset Encoders", new ResetEncoders(mDrive));
