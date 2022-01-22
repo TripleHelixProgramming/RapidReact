@@ -8,28 +8,18 @@ import static com.team2363.utilities.ControllerMap.*;
 
 import java.util.List;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import frc.robot.Constants.*;
+import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.trajectory.*;
+import frc.robot.drive.commands.*;
+import frc.lib.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.lib.ControllerPatroller;
-import frc.lib.HelixJoysticks;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.ElectricalConstants;
-import frc.robot.Constants.OIConstants;
 import frc.robot.drive.Drivetrain;
-import frc.robot.drive.commands.JoystickDrive;
-import frc.robot.drive.commands.ResetEncoders;
-import frc.robot.drive.commands.ZeroHeading;
 import frc.robot.indexer.Indexer;
 import frc.robot.intake.Intake;
 import frc.robot.shooter.Shooter;
@@ -86,11 +76,14 @@ public class RobotContainer {
             // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
-            List.of(new Translation2d(1, 0), new Translation2d(2, 0)),
+            // List.of(new Translation2d(1, 0), new Translation2d(2, 0)),
+            List.of(),
             // End 3 meters straight ahead of where we started, facing forward
             new Pose2d(3, 0, new Rotation2d(0)),
             config);
-    return null;
+    
+    TrajectoryFollower follower = new TrajectoryFollower(mDrive, exampleTrajectory);
+    return follower.andThen(() -> mDrive.brake());
   }
 
   public void configureButtonBindings() {

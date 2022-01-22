@@ -37,6 +37,7 @@ public class TrajectoryFollower extends CommandBase {
   public void initialize() {
     timer.reset();
     timer.start();
+    drive.resetOdometry(trajectory.getInitialPose());
   }
 
   @Override
