@@ -5,10 +5,12 @@
 package frc.robot.drive.commands;
 
 import edu.wpi.first.math.*;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.numbers.*;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -27,10 +29,10 @@ public class TrajectoryFollower extends CommandBase {
     this.drive = drive;
     this.trajectory = trajectory;
 
-    K.fill(0);
-    K.set(1, 1, AutoConstants.kPTranslationController);
-    K.set(2, 2, AutoConstants.kPTranslationController);
-    K.set(3, 3, AutoConstants.kPThetaController);
+    // K.fill(0.0);
+    // K.set(1, 1, 1.0);
+    // K.set(2, 2, 1.0);
+    // K.set(3, 3, 1.0);
   }
 
   @Override
@@ -44,15 +46,27 @@ public class TrajectoryFollower extends CommandBase {
   public void execute() {
     double time = timer.get();
     State refState = trajectory.sample(time);
-    r = StateSpaceUtil.poseTo3dVector(refState.poseMeters);
-    x = StateSpaceUtil.poseTo3dVector(drive.getPose());
-    ff = VecBuilder.fill(1, 2, 3);
-    u = (K.times(r.minus(x))).plus(ff);
+    Pose2d refpose = refState.poseMeters;
+    Pose2d curPose = drive.getPose();
+    // r = StateSpaceUtil.poseTo3dVector(refState.poseMeters);
+    // x = StateSpaceUtil.poseTo3dVector(drive.getPose());
+    // ff = VecBuilder.fill(1, 2, 3);
+    // u = (K.times(r.minus(x)));S
+    // u = (K.times(r.minus(x))).plus(ff);
     // u = ff;
+    // SmartDashboard.putNumber("xdot", u.get(1, 1));
+    // SmartDashboard.putNumber("ydot", u.get(2, 1));
+    // SmartDashboard.putNumber("thetadot", u.get(3, 1));
+    // drive.autoDrive(ChassisSpeeds.fromFieldRelativeSpeeds(
+    //                                                     u.get(1, 1), 
+    //                                                     u.get(2, 1), 
+    //                                                     u.get(3, 1), 
+    //                                                     drive.getHeading().times(-1.0)));
+
     drive.autoDrive(ChassisSpeeds.fromFieldRelativeSpeeds(
-                                                        u.get(1, 1), 
-                                                        u.get(2, 1), 
-                                                        u.get(3, 1), 
+                                                        AutoConstants.kPTranslationController * (refpose.getX() - curPose.getX()), 
+                                                        AutoConstants.kPTranslationController * (refpose.getY() - curPose.getY()), 
+                                                        AutoConstants.kPThetaController * (refpose.getRotation().getRadians() - curPose.getRotation().getRadians()), 
                                                         drive.getHeading().times(-1.0)));
   }
 
