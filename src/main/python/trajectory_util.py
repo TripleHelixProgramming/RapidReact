@@ -46,31 +46,30 @@ def draw_field():
     plt.gca().set_aspect("equal", adjustable="box")
     return fig, ax
 
-def draw_trajectory(x_coords, y_coords, angular_coords, obstacles, drive, title):
+def draw_trajectory(x_coords, y_coords, angular_coords, drive, title):
     fig, ax = draw_field()
-    # draw_robot(ax,[x_coords[0],y_coords[0],angular_coords[0]],drive)
-    # draw_robot(ax,[x_coords[-1],y_coords[-1],angular_coords[-1]],drive)
+    draw_robot(ax,[x_coords[0],y_coords[0],angular_coords[0]],drive)
+    draw_robot(ax,[x_coords[-1],y_coords[-1],angular_coords[-1]],drive)
     plt.plot(x_coords,y_coords,color="r")
     plt.title(title)
-    draw_robot(zip(x_coords, y_coords, angular_coords)[0])
-    draw_robot(zip(x_coords, y_coords, angular_coords)[-1])
+    draw_robot(ax,list(zip(x_coords, y_coords, angular_coords))[0], drive)
+    draw_robot(ax,list(zip(x_coords, y_coords, angular_coords))[-1], drive)
 
-def generate_initial_trajectory(start_pose, end_pose, balls, num_states):
-    x_points, y_points, theta_points = [start_pose[0]], [start_pose[1]], [start_pose[2]]
-
-    for k in range(len(balls)):
-        x_points.append(balls[k][0])
-        y_points.append(balls[k][1])
-    x_points.append(end_pose[0])
-    y_points.append(end_pose[1])
-    for k in range(len(balls)):
-        theta_points.append(math.atan2(y_points[k+2]-y_points[k+1],x_points[k+2]-x_points[k+1]))
-    theta_points.append(end_pose[2])
+def generate_initial_trajectory(waypoints, num_states):
+    x, y, theta = [], [], []
 
     lengths = [0]
-    for k in range(len(x_points)-1):
-        lengths.append(lengths[k] + math.hypot(x_points[k+1]-x_points[k],y_points[k+1]-y_points[k]))
+    for k in range(len(waypoints)-1):
+        lengths.append(lengths[k] + math.hypot(waypoints[k+1][0]-waypoints[k][0],waypoints[k+1][1]-waypoints[k][1]))
     ds = lengths[-1] / num_states
 
+    index = 0
     for k in range(num_states):
-        
+        s = ds * (num_states + 1) / num_states
+        while (lengths[index + 1] < s):
+            index += 1
+        t = (s - lengths[index]) / (lengths[index + 1] - lengths[index])
+    x.append((waypoints[index + 1][0] - waypoints[index][0]) * t)
+    y.append((waypoints[index + 1][1] - waypoints[index][1]) * t)
+    theta.append((waypoints[index + 1][2] - waypoints[index][2]) * t)
+    return x, y, theta
