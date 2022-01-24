@@ -52,8 +52,8 @@ def draw_trajectory(x_coords, y_coords, angular_coords, drive, title):
     draw_robot(ax,[x_coords[-1],y_coords[-1],angular_coords[-1]],drive)
     plt.plot(x_coords,y_coords,color="r")
     plt.title(title)
-    draw_robot(ax,list(zip(x_coords, y_coords, angular_coords))[0], drive)
-    draw_robot(ax,list(zip(x_coords, y_coords, angular_coords))[-1], drive)
+    for pose in zip(x_coords, y_coords, angular_coords):
+        draw_robot(ax,pose, drive)
 
 def generate_initial_trajectory(waypoints, num_states):
     x, y, theta = [], [], []
@@ -61,15 +61,15 @@ def generate_initial_trajectory(waypoints, num_states):
     lengths = [0]
     for k in range(len(waypoints)-1):
         lengths.append(lengths[k] + math.hypot(waypoints[k+1][0]-waypoints[k][0],waypoints[k+1][1]-waypoints[k][1]))
-    ds = lengths[-1] / num_states
+    ds = lengths[-1] / (num_states - 1)
 
     index = 0
     for k in range(num_states):
-        s = ds * (num_states + 1) / num_states
+        s = ds * k
         while (lengths[index + 1] < s):
             index += 1
         t = (s - lengths[index]) / (lengths[index + 1] - lengths[index])
-    x.append((waypoints[index + 1][0] - waypoints[index][0]) * t)
-    y.append((waypoints[index + 1][1] - waypoints[index][1]) * t)
-    theta.append((waypoints[index + 1][2] - waypoints[index][2]) * t)
+        x.append((waypoints[index + 1][0] - waypoints[index][0]) * t + waypoints[index][0])
+        y.append((waypoints[index + 1][1] - waypoints[index][1]) * t + waypoints[index][1])
+        theta.append((waypoints[index + 1][2] - waypoints[index][2]) * t + waypoints[index][2])
     return x, y, theta
