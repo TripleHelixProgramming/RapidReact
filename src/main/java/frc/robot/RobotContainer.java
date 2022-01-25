@@ -6,6 +6,13 @@ package frc.robot;
 
 import static com.team2363.utilities.ControllerMap.*;
 
+import java.util.List;
+
+import frc.robot.Constants.*;
+import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.trajectory.*;
+import frc.robot.drive.commands.*;
+import frc.lib.*;
 import edu.wpi.first.wpilibj.Joystick;
 // import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -66,8 +73,30 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // TODO: replace later with real auto command once we write swerve trajectory follower
-    return null;
+    TrajectoryConfig config =
+        new TrajectoryConfig(
+                AutoConstants.kMaxSpeedMetersPerSecond,
+                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+            // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(DriveConstants.kDriveKinematics);
+
+    // An example trajectory to follow.  All units in meters.
+    Trajectory exampleTrajectory =
+        TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(0)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(),
+            // List.of(),
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(10, 0, new Rotation2d(0)),
+            config);
+        
+    SmartDashboard.putNumber("Trajectory Time", exampleTrajectory.getTotalTimeSeconds());
+    
+    TrajectoryFollower follower = new TrajectoryFollower(mDrive, exampleTrajectory);
+    return follower.andThen(() -> mDrive.brake());
+    // return null;
   }
 
   public void configureButtonBindings() {

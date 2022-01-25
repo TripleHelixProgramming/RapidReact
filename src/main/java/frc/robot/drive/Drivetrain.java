@@ -212,6 +212,19 @@ public class Drivetrain extends SubsystemBase {
     setModuleStates(swerveModuleStates);
   }
 
+  @SuppressWarnings("ParameterName")
+  public void autoDrive(ChassisSpeeds speeds) {
+
+    if (speeds.vxMetersPerSecond == 0 && speeds.vyMetersPerSecond == 0 && speeds.omegaRadiansPerSecond == 0) {
+      brake();
+      return;
+    }
+
+    SwerveModuleState[] swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
+           
+    setModuleStates(swerveModuleStates);
+  }
+
   public void brake() {
     for (SwerveModule module : modules) {
       module.setDesiredState(new SwerveModuleState(0, module.getState().angle));

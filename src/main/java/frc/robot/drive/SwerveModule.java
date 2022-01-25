@@ -84,7 +84,7 @@ public class SwerveModule extends SubsystemBase {
 
         // 401 only sets P of the drive PID
         m_driveController.setP(Constants.ModuleConstants.kDriveP);
-        // m_driveController.setI(Constants.ModuleConstants.kDriveI);
+        // m_driveController.setI(Constants.ModuleConstants.kDrivePI);
         m_driveController.setD(Constants.ModuleConstants.kDriveD);
     }
 
