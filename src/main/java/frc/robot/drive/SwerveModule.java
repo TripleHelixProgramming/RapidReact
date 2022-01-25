@@ -7,12 +7,12 @@ package frc.robot.drive;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.ControlType;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -26,17 +26,17 @@ public class SwerveModule extends SubsystemBase {
     private final CANSparkMax m_driveMotor;
     private final CANSparkMax m_turningMotor;
 
-    private final CANEncoder m_driveEncoder;
-    private final CANEncoder m_turningEncoder;
+    private final RelativeEncoder m_driveEncoder;
+    private final RelativeEncoder m_turningEncoder;
 
     private final CANCoder m_turningCANCoder;
 
     // absolute offset for the CANCoder so that the wheels can be aligned when the
     // robot is turned on
-    private final Rotation2d m_CANCoderOffset;
+//    private final Rotation2d m_CANCoderOffset;
 
-    private final CANPIDController m_turningController;
-    private final CANPIDController m_driveController;    
+    private final SparkMaxPIDController m_turningController;
+    private final SparkMaxPIDController m_driveController;    
 
     /**
      * Constructs a SwerveModule.
@@ -60,7 +60,7 @@ public class SwerveModule extends SubsystemBase {
         m_turningCANCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
         m_turningCANCoder.setPosition(0);
         
-        m_CANCoderOffset = Rotation2d.fromDegrees(turningCANCoderOffsetDegrees);
+//        m_CANCoderOffset = Rotation2d.fromDegrees(turningCANCoderOffsetDegrees);
 
         // m_driveMotor.setIdleMode(IdleMode.kBrake);
         // m_turningMotor.setIdleMode(IdleMode.kCoast);
@@ -108,7 +108,7 @@ public class SwerveModule extends SubsystemBase {
         return m_turningMotor;
     }
 
-    public CANEncoder getTurnEncoder() {
+    public RelativeEncoder getTurnEncoder() {
         return m_turningEncoder;
     }
 

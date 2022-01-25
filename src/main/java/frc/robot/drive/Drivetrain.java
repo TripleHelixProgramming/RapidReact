@@ -15,7 +15,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 // import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 // import com.ctre.phoenix.sensors.PigeonIMU;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
+// import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -151,9 +151,11 @@ public class Drivetrain extends SubsystemBase {
    * @param pose The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose) {
+    /* Don't reset all the motors' positions. Otherwise the robot thinks it has teleported!
     for (SwerveModule module: modules) {
       module.resetDistance();
     }
+    */
     m_odometry.resetPosition(pose, getHeading());
   }
 
