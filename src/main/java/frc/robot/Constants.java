@@ -49,7 +49,8 @@ public final class Constants {
 
     public static final int kIndexerPort = 2;
 
-    public static final int kShooterPort = 1;
+    public static final int kShooterMasterPort = 1;
+    public static final int kShooterSlavePort = 1;
   }
 
   public static final class DriveConstants {
