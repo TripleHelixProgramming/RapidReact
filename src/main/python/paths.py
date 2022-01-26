@@ -7,7 +7,6 @@ def main():
 
     generator.generate([
                         [1,7.5,0],
-                        [11,7.5,0],
                         [13,2,2]])
 
 main()
