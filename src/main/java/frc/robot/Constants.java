@@ -88,7 +88,7 @@ public final class Constants {
     public static final double kMaxTranslationalVelocity = 0.75; //max 4.5
 
     // Units are radians per second
-    public static final double kMaxRotationalVelocity = 5.0; //max 5.0
+    public static final double kMaxRotationalVelocity = 3.0; //max 5.0
 
     //The locations for the modules must be relative to the center of the robot. 
     // Positive x values represent moving toward the front of the robot 
@@ -157,13 +157,13 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
-    public static final double kMaxSpeedMetersPerSecond = 3.0;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 3.0;
-    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
+    public static final double kMaxSpeedMetersPerSecond = 2.0;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 2.0;
+    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI / 2;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
     public static final double kPTranslationController = 4.0;
-    public static final double kPThetaController = 2.0;
+    public static final double kPThetaController = 5.0;
 
     // Constraint for the motion profilied robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
