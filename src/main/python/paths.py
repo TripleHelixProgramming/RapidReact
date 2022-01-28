@@ -1,5 +1,5 @@
 from trajectory_generator import trajectory_generator
-from swerve_drive import swerve_drive
+from drive.swerve_drive import swerve_drive
 
 def main():
     drive = swerve_drive(1,1,1,1,1)
@@ -7,6 +7,6 @@ def main():
 
     generator.generate([
                         [4.5,1.7,0],
-                        [2.5,1.7,0]])
+                        [10,1.7,0]])
 
 main()

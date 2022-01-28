@@ -4,7 +4,7 @@ from casadi import *
 import pylab as plt
 
 from trajectory_io import *
-from swerve_drive import swerve_drive
+from drive.swerve_drive import swerve_drive
 import trajectory_util
 
 class trajectory_generator:
