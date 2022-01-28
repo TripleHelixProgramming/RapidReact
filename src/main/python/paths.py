@@ -6,7 +6,7 @@ def main():
     generator = trajectory_generator(drive)
 
     generator.generate([
-                        [1,7.5,0],
-                        [13,2,2]])
+                        [4.5,1.7,0],
+                        [2.5,1.7,0]])
 
 main()

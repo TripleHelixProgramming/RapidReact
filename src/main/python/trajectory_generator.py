@@ -37,6 +37,7 @@ class trajectory_generator:
       T = self.opti.variable()
       self.dt = T / self.N
       self.opti.minimize(T)
+      self.opti.subject_to(T>=0)
 
       # Initialize variables
       self.X = self.opti.variable(3, self.N+1)
@@ -76,12 +77,13 @@ class trajectory_generator:
 
       self.drive.add_kinematics_constraint(self.opti, self.vx, self.vy, self.omega, 25)
       self.add_boundry_constraint()
+      self.add_waypoint_constraint(waypoints)
 
       self.opti.solver("ipopt")
       sol = self.opti.solve()
 
       print(sol.value(T))
-      trajectory_util.draw_trajectory(sol.value(self.drive.x),sol.value(self.drive.y),sol.value(self.drive.theta),self.drive,"trajectory")
+      trajectory_util.draw_trajectory(sol.value(self.x),sol.value(self.y),sol.value(self.theta),self.drive,"trajectory")
       # trajectory_util.draw_trajectory(x_init, y_init, theta_init, self.drive, "initial")
 
       plt.show()
@@ -95,11 +97,11 @@ class trajectory_generator:
       self.opti.subject_to(self.omega[-1] == 0)
 
    def add_waypoint_constraint(self, waypoints):
-      for k in range(len(waypoints)-1):
-         index = max(0, k * self.N - 1)
-         self.x[index] = waypoints[k][0]
-         self.y[index] = waypoints[k][1]
-         self.theta[index] = waypoints[k][2]
+      for k in range(len(waypoints)):
+         index = k * self.N
+         self.opti.subject_to(self.x[index] == waypoints[k][0])
+         self.opti.subject_to(self.y[index] == waypoints[k][1])
+         self.opti.subject_to(self.theta[index] == waypoints[k][2])
    
    def set_initial_guess(self, x, y, theta):
       self.opti.set_initial(self.x, x)
