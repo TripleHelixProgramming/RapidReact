@@ -3,6 +3,8 @@ import pylab as plt
 import matplotlib as mpl
 import json
 import math
+import os
+import matplotlib.animation as animation
 
 def short(theta0, theta1):
     diff = (theta1 - theta0 + math.pi) % (2*math.pi) - math.pi
@@ -46,31 +48,66 @@ def draw_field():
     plt.gca().set_aspect("equal", adjustable="box")
     return fig, ax
 
-def draw_trajectory(x_coords, y_coords, angular_coords, obstacles, drive, title):
+def draw_trajectory(x_coords, y_coords, angular_coords, drive, title):
     fig, ax = draw_field()
-    # draw_robot(ax,[x_coords[0],y_coords[0],angular_coords[0]],drive)
-    # draw_robot(ax,[x_coords[-1],y_coords[-1],angular_coords[-1]],drive)
+    draw_robot(ax,[x_coords[0],y_coords[0],angular_coords[0]],drive)
+    draw_robot(ax,[x_coords[-1],y_coords[-1],angular_coords[-1]],drive)
     plt.plot(x_coords,y_coords,color="r")
     plt.title(title)
-    draw_robot(zip(x_coords, y_coords, angular_coords)[0])
-    draw_robot(zip(x_coords, y_coords, angular_coords)[-1])
+    for pose in zip(x_coords, y_coords, angular_coords):
+        draw_robot(ax,pose, drive)
+        
+def animate_trajectory(
+    x_coords,
+    y_coords,
+    angular_coords,
+    drive,
+    dt,
+    title
+):
+    fig, ax = draw_field()
+    num_states = len(x_coords)
+    plt.plot(x_coords, y_coords)
+    
+    draw_robot(ax, (x_coords[0], y_coords[0], angular_coords[0]), drive)
+    draw_robot(ax,(x_coords[-1], y_coords[-1], angular_coords[-1]),drive)
 
-def generate_initial_trajectory(start_pose, end_pose, balls, num_states):
-    x_points, y_points, theta_points = [start_pose[0]], [start_pose[1]], [start_pose[2]]
+    def animate(i):
+        pose = list(zip(x_coords, y_coords, angular_coords))[i]
+        ax.collections = ax.collections[:7]
 
-    for k in range(len(balls)):
-        x_points.append(balls[k][0])
-        y_points.append(balls[k][1])
-    x_points.append(end_pose[0])
-    y_points.append(end_pose[1])
-    for k in range(len(balls)):
-        theta_points.append(math.atan2(y_points[k+2]-y_points[k+1],x_points[k+2]-x_points[k+1]))
-    theta_points.append(end_pose[2])
+        draw_robot(ax, pose, drive)
+        return ax.collections
+
+    anim = animation.FuncAnimation(
+        fig, animate, frames=num_states, interval=dt, blit=True, repeat=True
+    )
+
+    if not os.path.exists("animations"):
+        os.makedirs("animations")
+    anim.save(
+        os.path.join("animations", "{}.gif".format(title)),
+        writer="pillow",
+        dpi=100,
+        fps=(int)(1 / dt),
+    )
+    return anim
+
+def generate_initial_trajectory(waypoints, num_states):
+    x, y, theta = [], [], []
 
     lengths = [0]
-    for k in range(len(x_points)-1):
-        lengths.append(lengths[k] + math.hypot(x_points[k+1]-x_points[k],y_points[k+1]-y_points[k]))
-    ds = lengths[-1] / num_states
+    for k in range(len(waypoints)-1):
+        lengths.append(lengths[k] + math.hypot(waypoints[k+1][0]-waypoints[k][0],waypoints[k+1][1]-waypoints[k][1]))
+    ds = lengths[-1] / (num_states - 1)
 
+    index = 0
     for k in range(num_states):
-        
+        s = ds * k
+        while (lengths[index + 1] < s):
+            index += 1
+        t = (s - lengths[index]) / (lengths[index + 1] - lengths[index])
+        x.append((waypoints[index + 1][0] - waypoints[index][0]) * t + waypoints[index][0])
+        y.append((waypoints[index + 1][1] - waypoints[index][1]) * t + waypoints[index][1])
+        theta.append((waypoints[index + 1][2] - waypoints[index][2]) * t + waypoints[index][2])
+    return x, y, theta
