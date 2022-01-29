@@ -31,6 +31,7 @@ import frc.robot.drive.commands.ZeroHeading;
 // import frc.robot.indexer.Indexer;
 // import frc.robot.intake.Intake;
 // import frc.robot.shooter.Shooter;
+import frc.robot.paths.gogogadget;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -94,7 +95,8 @@ public class RobotContainer {
         
     SmartDashboard.putNumber("Trajectory Time", exampleTrajectory.getTotalTimeSeconds());
     
-    TrajectoryFollower follower = new TrajectoryFollower(mDrive, exampleTrajectory);
+    // TrajectoryFollower follower = new TrajectoryFollower(mDrive, exampleTrajectory);
+    TrajectoryFollower follower = new TrajectoryFollower(mDrive, new gogogadget());
     return follower.andThen(() -> mDrive.brake());
     // return null;
   }
