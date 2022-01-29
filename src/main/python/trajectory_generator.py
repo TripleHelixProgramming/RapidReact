@@ -81,7 +81,7 @@ class trajectory_generator:
       )
       self.set_initial_guess(x_init,y_init,theta_init)
 
-      self.drive.add_kinematics_constraint(self.opti, self.theta, self.vx, self.vy, self.omega, 25)
+      self.drive.add_kinematics_constraint(self.opti, self.theta, self.vx, self.vy, self.omega, self.ax, self.ay, self.alpha, 5, 5)
       self.add_boundry_constraint()
       self.add_waypoint_constraint(waypoints)
 
@@ -89,6 +89,7 @@ class trajectory_generator:
       sol = self.opti.solve()
 
       print(sol.value(T))
+
       # trajectory_util.draw_trajectory(sol.value(self.x),sol.value(self.y),sol.value(self.theta),self.drive,"trajectory")
       trajectory_util.animate_trajectory(sol.value(self.x),sol.value(self.y),sol.value(self.theta),self.drive,sol.value(T)/self.N,"trajectory")
       # trajectory_util.draw_trajectory(x_init, y_init, theta_init, self.drive, "initial")
