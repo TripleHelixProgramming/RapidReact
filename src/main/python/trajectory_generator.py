@@ -93,6 +93,7 @@ class trajectory_generator:
       # trajectory_util.draw_trajectory(sol.value(self.x),sol.value(self.y),sol.value(self.theta),self.drive,"trajectory")
       trajectory_util.animate_trajectory(sol.value(self.x),sol.value(self.y),sol.value(self.theta),self.drive,sol.value(T)/self.N,"trajectory")
       # trajectory_util.draw_trajectory(x_init, y_init, theta_init, self.drive, "initial")
+      export_trajectory(sol.value(self.x), sol.value(self.y), sol.value(self.theta), sol.value(T)/self.N, sol.value(T),"gogogadget")
 
       plt.show()
 
