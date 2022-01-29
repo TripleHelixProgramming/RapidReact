@@ -40,18 +40,24 @@ class trajectory_generator:
       self.opti.subject_to(T>=0)
 
       # Initialize variables
-      self.X = self.opti.variable(3, self.N+1)
+      self.X = self.opti.variable(6, self.N+1)
       self.x = self.X[0,:]
       self.y = self.X[1,:]
       self.theta = self.X[2,:]
+      self.vx = self.X[3,:]
+      self.vy = self.X[4,:]
+      self.omega = self.X[5,:]
       self.U = self.opti.variable(3, self.N)
-      self.vx = self.U[0,:]
-      self.vy = self.U[1,:]
-      self.omega = self.U[2,:]
+      self.ax = self.U[0,:]
+      self.ay = self.U[1,:]
+      self.alpha = self.U[2,:]
       
 
       # Add dynamics constraint
       dynamics = lambda x, u: vertcat(
+         x[3],
+         x[4],
+         x[5],
          u[0],
          u[1],
          u[2]
@@ -75,7 +81,7 @@ class trajectory_generator:
       )
       self.set_initial_guess(x_init,y_init,theta_init)
 
-      self.drive.add_kinematics_constraint(self.opti, self.vx, self.vy, self.omega, 25)
+      self.drive.add_kinematics_constraint(self.opti, self.theta, self.vx, self.vy, self.omega, 25)
       self.add_boundry_constraint()
       self.add_waypoint_constraint(waypoints)
 
@@ -83,7 +89,8 @@ class trajectory_generator:
       sol = self.opti.solve()
 
       print(sol.value(T))
-      trajectory_util.draw_trajectory(sol.value(self.x),sol.value(self.y),sol.value(self.theta),self.drive,"trajectory")
+      # trajectory_util.draw_trajectory(sol.value(self.x),sol.value(self.y),sol.value(self.theta),self.drive,"trajectory")
+      trajectory_util.animate_trajectory(sol.value(self.x),sol.value(self.y),sol.value(self.theta),self.drive,sol.value(T)/self.N,"trajectory")
       # trajectory_util.draw_trajectory(x_init, y_init, theta_init, self.drive, "initial")
 
       plt.show()

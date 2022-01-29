@@ -3,6 +3,8 @@ import pylab as plt
 import matplotlib as mpl
 import json
 import math
+import os
+import matplotlib.animation as animation
 
 def short(theta0, theta1):
     diff = (theta1 - theta0 + math.pi) % (2*math.pi) - math.pi
@@ -54,6 +56,42 @@ def draw_trajectory(x_coords, y_coords, angular_coords, drive, title):
     plt.title(title)
     for pose in zip(x_coords, y_coords, angular_coords):
         draw_robot(ax,pose, drive)
+        
+def animate_trajectory(
+    x_coords,
+    y_coords,
+    angular_coords,
+    drive,
+    dt,
+    title
+):
+    fig, ax = draw_field()
+    num_states = len(x_coords)
+    plt.plot(x_coords, y_coords)
+    
+    draw_robot(ax, (x_coords[0], y_coords[0], angular_coords[0]), drive)
+    draw_robot(ax,(x_coords[-1], y_coords[-1], angular_coords[-1]),drive)
+
+    def animate(i):
+        pose = list(zip(x_coords, y_coords, angular_coords))[i]
+        ax.collections = ax.collections[:7]
+
+        draw_robot(ax, pose, drive)
+        return ax.collections
+
+    anim = animation.FuncAnimation(
+        fig, animate, frames=num_states, interval=dt, blit=True, repeat=True
+    )
+
+    if not os.path.exists("animations"):
+        os.makedirs("animations")
+    anim.save(
+        os.path.join("animations", "{}.gif".format(title)),
+        writer="pillow",
+        dpi=100,
+        fps=(int)(1 / dt),
+    )
+    return anim
 
 def generate_initial_trajectory(waypoints, num_states):
     x, y, theta = [], [], []
