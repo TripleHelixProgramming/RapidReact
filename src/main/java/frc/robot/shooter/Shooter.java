@@ -43,6 +43,10 @@ public class Shooter extends SubsystemBase {
 
     double speed = direction ? ShooterConstants.kHoodSpeed : -1.0 * ShooterConstants.kHoodSpeed;
 
+    if (ShooterConstants.kHoodCurrentLimit < hoodMotor.getOutputCurrent()) {
+      stopHood();
+      return;
+    }
     // Allow the hood to move UP if the current angle is less than the max
     if ((getHoodAngle() < ShooterConstants.kHoodMaxAngle) && (UP == direction)) {      
       hoodMotor.set(speed);

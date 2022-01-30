@@ -153,6 +153,8 @@ public final class Constants {
     public static final double kHoodMinAngle = 15.0;
     public static final double kHoodMaxAngle = 95.0;
 
+    public static final double kHoodCurrentLimit = 10.0; // WARNING: NOT REAL VALUE!!! CONSULT WITH ELECTRONICS TEAM TO DETERMINE REAL VALUE!!!
+
   }
 
   public static final class OIConstants {
