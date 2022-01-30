@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.intake.commands.RetractIntake;
 
 public class Intake extends SubsystemBase {
   private DoubleSolenoid solenoid = new DoubleSolenoid(
@@ -22,6 +23,7 @@ public class Intake extends SubsystemBase {
   private TalonSRX motor = new TalonSRX(ElectricalConstants.kIntakeRollerPort);
 
   public Intake() {
+    super();
     motor.configFactoryDefault();
     motor.setNeutralMode(NeutralMode.Brake);
     motor.enableVoltageCompensation(true);
@@ -30,6 +32,8 @@ public class Intake extends SubsystemBase {
     motor.configPeakCurrentLimit(60,0);
     motor.configContinuousCurrentLimit(40);
     motor.enableCurrentLimit(true);
+
+    setDefaultCommand(new RetractIntake(this));    
   }
 
   public void deploy() {
@@ -47,4 +51,10 @@ public class Intake extends SubsystemBase {
   public void rollerStop() {
     motor.set(ControlMode.PercentOutput, 0);
   }
+
+  // Status of the intake arm's extended state.
+  public boolean isExtended() {
+    return solenoid.get() == Value.kForward;
+  }
+
 }

@@ -5,10 +5,11 @@
 package frc.robot.shooter.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.shooter.Shooter;
 
 public class SpinUpShooter extends CommandBase {
   /** Creates a new ShooterSpinUp. */
-  public SpinUpShooter() {
+  public SpinUpShooter(Shooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
