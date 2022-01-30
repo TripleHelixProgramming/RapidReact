@@ -1,6 +1,4 @@
 from math import hypot
-from termios import TAB0
-import numpy as np
 from casadi import *
 
 class swerve_drive:
@@ -33,14 +31,11 @@ class swerve_drive:
             Fx = solver.variable(4)
             Fy = solver.variable(4)
 
-            T0 = modules[0][1] * Fx[0] - modules[0][0] * Fy[0]
-            T1 = modules[1][1] * Fx[1] - modules[1][0] * Fy[1]
-            T2 = modules[2][1] * Fx[2] - modules[2][0] * Fy[2]
-            T3 = modules[3][1] * Fx[3] - modules[3][0] * Fy[3]
-
+            T = []
             for j in range(4):
+                    T.append(modules[j][1] * Fx[j] - modules[j][0] * Fy[j])
                     solver.subject_to(Fx[j] * Fx[j] + Fy[j] * Fy[j] < f*f)
 
             solver.subject_to(ax[k] * self.mass == Fx[0] + Fx[1] + Fx[2] + Fx[3])
             solver.subject_to(ay[k] * self.mass == Fy[0] + Fy[1] + Fy[2] + Fy[3])
-            solver.subject_to(alpha[k] == T0 + T1 + T2 + T3)
+            solver.subject_to(alpha[k] == sum(T))
