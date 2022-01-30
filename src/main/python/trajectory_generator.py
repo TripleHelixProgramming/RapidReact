@@ -1,46 +1,118 @@
+from re import A
+from telnetlib import VT3270REGIME
 from casadi import *
 import pylab as plt
 
 from trajectory_io import *
-from swerve_drive import swerve_drive
+from drive.swerve_drive import swerve_drive
 import trajectory_util
 
 class trajectory_generator:
    def __init__(self, drive):
       self.drive = drive
    
-   def generate(self, start_pose, end_pose, balls):
-      N = 100 # number of control intervals
+   def generate(self, waypoints):
+      self.N = 100 # number of control intervals
+      # Ns = []
+      # for k in range(len(waypoints) - 1):
 
-      opti = Opti()
 
-      T = opti.variable()
-      dt = T/N
+      self.opti = Opti()
 
-      opti.minimize(T) # minimizing time is the trajectory planner's objective
+      # Minimize time
+      # Ts = []
+      # dts = []
+      # for n in range(len(waypoints) - 1):
+      #    T = self.opti.variable()
+      #    dt = T / self.N
+      #    Ts.append(T)
+      #    dts.append(dt)
 
-      self.drive.set_solver(opti)
-      self.drive.initialize(N)
-      self.drive.add_dynamics_constraint(dt)
-      self.drive.add_boundry_constraint(start_pose, end_pose)
-      self.drive.add_speed_constraint(8,8)
+      #    self.opti.subject_to(T >= 0)
+      #    self.opti.set_initial(T, 5)
 
-      opti.subject_to(T>=0) # Time must be positive
+      # total_time = sum(Ts)
+      # self.opti.minimize(total_time)
 
-      x_init, y_init, theta_init = trajectory_util.load_init_trajectory(
-         start_pose[2], end_pose[2], balls, N
+      T = self.opti.variable()
+      self.dt = T / self.N
+      self.opti.minimize(T)
+      self.opti.subject_to(T>=0)
+
+      # Initialize variables
+      self.X = self.opti.variable(6, self.N+1)
+      self.x = self.X[0,:]
+      self.y = self.X[1,:]
+      self.theta = self.X[2,:]
+      self.vx = self.X[3,:]
+      self.vy = self.X[4,:]
+      self.omega = self.X[5,:]
+      self.U = self.opti.variable(3, self.N)
+      self.ax = self.U[0,:]
+      self.ay = self.U[1,:]
+      self.alpha = self.U[2,:]
+      
+
+      # Add dynamics constraint
+      dynamics = lambda x, u: vertcat(
+         x[3],
+         x[4],
+         x[5],
+         u[0],
+         u[1],
+         u[2]
       )
 
-      self.drive.set_initial_guess(x_init,y_init,theta_init)
+      # start_n = 0
+      # for n, dt in zip(len(waypoints) - 1, dts):
+      #    end_n = start_n + n
+      #    for k in range(start_n, end_n):
+      #          x_next = self.X[:, k] + dynamics(self.X[:, k], self.U[:, k]) * dt
+      #          self.opti.subject_to(self.X[:, k + 1] == x_next)
+      #    start_n = end_n
 
-      opti.set_initial(T, 10)
+      for k in range(self.N):
+               x_next = self.X[:, k] + dynamics(self.X[:, k], self.U[:, k]) * self.dt
+               self.opti.subject_to(self.X[:, k + 1] == x_next)
 
-      opti.solver("ipopt")
-      sol = opti.solve()
+      # Set initial guess
+      x_init, y_init, theta_init = trajectory_util.generate_initial_trajectory(
+         waypoints, self.N+1
+      )
+      self.set_initial_guess(x_init,y_init,theta_init)
 
-      # self.drive.export_trajectory(sol, "Traj")
+      self.drive.add_kinematics_constraint(self.opti, self.theta, self.vx, self.vy, self.omega, self.ax, self.ay, self.alpha, 5, 5)
+      self.add_boundry_constraint()
+      self.add_waypoint_constraint(waypoints)
+
+      self.opti.solver("ipopt")
+      sol = self.opti.solve()
+
       print(sol.value(T))
-      # util.draw_trajectory(sol.value(self.drive.x),sol.value(self.drive.y),sol.value(self.drive.theta),obstacles,drive,"trajectory")
-      # util.draw_trajectory(x_init,y_init,theta_init,obstacles,drive,"trajectory")
 
-      # plt.show()
+      # trajectory_util.draw_trajectory(sol.value(self.x),sol.value(self.y),sol.value(self.theta),self.drive,"trajectory")
+      trajectory_util.animate_trajectory(sol.value(self.x),sol.value(self.y),sol.value(self.theta),self.drive,sol.value(T)/self.N,"trajectory")
+      # trajectory_util.draw_trajectory(x_init, y_init, theta_init, self.drive, "initial")
+      export_trajectory(sol.value(self.x), sol.value(self.y), sol.value(self.theta), sol.value(T)/self.N, sol.value(T),"gogogadget")
+
+      plt.show()
+
+   def add_boundry_constraint(self):
+      self.opti.subject_to(self.vx[0] == 0)
+      self.opti.subject_to(self.vy[0] == 0)
+      self.opti.subject_to(self.omega[0] == 0)
+      self.opti.subject_to(self.vx[-1] == 0)
+      self.opti.subject_to(self.vy[-1] == 0)
+      self.opti.subject_to(self.omega[-1] == 0)
+
+   def add_waypoint_constraint(self, waypoints):
+      for k in range(len(waypoints)):
+         index = k * self.N
+         self.opti.subject_to(self.x[index] == waypoints[k][0])
+         self.opti.subject_to(self.y[index] == waypoints[k][1])
+         self.opti.subject_to(self.theta[index] == waypoints[k][2])
+   
+   def set_initial_guess(self, x, y, theta):
+      self.opti.set_initial(self.x, x)
+      self.opti.set_initial(self.y, y)
+      self.opti.set_initial(self.theta, theta)
