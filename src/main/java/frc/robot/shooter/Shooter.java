@@ -45,6 +45,12 @@ public class Shooter extends SubsystemBase {
 
     if (ShooterConstants.kHoodCurrentLimit < hoodMotor.getOutputCurrent()) {
       stopHood();
+      // Should we assume a high current means we are at the bottom? And reset the encoder?
+      /*
+      if (DOWN == direction) {
+        hoodEncoder.setPosition(0.0);
+      }
+      */
       return;
     }
     // Allow the hood to move UP if the current angle is less than the max
