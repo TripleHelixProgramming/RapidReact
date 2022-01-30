@@ -28,10 +28,15 @@ import frc.robot.drive.commands.JoystickDrive;
 import frc.robot.drive.commands.ResetEncoders;
 import frc.robot.drive.commands.TestDrive;
 import frc.robot.drive.commands.ZeroHeading;
+import frc.robot.indexer.Indexer;
+import frc.robot.indexer.commands.ShootIndexer;
+import frc.robot.indexer.commands.StopIndexer;
 // import frc.robot.indexer.Indexer;
 import frc.robot.intake.Intake;
 import frc.robot.shooter.Shooter;
 import frc.robot.shooter.commands.MoveHood;
+import frc.robot.shooter.commands.SpinUpShooter;
+import frc.robot.shooter.commands.StopShooter;
 import frc.robot.intake.commands.DeployIntake;
 import frc.robot.intake.commands.RetractIntake;
 
@@ -48,6 +53,7 @@ public class RobotContainer {
   
   private final Intake mIntake = new Intake();
   private final Shooter mShooter = new Shooter();
+  private final Indexer mIndexer = new Indexer();
 
   /*
   private final Indexer mIndexer = new Indexer();
@@ -67,6 +73,8 @@ public class RobotContainer {
     configureButtonBindings();
     mDrive.setDefaultCommand(new JoystickDrive(mDrive, joysticks));
     // mDrive.setDefaultCommand(new TestDrive(mDrive));
+    // mIntake.setDefaultCommand(new RetractIntake(mIntake));
+    mShooter.setDefaultCommand(new SpinUpShooter(mShooter));
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Reset Encoders", new ResetEncoders(mDrive));
@@ -118,33 +126,42 @@ public class RobotContainer {
       // Because the RadioMaster has so many more buttons/switches, map many of the operator commands to it, too
 
       // Intake Control
-      new JoystickButton(driver, RM_SF).whenPressed(new DeployIntake(mIntake));
-      new JoystickButton(driver, RM_SF).whenReleased(new RetractIntake(mIntake));
+      new JoystickButton(driver, X_BOX_A).whileHeld(new DeployIntake(mIntake));
+      new JoystickButton(driver, X_BOX_B).whenReleased(new RetractIntake(mIntake));
 
       // Enable Hood adjustment
-      new JoystickButton(driver, RM_SA_FRONT).whileHeld(new MoveHood(mShooter, Shooter.UP));
-      new JoystickButton(driver, RM_SA_BACK).whileHeld(new MoveHood(mShooter, Shooter.DOWN));
+      // new JoystickButton(driver, RM_SA_FRONT).whileHeld(new MoveHood(mShooter, Shooter.UP));
+      // new JoystickButton(driver, RM_SA_BACK).whileHeld(new MoveHood(mShooter, Shooter.DOWN));
 
 
     } else { // Assume XBox Controller
       new JoystickButton(driver, X_BOX_LOGO_LEFT).whenPressed(new ZeroHeading(mDrive));
 
-      new JoystickButton(driver, X_BOX_A);
-      new JoystickButton(driver, X_BOX_B);
-      new JoystickButton(driver, X_BOX_X);
-      new JoystickButton(driver, X_BOX_Y);
+      // new JoystickButton(driver, X_BOX_A);
+      // new JoystickButton(driver, X_BOX_B);
+      // new JoystickButton(driver, X_BOX_X);
+      // new JoystickButton(driver, X_BOX_Y);
+
+      new JoystickButton(driver, X_BOX_A).whenPressed(new DeployIntake(mIntake));
+      new JoystickButton(driver, X_BOX_B).whenReleased(new RetractIntake(mIntake));
+
     }
 
     // Operator Buttons - Operator is always PS4
 
     if (operator.isConnected()) {
       // Intake Control
-      new JoystickButton(operator, PS4_R1).whenPressed(new DeployIntake(mIntake));
-      new JoystickButton(operator, PS4_L1).whenPressed(new RetractIntake(mIntake));
+      // new JoystickButton(operator, PS4_R1).whenPressed(new DeployIntake(mIntake));
+      // new JoystickButton(operator, PS4_L1).whenPressed(new RetractIntake(mIntake));
 
       // Enable Hood adjustment
-      new JoystickButton(operator, PS4_TRIANGLE).whileHeld(new MoveHood(mShooter, Shooter.UP));
-      new JoystickButton(operator, PS4_SQUARE).whileHeld(new MoveHood(mShooter, Shooter.DOWN));
+      new JoystickButton(operator, PS4_TRIANGLE).whileHeld(new MoveHood(mShooter, operator));
+
+      new JoystickButton(operator, PS4_SQUARE).whenPressed(new SpinUpShooter(mShooter));
+      new JoystickButton(operator, PS4_X).whenPressed(new StopShooter(mShooter));
+
+      new JoystickButton(operator, PS4_R1).whileHeld(new ShootIndexer(mIndexer));
+      new JoystickButton(operator, PS4_L1).whenPressed(new StopIndexer(mIndexer));
     }
 
   }

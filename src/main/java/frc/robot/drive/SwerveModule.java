@@ -78,13 +78,14 @@ public class SwerveModule extends SubsystemBase {
         m_turningController = m_turningMotor.getPIDController();
         m_driveController = m_driveMotor.getPIDController();
 
+
         m_turningController.setP(Constants.ModuleConstants.kTurningP);
-        // m_turningController.setI(Constants.ModuleConstants.kTurningI);
+        m_turningController.setI(Constants.ModuleConstants.kTurningI);
         m_turningController.setD(Constants.ModuleConstants.kTurningD);
 
         // 401 only sets P of the drive PID
         m_driveController.setP(Constants.ModuleConstants.kDriveP);
-        // m_driveController.setI(Constants.ModuleConstants.kDrivePI);
+        m_driveController.setI(Constants.ModuleConstants.kDriveI);
         m_driveController.setD(Constants.ModuleConstants.kDriveD);
     }
 

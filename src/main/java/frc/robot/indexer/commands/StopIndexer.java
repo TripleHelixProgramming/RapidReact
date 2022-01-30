@@ -5,13 +5,20 @@
 package frc.robot.indexer.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.indexer.Indexer;
 
 public class StopIndexer extends CommandBase {
-  public StopIndexer() {
+  Indexer indexer;
+
+  public StopIndexer(Indexer indexer) {
+    this.indexer = indexer;
   }
 
+
   @Override
-  public void initialize() {}
+  public void initialize() {
+    indexer.rollerStop();
+  }
 
   @Override
   public boolean isFinished() {

@@ -23,7 +23,6 @@ public class Intake extends SubsystemBase {
   private TalonSRX motor = new TalonSRX(ElectricalConstants.kIntakeRollerPort);
 
   public Intake() {
-    super();
     motor.configFactoryDefault();
     motor.setNeutralMode(NeutralMode.Brake);
     motor.enableVoltageCompensation(true);
@@ -31,9 +30,7 @@ public class Intake extends SubsystemBase {
     motor.configPeakCurrentDuration(100,0);
     motor.configPeakCurrentLimit(60,0);
     motor.configContinuousCurrentLimit(40);
-    motor.enableCurrentLimit(true);
-
-    setDefaultCommand(new RetractIntake(this));    
+    motor.enableCurrentLimit(true);   
   }
 
   public void deploy() {
@@ -54,7 +51,7 @@ public class Intake extends SubsystemBase {
 
   // Status of the intake arm's extended state.
   public boolean isExtended() {
-    return solenoid.get() == Value.kForward;
+    // return solenoid.get() == Value.kForward;
+    return false;
   }
-
 }

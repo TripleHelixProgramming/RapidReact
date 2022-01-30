@@ -44,8 +44,8 @@ public final class Constants {
     
     public static final int kGyroPort = 20;
 
-    public static final int kIntakeRetractPort = 0; // Pneumatic Control Module Port, not CAN ID
-    public static final int kIntakeDeployPort = 1;  // Pneumatic Control Module Port, not CAN ID
+    public static final int kIntakeRetractPort = 1; // Pneumatic Control Module Port, not CAN ID
+    public static final int kIntakeDeployPort = 0;  // Pneumatic Control Module Port, not CAN ID
     public static final int kIntakeRollerPort = 21;
 
     public static final int kIndexerPort = 14;
@@ -91,7 +91,7 @@ public final class Constants {
     public static final double kMaxTranslationalVelocity = 0.75; //max 4.5
 
     // Units are radians per second
-    public static final double kMaxRotationalVelocity = 3.0; //max 5.0
+    public static final double kMaxRotationalVelocity = 1.0; //max 5.0
 
     //The locations for the modules must be relative to the center of the robot. 
     // Positive x values represent moving toward the front of the robot 
@@ -106,7 +106,7 @@ public final class Constants {
 
     public static final boolean kGyroReversed = false;
 
-    public static final double kMaxSpeedMetersPerSecond = 3.0;
+    public static final double kMaxSpeedMetersPerSecond = 2.0;
   }
 
   public static final class ModuleConstants {
@@ -150,8 +150,20 @@ public final class Constants {
     public static final double kHoodSpeed = 0.1; // May want to convert to RPM
     public static final double kHoodGearingRatio = 4.075;  // 1 rev of the motor = 48/4240 revs of the hood = ~4.075 deg
 
-    public static final double kHoodMinAngle = 15.0;
-    public static final double kHoodMaxAngle = 95.0;
+    public static final double kHoodMinAngle = 50.0;
+    public static final double kHoodMaxAngle = 100.0;
+
+    // public static final double kHoodMinAngle = 45.0;
+    // public static final double kHoodMaxAngle = 70.0;
+
+    public static final double kHoodP = 0.025;
+    public static final double kHoodI = 0.0;
+    public static final double kHoodD = 0.0;
+
+    public static final double kShooterP = 0.0;
+    public static final double kShooterI = 0.0;
+    public static final double kShooterD = 0.0;
+    public static final double kShooterFF = 0.00025;
 
     public static final double kHoodCurrentLimit = 10.0; // WARNING: NOT REAL VALUE!!! CONSULT WITH ELECTRONICS TEAM TO DETERMINE REAL VALUE!!!
 

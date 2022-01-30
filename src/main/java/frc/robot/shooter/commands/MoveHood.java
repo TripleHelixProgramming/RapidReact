@@ -5,7 +5,10 @@
 package frc.robot.shooter.commands;
 
 import com.revrobotics.CANSparkMax;
+import com.team2363.utilities.ControllerMap;
 
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.shooter.Shooter;
@@ -19,13 +22,12 @@ import frc.robot.shooter.Shooter;
 public class MoveHood extends CommandBase {
 
     private Shooter shooter;
-    private boolean direction = Shooter.DOWN;
+    private Joystick joystick;
 
-
-    public MoveHood(Shooter shooter, boolean direction) {
+    public MoveHood(Shooter shooter, Joystick joystick) {
+        this.joystick = joystick;
         this.shooter = shooter;
         addRequirements(shooter);
-        this.direction = direction;
         // Use addRequirements() here to declare subsystem dependencies.
     }
 
@@ -33,29 +35,34 @@ public class MoveHood extends CommandBase {
     @Override
     public void initialize() {
         // Start the hood motor.
-        shooter.moveHood(direction);
+        // shooter.moveHood(direction);
+        double joystickInput = Math.max(0, -joystick.getRawAxis(ControllerMap.PS4_LEFT_STICK_Y));
+        SmartDashboard.putNumber("Hood Position", shooter.getHoodAngle());
+        double target = ((ShooterConstants.kHoodMaxAngle - ShooterConstants.kHoodMinAngle) * joystickInput + ShooterConstants.kHoodMinAngle);
+        shooter.setHoodPosition(target);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         // Check if hard stop hit. Stop if so.
-        if ((Shooter.UP == direction) && (ShooterConstants.kHoodMaxAngle < shooter.getHoodAngle())
-            || (Shooter.DOWN == direction) && (ShooterConstants.kHoodMinAngle > shooter.getHoodAngle())) {
-                end(true);
-            }
+        // if ((Shooter.UP == direction) && (ShooterConstants.kHoodMaxAngle < shooter.getHoodAngle())
+        //     || (Shooter.DOWN == direction) && (ShooterConstants.kHoodMinAngle > shooter.getHoodAngle())) {
+        //         end(true);
+        //     }
+        
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         // Stop the motor
-        shooter.stopHood();
+        // shooter.stopHood();
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+        return true;
     }
 }
