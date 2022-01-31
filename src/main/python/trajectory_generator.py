@@ -1,10 +1,7 @@
-from re import A
-from telnetlib import VT3270REGIME
 from casadi import *
 import pylab as plt
 
 from trajectory_io import *
-from drive.swerve_drive import swerve_drive
 import trajectory_util
 
 class trajectory_generator:
@@ -19,17 +16,15 @@ class trajectory_generator:
       self.opti = Opti()
 
       # Minimize time
-      Ts = []
-      dts = []
+      Ts, dts = [], []
       for k in range(self.segments):
          T = self.opti.variable()
-         dt = T / self.N
+         dt = T / self.N_per_segment
          Ts.append(T)
          dts.append(dt)
 
          self.opti.subject_to(T >= 0)
          self.opti.set_initial(T, 5)
-
       self.opti.minimize(sum(Ts))
 
       # Initialize variables
@@ -75,9 +70,12 @@ class trajectory_generator:
       self.opti.solver("ipopt")
       sol = self.opti.solve()
 
-      print(sol.value(T))
+      sol_dts = []
+      for k in range(self.segments):
+         sol_dts.append(sol.value(Ts[k] / self.N_per_segment))
+      print(sum(sol_dts) * self.N_per_segment)
 
-      # xs, ys, thetas = export_trajectory(sol.value(self.x), sol.value(self.y), sol.value(self.theta), sol.value(T)/self.N, sol.value(T),"gogogadget")
+      xs, ys, thetas = export_trajectory(sol.value(self.x), sol.value(self.y), sol.value(self.theta), sol_dts, self.N_per_segment, "gogogadget")
 
       # trajectory_util.draw_trajectory(xs,ys,thetas,self.drive,"trajectory")
       trajectory_util.draw_trajectory(sol.value(self.x),sol.value(self.y),sol.value(self.theta),self.drive,"trajectory")

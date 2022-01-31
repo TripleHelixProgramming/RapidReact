@@ -8,7 +8,7 @@ def main():
 
     generator.generate([
                         [5,2,0],
-                        [10,3,0],
+                        [10,4,0],
                         [12, 3, -1]])
 
 main()

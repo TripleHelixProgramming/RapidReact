@@ -104,7 +104,7 @@ def generate_initial_trajectory(waypoints, num_states):
     index = 0
     for k in range(num_states):
         s = ds * k
-        while (lengths[index + 1] < s):
+        while (lengths[index + 1] + 0.000001 < s):
             index += 1
         t = (s - lengths[index]) / (lengths[index + 1] - lengths[index])
         x.append((waypoints[index + 1][0] - waypoints[index][0]) * t + waypoints[index][0])
