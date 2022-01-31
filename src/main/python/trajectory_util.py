@@ -30,7 +30,7 @@ def draw_robot(ax, pose, drive):
     ax.add_collection(lines)
 
 def draw_field():
-    plt.style.use("ggplot")
+    plt.style.use("classic")
     fig, ax = plt.subplots()
     ax.add_patch(mpl.patches.Rectangle(
         (0, 0),
@@ -61,16 +61,19 @@ def animate_trajectory(
     x_coords,
     y_coords,
     angular_coords,
+    waypoints,
     drive,
     dt,
     title
 ):
+    
     fig, ax = draw_field()
+
+    for waypoint in waypoints:
+        draw_robot(ax, waypoint, drive)
+
     num_states = len(x_coords)
     plt.plot(x_coords, y_coords)
-    
-    draw_robot(ax, (x_coords[0], y_coords[0], angular_coords[0]), drive)
-    draw_robot(ax,(x_coords[-1], y_coords[-1], angular_coords[-1]),drive)
 
     def animate(i):
         pose = list(zip(x_coords, y_coords, angular_coords))[i]

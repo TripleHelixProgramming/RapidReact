@@ -67,6 +67,9 @@ class trajectory_generator:
       self.add_boundry_constraint()
       self.add_waypoint_constraint(waypoints)
 
+      for k in range(100):
+         self.opti.subject_to(self.theta[k] == 0)
+
       self.opti.solver("ipopt")
       sol = self.opti.solve()
 
@@ -78,8 +81,8 @@ class trajectory_generator:
       xs, ys, thetas = export_trajectory(sol.value(self.x), sol.value(self.y), sol.value(self.theta), sol_dts, self.N_per_segment, "gogogadget")
 
       # trajectory_util.draw_trajectory(xs,ys,thetas,self.drive,"trajectory")
-      trajectory_util.draw_trajectory(xs,ys,thetas,self.drive,"trajectory")
-      trajectory_util.animate_trajectory(xs,ys,thetas,self.drive,0.02,"trajectory")
+      # trajectory_util.draw_trajectory(xs,ys,thetas,self.drive,"trajectory")
+      trajectory_util.animate_trajectory(xs,ys,thetas,waypoints,self.drive,0.02,"trajectory")
 
       plt.show()
 
