@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.drive.Drivetrain;
-import frc.robot.paths.gogogadget;
+import frc.paths.Path;
 
 public class TrajectoryFollower extends CommandBase {
   private Drivetrain drive;
@@ -31,7 +31,7 @@ public class TrajectoryFollower extends CommandBase {
   private Rotation2d offset;
   private int index;
 
-  public TrajectoryFollower(Drivetrain drive, gogogadget path) {
+  public TrajectoryFollower(Drivetrain drive, Path path) {
     addRequirements(drive);
     this.drive = drive;
     this.path = path.getPath();
@@ -46,9 +46,9 @@ public class TrajectoryFollower extends CommandBase {
   public void initialize() {
     timer.reset();
     timer.start();
-    drive.resetOdometry(new Pose2d(new Translation2d(4.5,1.7), new Rotation2d(0)));
-    // offset = trajectory.getInitialPose().getRotation().plus(drive.getHeading());
-    offset = drive.getHeading();
+    Pose2d initialPose = new Pose2d(new Translation2d(path[0][0],path[0][1]), new Rotation2d(path[0][2]));
+    drive.resetOdometry(initialPose);
+    offset = initialPose.getRotation().plus(drive.getHeading());
     index = 0;
   }
 
@@ -78,6 +78,6 @@ public class TrajectoryFollower extends CommandBase {
   @Override
   public boolean isFinished() {
     // return timer.hasElapsed(trajectory.getTotalTimeSeconds());
-    return index == path.length;
+    return index >= path.length;
   }
 }

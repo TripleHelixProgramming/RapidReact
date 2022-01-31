@@ -48,14 +48,16 @@ def draw_field():
     plt.gca().set_aspect("equal", adjustable="box")
     return fig, ax
 
-def draw_trajectory(x_coords, y_coords, angular_coords, drive, title):
+def draw_trajectory(x_coords, y_coords, angular_coords, waypoints, drive, title):
     fig, ax = draw_field()
     draw_robot(ax,[x_coords[0],y_coords[0],angular_coords[0]],drive)
     draw_robot(ax,[x_coords[-1],y_coords[-1],angular_coords[-1]],drive)
-    plt.plot(x_coords,y_coords,color="r")
+    plt.plot(x_coords,y_coords,color="b")
     plt.title(title)
-    for pose in zip(x_coords, y_coords, angular_coords):
-        draw_robot(ax,pose, drive)
+    for waypoint in waypoints:
+        draw_robot(ax, waypoint, drive)
+    # for pose in zip(x_coords, y_coords, angular_coords):
+    #     draw_robot(ax,pose, drive)
         
 def animate_trajectory(
     x_coords,

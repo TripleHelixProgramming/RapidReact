@@ -9,7 +9,8 @@ def main():
     generator.generate([
                         [5,2,0],
                         [10,3,0],
-                        [10,2,-1]])
+                        [10,2,-1]],
+                        "gogogogadget")
                         # [, 2, -1]])
 
 main()

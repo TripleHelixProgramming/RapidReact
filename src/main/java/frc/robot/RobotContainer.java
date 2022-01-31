@@ -31,7 +31,7 @@ import frc.robot.drive.commands.ZeroHeading;
 // import frc.robot.indexer.Indexer;
 // import frc.robot.intake.Intake;
 // import frc.robot.shooter.Shooter;
-import frc.robot.paths.gogogadget;
+import frc.paths.gogogadget;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -74,28 +74,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    TrajectoryConfig config =
-        new TrajectoryConfig(
-                AutoConstants.kMaxSpeedMetersPerSecond,
-                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-            // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(DriveConstants.kDriveKinematics);
-
-    // An example trajectory to follow.  All units in meters.
-    Trajectory exampleTrajectory =
-        TrajectoryGenerator.generateTrajectory(
-            // Start at the origin facing the +X direction
-            new Pose2d(0, 0, new Rotation2d(0)),
-            // Pass through these two interior waypoints, making an 's' curve path
-            List.of(new Translation2d(2.5, 0)),
-            // List.of(),
-            // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(3, 0.5, Rotation2d.fromDegrees(90)),
-            config);
-        
-    SmartDashboard.putNumber("Trajectory Time", exampleTrajectory.getTotalTimeSeconds());
-    
-    // TrajectoryFollower follower = new TrajectoryFollower(mDrive, exampleTrajectory);
     TrajectoryFollower follower = new TrajectoryFollower(mDrive, new gogogadget());
     return follower.andThen(() -> mDrive.brake());
     // return null;
