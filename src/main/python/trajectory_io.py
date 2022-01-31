@@ -9,13 +9,14 @@ def export_trajectory(x, y, theta, dts, N_per_segment, name):
         new_dt = 0.02
         time = 0
         index = 0
-        # while k in range(int(ts[-1] / 0.02)):
-        #     while ts[index + 1] < k * 0.02:
-        #         index += 1
-        #     percent = (k * 0.02 - ts[index]) / (ts[index + 1] - ts[index])
-        #     xs.append(round((x[index + 1] - x[index]) * percent + x[index], 4))
-        #     ys.append(round((y[index + 1] - y[index]) * percent + y[index], 4))
-        #     thetas.append(round((theta[index + 1] - theta[index]) * percent + theta[index], 4))
+        # print(int(ts[-1] / 0.02))
+        for k in range(int(ts[-1] / 0.02)):
+            while ts[index + 1] < k * 0.02:
+                index += 1
+            percent = (k * 0.02 - ts[index]) / (ts[index + 1] - ts[index])
+            xs.append(round((x[index + 1] - x[index]) * percent + x[index], 4))
+            ys.append(round((y[index + 1] - y[index]) * percent + y[index], 4))
+            thetas.append(round((theta[index + 1] - theta[index]) * percent + theta[index], 4))
 
         # f = open(name + ".java", "w")
         # f.write("package frc.paths;\n")
