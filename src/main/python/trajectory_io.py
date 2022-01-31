@@ -1,6 +1,5 @@
 from math import *
-
-from matplotlib.pyplot import xscale
+import trajectory_util
 
 def export_trajectory(x, y, theta, old_dt, T, name):
         # data = []
@@ -32,7 +31,6 @@ def export_trajectory(x, y, theta, old_dt, T, name):
         while time < T:
             time = min(T, time + new_dt)
             index = min(int(floor(time / old_dt)),99)
-            print(index)
             percent = (time % new_dt) / new_dt
             xs.append(round((x[index + 1] - x[index]) * percent + x[index], 4))
             ys.append(round((y[index + 1] - y[index]) * percent + y[index], 4))
@@ -51,3 +49,5 @@ def export_trajectory(x, y, theta, old_dt, T, name):
         f.write("   }\n")
         f.write("}\n")
         f.close()
+
+        return xs, ys, thetas
