@@ -1,5 +1,7 @@
 package frc.paths;
 
+import frc.lib.control.SwerveTrajectory;
+
 public abstract class Path {
-    public abstract double[][] getPath();
+    public abstract SwerveTrajectory getPath();
 }

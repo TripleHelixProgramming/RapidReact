@@ -36,7 +36,7 @@ public class SwerveTrajectory {
         if (time > getTotalTime()) {
             return trajectory.get(trajectory.size() - 1);
         }
-        
+
         int low = 1;
         int high = trajectory.size() - 1;
 
@@ -47,7 +47,6 @@ public class SwerveTrajectory {
             } else {
                 high = mid;
             }
-            System.out.println(mid);
         }
 
         State previousState = trajectory.get(low - 1);

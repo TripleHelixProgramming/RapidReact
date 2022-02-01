@@ -1,5 +1,7 @@
 package frc.paths;
 
+import frc.lib.control.SwerveTrajectory;
+
 public class gogogogadget extends Path {
    private final static double[][] points = {
        {0,5.0,2.0,-3.413902885841168e-32,2.0,-3.413902885841168e-32,-3.413902885841168e-32},
@@ -204,7 +206,7 @@ public class gogogogadget extends Path {
        {3.026469258344303,10.000182896052438,2.0002609460246656,-0.9998199431336976,2.0002609460246656,-0.9998199431336976,-0.9998199431336976},
        {3.035800831494415,10.0,2.0,-1.0,2.0,-1.0,-1.0},
    };
-   public double[][] getPath() {
-       return points;
+   public SwerveTrajectory getPath() {
+       return new SwerveTrajectory(points);
    }
 }
