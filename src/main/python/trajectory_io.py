@@ -22,8 +22,8 @@ def export_trajectory(x, y, theta, dts, N_per_segment, name):
         f.write("\n")
         f.write("public class " + name + " extends Path {\n")
         f.write("   private final static double[][] points = {\n")
-        for j in range(len(xs)):
-            f.write("       {" + str(xs[j]) + "," + str(ys[j]) + "," + str(thetas[j]) + "},\n")
+        for j in range(len(x)):
+            f.write("       {" + str(ts[j]) + "," + str(x[j]) + "," + str(y[j]) + "," + str(theta[j]) + "," + str(y[j]) + "," + str(theta[j]) + "," + str(theta[j]) + "},\n")
         f.write("   };\n")
         f.write("   public double[][] getPath() {\n")
         f.write("       return points;\n")
