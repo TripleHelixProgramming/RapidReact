@@ -19,12 +19,12 @@ import frc.robot.shooter.Shooter;
  * Hood hard stops based on current draw.
  * 
  */
-public class MoveHood extends CommandBase {
+public class MoveHoodJoystick extends CommandBase {
 
     private Shooter shooter;
     private Joystick joystick;
 
-    public MoveHood(Shooter shooter, Joystick joystick) {
+    public MoveHoodJoystick(Shooter shooter, Joystick joystick) {
         this.joystick = joystick;
         this.shooter = shooter;
         addRequirements(shooter);

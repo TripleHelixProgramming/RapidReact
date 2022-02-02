@@ -136,7 +136,7 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final double kRollerSpeed = 0.7; // power percentage
+    public static final double kRollerSpeed = 0.85; // power percentage
   }
 
   public static final class IndexerConstants {
