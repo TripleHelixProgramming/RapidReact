@@ -10,5 +10,7 @@ public class main {
         // System.out.println("hi");
         System.out.println(trajectory.getInitialPose());
         System.out.println(trajectory.sample(3.0).pose);
+
+        System.out.println(5 % Double.POSITIVE_INFINITY);
     }
 }

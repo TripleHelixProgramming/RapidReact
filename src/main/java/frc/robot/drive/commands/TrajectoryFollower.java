@@ -4,14 +4,12 @@
 
 package frc.robot.drive.commands;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.Nat;
-import edu.wpi.first.math.StateSpaceUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.numbers.*;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.lib.control.PIDController;
 import frc.lib.control.SwerveTrajectory;
 import frc.lib.control.SwerveTrajectory.State;
 import frc.paths.Path;
@@ -20,21 +18,16 @@ import frc.robot.drive.Drivetrain;
 
 public class TrajectoryFollower extends CommandBase {
   private Drivetrain drive;
-  private Matrix<N3, N3> K = new Matrix<N3, N3>(Nat.N3(), Nat.N3());
-  private Matrix<N3, N1> u, r, x, ff;
-  private Timer timer = new Timer();
   private SwerveTrajectory trajectory;
+  private PIDController xController, yController, thetaController;
   private Rotation2d offset;
+  private double lastTime = 0;
+  private Timer timer = new Timer();
 
   public TrajectoryFollower(Drivetrain drive, Path path) {
     addRequirements(drive);
     this.drive = drive;
     this.trajectory = path.getPath();
-
-    K.fill(0.0);
-    K.set(0, 0, AutoConstants.kPTranslationController);
-    K.set(1, 1, AutoConstants.kPTranslationController);
-    K.set(2, 2, AutoConstants.kPThetaController);
   }
 
   @Override
@@ -43,22 +36,33 @@ public class TrajectoryFollower extends CommandBase {
     timer.start();
     drive.resetOdometry(trajectory.getInitialPose());
     offset = trajectory.getInitialPose().getRotation().plus(drive.getHeading());
+    
+    xController = new PIDController(AutoConstants.kPTranslationController, 0, 0);
+    yController = new PIDController(AutoConstants.kPTranslationController, 0, 0);
+    thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
+    thetaController.setContinous(true);
+    thetaController.setInputRange(Math.PI * 2);
+
+    lastTime = 0;
   }
 
   @Override
   public void execute() {
     double time = timer.get();
+    double dt = time - lastTime;
     State refState = trajectory.sample(time);
-    r = StateSpaceUtil.poseTo3dVector(refState.pose);
-    x = StateSpaceUtil.poseTo3dVector(drive.getPose());
-    // ff = VecBuilder.fill(1, 2, 3);
-    u = (K.times(r.minus(x)));
-    // u = (K.times(r.minus(x))).plus(ff);
+    Pose2d currentPose = drive.getPose();
+
+    xController.setReference(refState.pose.getX());
+    yController.setReference(refState.pose.getY());
+    thetaController.setReference(refState.pose.getRotation().getRadians());
+
     drive.autoDrive(ChassisSpeeds.fromFieldRelativeSpeeds(
-                                                        u.get(0, 0), 
-                                                        u.get(1, 0), 
-                                                        u.get(2, 0), 
+                                                        xController.calculate(currentPose.getX(), dt),
+                                                        xController.calculate(currentPose.getY(), dt),
+                                                        xController.calculate(currentPose.getRotation().getRadians(), dt),
                                                         drive.getHeading().times(-1.0).plus(offset)));
+    lastTime = time;
   }
 
   @Override
