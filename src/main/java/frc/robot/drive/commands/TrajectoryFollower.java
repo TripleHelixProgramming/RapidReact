@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.control.PIDController;
 import frc.lib.control.SwerveTrajectory;
@@ -57,10 +58,15 @@ public class TrajectoryFollower extends CommandBase {
     yController.setReference(refState.pose.getY());
     thetaController.setReference(refState.pose.getRotation().getRadians());
 
+    double currentAngle = currentPose.getRotation().plus(offset).getRadians();
+    double thetaOutput = thetaController.calculate(currentAngle, dt);
+    SmartDashboard.putNumber("Current Theta", currentAngle);
+    SmartDashboard.putNumber("Reference Theta", refState.pose.getRotation().getRadians());
+
     drive.autoDrive(ChassisSpeeds.fromFieldRelativeSpeeds(
                                                         xController.calculate(currentPose.getX(), dt),
-                                                        xController.calculate(currentPose.getY(), dt),
-                                                        xController.calculate(currentPose.getRotation().getRadians(), dt),
+                                                        yController.calculate(currentPose.getY(), dt),
+                                                        thetaOutput,
                                                         drive.getHeading().times(-1.0).plus(offset)));
     lastTime = time;
   }

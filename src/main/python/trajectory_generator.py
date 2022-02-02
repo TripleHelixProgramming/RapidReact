@@ -63,7 +63,7 @@ class trajectory_generator:
       self.opti.set_initial(self.theta, theta_init)
 
       # Add constraints
-      self.drive.add_kinematics_constraint(self.opti, self.theta, self.vx, self.vy, self.omega, self.ax, self.ay, self.alpha, self.N, 1, 5)
+      self.drive.add_kinematics_constraint(self.opti, self.theta, self.vx, self.vy, self.omega, self.ax, self.ay, self.alpha, self.N, 0.3, 1.5)
       self.add_boundry_constraint()
       self.add_waypoint_constraint(waypoints)
 

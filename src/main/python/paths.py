@@ -8,8 +8,8 @@ def main():
 
     generator.generate([
                         [5,2,0],
-                        [10,3,0],
-                        [10,2,-1]],
+                        [7,2,math.pi]],
+                        # [10,2,-1]],
                         "gogogogadget")
                         # [, 2, -1]])
 
