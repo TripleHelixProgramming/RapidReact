@@ -133,7 +133,7 @@ public class RobotContainer {
       new JoystickButton(driver, RM_SB_BACK).whileHeld(new MoveHoodButton(mShooter, Shooter.DOWN));
 
       // Indexer
-      new JoystickButton(driver, RM_SH).whileHeld(new PullTrigger(mShooter));
+      new JoystickButton(driver, RM_SH).whenPressed(new PullTrigger(mShooter));
       new JoystickButton(driver, RM_SH).whenReleased(new StopTrigger(mShooter));
 
       // Shoot
@@ -171,7 +171,7 @@ public class RobotContainer {
       new JoystickButton(operator, PS4_TRIANGLE).whenPressed(new SpinUpShooter(mShooter));
       new JoystickButton(operator, PS4_X).whenPressed(new StopShooter(mShooter));
 
-      new JoystickButton(operator, PS4_L2).whileHeld(new PullTrigger(mShooter));
+      new JoystickButton(operator, PS4_L2).whenPressed(new PullTrigger(mShooter));
       new JoystickButton(operator, PS4_L2).whenReleased(new StopTrigger(mShooter));
     }
 
