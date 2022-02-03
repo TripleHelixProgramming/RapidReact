@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
@@ -53,6 +54,9 @@ public class Drivetrain extends SubsystemBase {
           );
 
   private SwerveModule[] modules = {m_frontLeft, m_frontRight, m_rearLeft, m_rearRight};
+  private double[] lastDistances;
+  private Timer timer;
+  private double lastTime;
 
   // The gyro sensor
   private final AHRS m_ahrs = new AHRS();
@@ -82,17 +86,26 @@ public class Drivetrain extends SubsystemBase {
     m_targetPose = m_odometry.getPoseMeters();
     m_thetaController.reset();
     m_thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    lastDistances = new double[]{
+      m_frontLeft.getDriveDistanceMeters(),
+      m_frontRight.getDriveDistanceMeters(),
+      m_rearLeft.getDriveDistanceMeters(),
+      m_rearRight.getDriveDistanceMeters(),
+    };
+    timer.reset();
+    timer.start();
+    lastTime = 0;
   }
 
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
-    m_odometry.update(
-        getHeading(),
-        m_frontLeft.getState(),
-        m_frontRight.getState(),
-        m_rearLeft.getState(),
-        m_rearRight.getState());
+    // m_odometry.update(
+    //     getHeading(),
+    //     m_frontLeft.getState(),
+    //     m_frontRight.getState(),
+    //     m_rearLeft.getState(),
+    //     m_rearRight.getState());
     
     SmartDashboard.putNumber("Heading", getHeading().getDegrees());
     
@@ -105,6 +118,26 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Distance 1", modules[1].getDriveDistanceMeters());
     SmartDashboard.putNumber("Distance 2", modules[2].getDriveDistanceMeters());
     SmartDashboard.putNumber("Distance 3", modules[3].getDriveDistanceMeters());
+  }
+
+  public void updateOdometry() {
+    double[] distances = new double[]{
+      m_frontLeft.getDriveDistanceMeters(),
+      m_frontRight.getDriveDistanceMeters(),
+      m_rearLeft.getDriveDistanceMeters(),
+      m_rearRight.getDriveDistanceMeters(),
+    };
+    double time = timer.get();
+    double dt = time - lastTime;
+    lastTime = time;
+    if (dt == 0) return;
+    m_odometry.updateWithTime(time, 
+                            getHeading(), 
+                            new SwerveModuleState((distances[0] - lastDistances[0]) / dt, m_frontLeft.getState().angle),
+                            new SwerveModuleState((distances[1] - lastDistances[1]) / dt, m_frontRight.getState().angle),
+                            new SwerveModuleState((distances[2] - lastDistances[2]) / dt, m_rearLeft.getState().angle),
+                            new SwerveModuleState((distances[3] - lastDistances[3]) / dt, m_rearRight.getState().angle));
+    lastDistances = distances;
   }
 
   /**
