@@ -39,7 +39,7 @@ public abstract class Drive extends CommandBase {
         fieldRelative = getFieldRelative();
 
         chassisSpeeds = fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(xDot, yDot, thetaDot, drivetrain.getHeading().times(-1.0))
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(xDot, yDot, thetaDot, drivetrain.getHeading())
             : new ChassisSpeeds(xDot, yDot, thetaDot);
         
         drivetrain.drive(chassisSpeeds, true);
