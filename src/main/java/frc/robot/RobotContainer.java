@@ -6,32 +6,25 @@ package frc.robot;
 
 import static com.team2363.utilities.ControllerMap.*;
 
-import java.util.List;
-
-import frc.robot.Constants.*;
-import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.math.trajectory.*;
-import frc.robot.drive.commands.*;
-import frc.lib.*;
 import edu.wpi.first.wpilibj.Joystick;
-// import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+// import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.lib.ControllerPatroller;
 import frc.lib.HelixJoysticks;
+// import frc.robot.indexer.Indexer;
+// import frc.robot.intake.Intake;
+// import frc.robot.shooter.Shooter;
+import frc.paths.gogogogadget;
 // import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.JoystickDrive;
 import frc.robot.drive.commands.ResetEncoders;
-import frc.robot.drive.commands.TestDrive;
+import frc.robot.drive.commands.TrajectoryFollower;
 import frc.robot.drive.commands.ZeroHeading;
-// import frc.robot.indexer.Indexer;
-// import frc.robot.intake.Intake;
-// import frc.robot.shooter.Shooter;
-import frc.paths.gogogogadget;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
