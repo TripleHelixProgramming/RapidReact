@@ -91,6 +91,8 @@ public final class Constants {
     // Units are radians per second
     public static final double kMaxRotationalVelocity = 3.0; //max 5.0
 
+    // Max veloc
+
     //The locations for the modules must be relative to the center of the robot. 
     // Positive x values represent moving toward the front of the robot 
     // Positive y values represent moving toward the left of the robot.
@@ -103,12 +105,9 @@ public final class Constants {
             );
 
     public static final boolean kGyroReversed = false;
-
-    public static final double kMaxSpeedMetersPerSecond = 3.0;
   }
 
   public static final class ModuleConstants {
-
     public static final double kDriveP = 0.1;
     public static final double kDriveI = 0.0;
     public static final double kDriveD = 0.0;
@@ -131,6 +130,8 @@ public final class Constants {
     public static final double kDriveConversionFactor = (kWheelDiameterMeters * Math.PI) / kDriveGearRatio;
 
     public static final double kTurnPositionConversionFactor = 12.8;
+
+    public static final double kMaxSpeedMetersPerSecond = 3.0;
   }
 
   public static final class IntakeConstants {

@@ -42,9 +42,7 @@ public abstract class Drive extends CommandBase {
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xDot, yDot, thetaDot, drivetrain.getHeading().times(-1.0))
             : new ChassisSpeeds(xDot, yDot, thetaDot);
         
-        chassisPercent = new ChassisSpeeds(getX(), getY(), getTheta());
-
-        drivetrain.drive(chassisSpeeds, chassisPercent);
+        drivetrain.drive(chassisSpeeds, true);
     }
 
     abstract public double getX();

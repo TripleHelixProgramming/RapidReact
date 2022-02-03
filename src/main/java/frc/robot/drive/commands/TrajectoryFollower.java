@@ -58,16 +58,12 @@ public class TrajectoryFollower extends CommandBase {
     yController.setReference(refState.pose.getY());
     thetaController.setReference(refState.pose.getRotation().getRadians());
 
-    double currentAngle = currentPose.getRotation().plus(offset).getRadians();
-    double thetaOutput = thetaController.calculate(currentAngle, dt);
-    SmartDashboard.putNumber("Current Theta", currentAngle);
-    SmartDashboard.putNumber("Reference Theta", refState.pose.getRotation().getRadians());
-
-    drive.autoDrive(ChassisSpeeds.fromFieldRelativeSpeeds(
+    drive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(
                                                         xController.calculate(currentPose.getX(), dt),
                                                         yController.calculate(currentPose.getY(), dt),
-                                                        thetaOutput,
-                                                        drive.getHeading().times(-1.0).plus(offset)));
+                                                        thetaController.calculate(currentPose.getRotation().getRadians(), dt),
+                                                        drive.getHeading().minus(offset)),
+                                                        true);
     lastTime = time;
   }
 
