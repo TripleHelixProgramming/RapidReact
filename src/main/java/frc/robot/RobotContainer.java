@@ -125,7 +125,7 @@ public class RobotContainer {
       // Because the RadioMaster has so many more buttons/switches, map many of the operator commands to it, too
 
       // Intake Control
-      new JoystickButton(driver, RM_SE_UP).whileHeld(new DeployIntake(mIntake));
+      new JoystickButton(driver, RM_SE_UP).whenPressed(new DeployIntake(mIntake));
       new JoystickButton(driver, RM_SE_UP).whenReleased(new RetractIntake(mIntake));
 
       // Enable Hood adjustment
