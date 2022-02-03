@@ -48,7 +48,7 @@ public final class Constants {
     public static final int kIntakeDeployPort = 0;  // Pneumatic Control Module Port, not CAN ID
     public static final int kIntakeRollerPort = 21;
 
-    public static final int kIndexerPort = 14;
+    public static final int kTriggerPort = 14;
 
     public static final int kShooterHoodPort = 15;
     public static final int kShooterMasterPort = 16;
@@ -139,11 +139,9 @@ public final class Constants {
     public static final double kRollerSpeed = 0.85; // power percentage
   }
 
-  public static final class IndexerConstants {
-    public static final double kShootSpeed = 0.7; // power percentage
-  }
-
   public static final class ShooterConstants {
+    public static final double kTriggerSpeed = 0.7; // power percentage
+
     public static final int kShootHighSpeed = 3500; // RPM
     public static final int kShootLowSpeed = 2000;  // RPM
 

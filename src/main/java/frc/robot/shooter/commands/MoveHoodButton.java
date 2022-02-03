@@ -35,7 +35,7 @@ public class MoveHoodButton extends CommandBase {
     public void initialize() {
         // Start the hood motor.
         shooter.moveHood(direction);
-        SmartDashboard.putNumber("Hood Position", shooter.getHoodAngle());
+        SmartDashboard.putNumber("Hood Angle", shooter.getHoodAngle());
     }
 
     // Called every time the scheduler runs while the command is scheduled.

@@ -28,16 +28,15 @@ import frc.robot.drive.commands.JoystickDrive;
 import frc.robot.drive.commands.ResetEncoders;
 import frc.robot.drive.commands.TestDrive;
 import frc.robot.drive.commands.ZeroHeading;
-import frc.robot.indexer.Indexer;
-import frc.robot.indexer.commands.ShootIndexer;
-import frc.robot.indexer.commands.StopIndexer;
 // import frc.robot.indexer.Indexer;
 import frc.robot.intake.Intake;
 import frc.robot.shooter.Shooter;
 import frc.robot.shooter.commands.MoveHoodButton;
 import frc.robot.shooter.commands.MoveHoodJoystick;
+import frc.robot.shooter.commands.PullTrigger;
 import frc.robot.shooter.commands.SpinUpShooter;
 import frc.robot.shooter.commands.StopShooter;
+import frc.robot.shooter.commands.StopTrigger;
 import frc.robot.intake.commands.DeployIntake;
 import frc.robot.intake.commands.RetractIntake;
 
@@ -54,7 +53,6 @@ public class RobotContainer {
   
   private final Intake mIntake = new Intake();
   private final Shooter mShooter = new Shooter();
-  private final Indexer mIndexer = new Indexer();
 
   /*
   private final Indexer mIndexer = new Indexer();
@@ -135,8 +133,8 @@ public class RobotContainer {
       new JoystickButton(driver, RM_SB_BACK).whileHeld(new MoveHoodButton(mShooter, Shooter.DOWN));
 
       // Indexer
-      new JoystickButton(driver, RM_SH).whileHeld(new ShootIndexer(mIndexer));
-      new JoystickButton(driver, RM_SH).whenReleased(new StopIndexer(mIndexer));
+      new JoystickButton(driver, RM_SH).whileHeld(new PullTrigger(mShooter));
+      new JoystickButton(driver, RM_SH).whenReleased(new StopTrigger(mShooter));
 
       // Shoot
       new JoystickButton(driver, RM_SF).whenPressed(new SpinUpShooter(mShooter));
@@ -173,8 +171,8 @@ public class RobotContainer {
       new JoystickButton(operator, PS4_TRIANGLE).whenPressed(new SpinUpShooter(mShooter));
       new JoystickButton(operator, PS4_X).whenPressed(new StopShooter(mShooter));
 
-      new JoystickButton(operator, PS4_L2).whileHeld(new ShootIndexer(mIndexer));
-      new JoystickButton(operator, PS4_L2).whenReleased(new StopIndexer(mIndexer));
+      new JoystickButton(operator, PS4_L2).whileHeld(new PullTrigger(mShooter));
+      new JoystickButton(operator, PS4_L2).whenReleased(new StopTrigger(mShooter));
     }
 
   }

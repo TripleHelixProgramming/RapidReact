@@ -23,6 +23,9 @@ public class Shooter extends SubsystemBase {
   public static boolean UP = true;
   public static boolean DOWN = false;
 
+  private double targetVelocity = 0.0; // Target velocity of the shooter.
+  
+  private CANSparkMax triggerMotor;
   private CANSparkMax hoodMotor;
   private CANSparkMax masterMotor;
   private CANSparkMax slaveMotor;
@@ -34,16 +37,19 @@ public class Shooter extends SubsystemBase {
   private SparkMaxPIDController shooterController;
 
   public Shooter() {
+    triggerMotor = new CANSparkMax(ElectricalConstants.kTriggerPort, MotorType.kBrushless);
     hoodMotor = new CANSparkMax(ElectricalConstants.kShooterHoodPort, MotorType.kBrushless);
     masterMotor = new CANSparkMax(ElectricalConstants.kShooterMasterPort, MotorType.kBrushless);
     slaveMotor = new CANSparkMax(ElectricalConstants.kShooterSlavePort, MotorType.kBrushless);
 
+    triggerMotor.restoreFactoryDefaults();
+    hoodMotor.restoreFactoryDefaults();
     masterMotor.restoreFactoryDefaults();
     slaveMotor.restoreFactoryDefaults();
-    hoodMotor.restoreFactoryDefaults();
-
+  
     slaveMotor.follow(masterMotor, true);
 
+    triggerMotor.enableVoltageCompensation(12);
     hoodMotor.enableVoltageCompensation(12);
     masterMotor.enableVoltageCompensation(12);
 
@@ -69,7 +75,7 @@ public class Shooter extends SubsystemBase {
     shooterController.setD(ShooterConstants.kShooterD);
 
     hoodMotor.setIdleMode(IdleMode.kBrake);
-    hoodEncoder.setPosition(50.0); // Assume hood starts completely down/retracted.
+    hoodEncoder.setPosition(ShooterConstants.kHoodMinAngle); // Assume hood starts completely down/retracted.
   }
 
   public void moveHood(boolean direction) {
@@ -86,6 +92,7 @@ public class Shooter extends SubsystemBase {
       */
       return;
     }
+
     // Allow the hood to move UP if the current angle is less than the max
     if ((getHoodAngle() < ShooterConstants.kHoodMaxAngle) && (UP == direction)) {      
       hoodMotor.set(speed);
@@ -103,11 +110,16 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setShooterVelocity(double velocity) {
-    shooterController.setReference(velocity, ControlType.kVelocity, 0, velocity * ShooterConstants.kShooterFF, ArbFFUnits.kPercentOut);
+    this.targetVelocity = velocity;
+    shooterController.setReference(targetVelocity, ControlType.kVelocity, 0, targetVelocity * ShooterConstants.kShooterFF, ArbFFUnits.kPercentOut);
   }
 
   public double getShooterVelocity() {
     return masterEncoder.getVelocity();
+  }
+
+  public double getTargetVelocity() {
+    return this.targetVelocity;
   }
 
   public void stopHood() {
@@ -116,10 +128,19 @@ public class Shooter extends SubsystemBase {
 
   public void stopShooter() {
     masterMotor.stopMotor();
+    this.targetVelocity = 0.0;
   }
 
   public double getHoodAngle() {
     return hoodEncoder.getPosition();
+  }
+
+  public void startTrigger() {
+    triggerMotor.set(ShooterConstants.kTriggerSpeed);
+  }
+
+  public void stopTrigger() {
+    triggerMotor.stopMotor();
   }
 
 }
