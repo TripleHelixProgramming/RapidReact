@@ -12,6 +12,7 @@ public class StopTrigger extends CommandBase {
 
   public StopTrigger(Shooter shooter) {
     this.shooter = shooter;
+    addRequirements(shooter);
   }
 
   @Override

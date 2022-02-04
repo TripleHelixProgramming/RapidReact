@@ -4,6 +4,7 @@
 
 package frc.robot.shooter.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.shooter.Shooter;
 
@@ -13,6 +14,7 @@ public class PullTrigger extends CommandBase {
 
   public PullTrigger(Shooter shooter) {
     this.shooter = shooter;
+    addRequirements(shooter);
   }
 
   @Override
@@ -22,14 +24,21 @@ public class PullTrigger extends CommandBase {
 
   @Override
   public void execute() {
+    double currentVelocity = shooter.getShooterVelocity();
+    double targetVelocity = shooter.getTargetVelocity();
+
+    SmartDashboard.putNumber("Shooter Target Velocity", targetVelocity);
+    SmartDashboard.putNumber("Shooter Current Velocity", currentVelocity);
     // Wait for the shooter wheel to reach the target speed before "firing".
     // If shooter wheel slows below some percent of the target, stop the trigger and wait some more.
-    if (shooter.getShooterVelocity() < (shooter.getTargetVelocity() * 0.95)) {
-      shooter.stopTrigger();
-      hasFired = false;
-    } else if (shooter.getShooterVelocity() >= shooter.getTargetVelocity()) {
-      shooter.startTrigger();
-      hasFired = true;
+    if (0.0 < targetVelocity) {
+      if (currentVelocity < (targetVelocity * 0.90)) {
+        shooter.stopTrigger();
+        hasFired = false;
+      } else {
+        shooter.startTrigger();
+        hasFired = true;
+      }
     }
   }
 

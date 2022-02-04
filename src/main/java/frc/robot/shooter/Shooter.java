@@ -56,7 +56,7 @@ public class Shooter extends SubsystemBase {
     masterMotor.setClosedLoopRampRate(0.1);
 
     // hoodMotor.setSmartCurrentLimit(10);
-    hoodMotor.setSmartCurrentLimit(70);
+    hoodMotor.setSmartCurrentLimit((int)Math.round(ShooterConstants.kHoodCurrentLimit));
 
     hoodEncoder = hoodMotor.getEncoder();
     masterEncoder = masterMotor.getEncoder();
@@ -76,6 +76,11 @@ public class Shooter extends SubsystemBase {
 
     hoodMotor.setIdleMode(IdleMode.kBrake);
     hoodEncoder.setPosition(ShooterConstants.kHoodMinAngle); // Assume hood starts completely down/retracted.
+  }
+
+  public void resetHoodAngle() {
+    hoodEncoder.setPosition(ShooterConstants.kHoodMinAngle);
+    setHoodPosition(ShooterConstants.kHoodMinAngle);
   }
 
   public void moveHood(boolean direction) {
@@ -136,7 +141,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void startTrigger() {
-    triggerMotor.set(ShooterConstants.kTriggerSpeed);
+    triggerMotor.set(-ShooterConstants.kTriggerSpeed);
   }
 
   public void stopTrigger() {

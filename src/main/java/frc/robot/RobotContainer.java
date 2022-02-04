@@ -111,6 +111,10 @@ public class RobotContainer {
     // return null;
   }
 
+  public void resetHoodAngle() {
+    mShooter.resetHoodAngle();
+  }
+
   public void configureButtonBindings() {
     CommandScheduler.getInstance().clearButtons();
     
