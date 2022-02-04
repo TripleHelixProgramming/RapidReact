@@ -57,10 +57,14 @@ public class TrajectoryFollower extends CommandBase {
     yController.setReference(refState.pose.getY());
     thetaController.setReference(refState.pose.getRotation().getRadians());
 
+    double vx = xController.calculate(currentPose.getX(), dt) + refState.velocity.x;
+    double vy = yController.calculate(currentPose.getY(), dt) + refState.velocity.y;
+    double omega = -thetaController.calculate(currentPose.getRotation().getRadians(), dt) + refState.velocity.z;
+
     drive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(
-                                                        xController.calculate(currentPose.getX(), dt),
-                                                        yController.calculate(currentPose.getY(), dt),
-                                                        thetaController.calculate(currentPose.getRotation().getRadians(), dt),
+                                                        vx,
+                                                        vy,
+                                                        omega,
                                                         drive.getHeading().minus(offset)),
                                                         false);
     lastTime = time;

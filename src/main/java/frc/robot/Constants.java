@@ -86,7 +86,7 @@ public final class Constants {
     public static final double kWheelBase = 0.6223; // 24.5 in
 
     // Units are meters per second
-    public static final double kMaxTranslationalVelocity = 0.75; //max 4.5
+    public static final double kMaxTranslationalVelocity = 2.25; //max 4.5
 
     // Units are radians per second
     public static final double kMaxRotationalVelocity = 3.0; //max 5.0
@@ -164,12 +164,7 @@ public final class Constants {
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI / 2;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-    public static final double kPTranslationController = 4.0;
-    public static final double kPThetaController = -1.0;
-
-    // Constraint for the motion profilied robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
-        new TrapezoidProfile.Constraints(
-            kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+    public static final double kPTranslationController = 6.0;
+    public static final double kPThetaController = 6.0;
   }
 }
