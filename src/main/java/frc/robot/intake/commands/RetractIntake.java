@@ -17,8 +17,8 @@ public class RetractIntake extends CommandBase {
 
   @Override
   public void initialize() {
-    intake.retract();
     intake.rollerStop();
+    intake.retract();
   }
 
   @Override
