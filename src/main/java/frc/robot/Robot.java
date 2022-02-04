@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-    Preferences.initDouble("kMaxSpeedMetersPerSecond", Constants.DriveConstants.kMaxSpeedMetersPerSecond);
+    Preferences.initDouble("kMaxSpeedMetersPerSecond", Constants.ModuleConstants.kMaxSpeedMetersPerSecond);
 
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our

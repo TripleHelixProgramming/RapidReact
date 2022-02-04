@@ -5,13 +5,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "java",
-      "name": "Launch Test",
-      "request": "launch",
-      "mainClass": "frc.robot.Test",
-      "projectName": "RapidReact-3"
-    },
-    {
       "type": "wpilib",
       "name": "WPILib Desktop Debug",
       "request": "launch",

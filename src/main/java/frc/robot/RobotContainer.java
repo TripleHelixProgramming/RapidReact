@@ -6,28 +6,26 @@ package frc.robot;
 
 import static com.team2363.utilities.ControllerMap.*;
 
-import java.util.List;
-
-import frc.robot.Constants.*;
-import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.math.trajectory.*;
-import frc.robot.drive.commands.*;
-import frc.lib.*;
 import edu.wpi.first.wpilibj.Joystick;
-// import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+// import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.lib.ControllerPatroller;
 import frc.lib.HelixJoysticks;
+// import frc.robot.indexer.Indexer;
+// import frc.robot.intake.Intake;
+// import frc.robot.shooter.Shooter;
+import frc.paths.gogogogadget;
 // import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.JoystickDrive;
 import frc.robot.drive.commands.ResetEncoders;
-import frc.robot.drive.commands.TestDrive;
+import frc.robot.drive.commands.TrajectoryFollower;
 import frc.robot.drive.commands.ZeroHeading;
+
 import frc.robot.indexer.Indexer;
 import frc.robot.indexer.commands.ShootIndexer;
 import frc.robot.indexer.commands.StopIndexer;
@@ -40,6 +38,7 @@ import frc.robot.shooter.commands.SpinUpShooter;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.intake.commands.DeployIntake;
 import frc.robot.intake.commands.RetractIntake;
+
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -87,30 +86,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    TrajectoryConfig config =
-        new TrajectoryConfig(
-                AutoConstants.kMaxSpeedMetersPerSecond,
-                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-            // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(DriveConstants.kDriveKinematics);
-
-    // An example trajectory to follow.  All units in meters.
-    Trajectory exampleTrajectory =
-        TrajectoryGenerator.generateTrajectory(
-            // Start at the origin facing the +X direction
-            new Pose2d(0, 0, new Rotation2d(0)),
-            // Pass through these two interior waypoints, making an 's' curve path
-            List.of(new Translation2d(2.5, 0)),
-            // List.of(),
-            // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(3, 0.5, Rotation2d.fromDegrees(90)),
-            config);
-        
-    SmartDashboard.putNumber("Trajectory Time", exampleTrajectory.getTotalTimeSeconds());
-    
-    TrajectoryFollower follower = new TrajectoryFollower(mDrive, exampleTrajectory);
+    TrajectoryFollower follower = new TrajectoryFollower(mDrive, new gogogogadget());
     return follower.andThen(() -> mDrive.brake());
-    // return null;
   }
 
   public void configureButtonBindings() {

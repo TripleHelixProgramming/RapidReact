@@ -4,27 +4,18 @@
 
 package frc.robot.drive;
 
-// import com.analog.adis16470.frc.ADIS16470_IMU;
 import  com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
-//import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
-// import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-// import com.ctre.phoenix.sensors.PigeonIMU;
-// import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ElectricalConstants;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.Preferences;
+import frc.robot.Constants.ModuleConstants;
 
 @SuppressWarnings("PMD.ExcessiveImports")
 public class Drivetrain extends SubsystemBase {
@@ -63,6 +54,9 @@ public class Drivetrain extends SubsystemBase {
           );
 
   private SwerveModule[] modules = {m_frontLeft, m_frontRight, m_rearLeft, m_rearRight};
+  private double[] lastDistances;
+  private double lastTime;
+  private final Timer timer;
 
   // The gyro sensor
   private final AHRS m_ahrs = new AHRS();
@@ -75,16 +69,12 @@ public class Drivetrain extends SubsystemBase {
   //target pose and controller
   Pose2d m_targetPose;
   PIDController m_thetaController = new PIDController(1.0, 0.0, 0.05);
-  //ProfiledPIDController m_thetaController = new ProfiledPIDController(
-  //  AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
     
   /** Creates a new DriveSubsystem. */
   public Drivetrain() {
 
     // Zero out the gyro.
     m_ahrs.calibrate();
-//    m_gyro.calibrate();
-//    m_gyro.reset();
 
     m_odometry = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getHeading());
 
@@ -96,44 +86,60 @@ public class Drivetrain extends SubsystemBase {
     m_targetPose = m_odometry.getPoseMeters();
     m_thetaController.reset();
     m_thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    lastDistances = new double[]{
+      m_frontLeft.getDriveDistanceMeters(),
+      m_frontRight.getDriveDistanceMeters(),
+      m_rearLeft.getDriveDistanceMeters(),
+      m_rearRight.getDriveDistanceMeters(),
+    };
+    timer = new Timer();
+    timer.reset();
+    timer.start();
+    lastTime = 0;
   }
 
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
-    m_odometry.update(
-        getHeading(),
-        m_frontLeft.getState(),
-        m_frontRight.getState(),
-        m_rearLeft.getState(),
-        m_rearRight.getState());
+    // m_odometry.update(
+        // getHeading(),
+        // m_frontLeft.getState(),
+        // m_frontRight.getState(),
+        // m_rearLeft.getState(),
+        // m_rearRight.getState());
+    updateOdometry();
     
     SmartDashboard.putNumber("Heading", getHeading().getDegrees());
-    
-    // SmartDashboard.putNumber("FrontLeft State Velocity", modules[0].getState().speedMetersPerSecond);
-    // SmartDashboard.putNumber("FrontLeft State Angle", modules[0].getState().angle.getDegrees());
-
-    // SmartDashboard.putNumber("FrontRight Velocity", modules[1].getState().speedMetersPerSecond);
-    // SmartDashboard.putNumber("FrontRight Angle", modules[1].getState().angle.getDegrees());
-
-    // SmartDashboard.putNumber("RearLeft Velocity", modules[2].getState().speedMetersPerSecond);
-    // SmartDashboard.putNumber("RearLeft Angle", modules[2].getState().angle.getDegrees());
-
-    // SmartDashboard.putNumber("RearRight Velocity", modules[3].getState().speedMetersPerSecond);
-    // SmartDashboard.putNumber("RearRight Angle", modules[3].getState().angle.getDegrees());
     
     SmartDashboard.putNumber("currentX", getPose().getX());
     SmartDashboard.putNumber("currentY", getPose().getY());
     SmartDashboard.putNumber("currentAngle", getPose().getRotation().getRadians());
     SmartDashboard.putNumber("targetPoseAngle", m_targetPose.getRotation().getRadians());
 
-    // SmartDashboard.putNumber("FronLeft Turning CANcoder Mag Offset", modules[0].getTurnCANcoder().configGetMagnetOffset());
-    // SmartDashboard.putNumber("FronLeft Turning CANcoder Abs Position", modules[0].getTurnCANcoder().getAbsolutePosition());
-
     SmartDashboard.putNumber("Distance 0", modules[0].getDriveDistanceMeters());
     SmartDashboard.putNumber("Distance 1", modules[1].getDriveDistanceMeters());
     SmartDashboard.putNumber("Distance 2", modules[2].getDriveDistanceMeters());
     SmartDashboard.putNumber("Distance 3", modules[3].getDriveDistanceMeters());
+  }
+
+  public void updateOdometry() {
+    double[] distances = new double[]{
+      m_frontLeft.getDriveDistanceMeters(),
+      m_frontRight.getDriveDistanceMeters(),
+      m_rearLeft.getDriveDistanceMeters(),
+      m_rearRight.getDriveDistanceMeters(),
+    };
+    double time = timer.get();
+    double dt = time - lastTime;
+    lastTime = time;
+    if (dt == 0) return;
+    m_odometry.updateWithTime(time, 
+                            getHeading(), 
+                            new SwerveModuleState((distances[0] - lastDistances[0]) / dt, m_frontLeft.getState().angle),
+                            new SwerveModuleState((distances[1] - lastDistances[1]) / dt, m_frontRight.getState().angle),
+                            new SwerveModuleState((distances[2] - lastDistances[2]) / dt, m_rearLeft.getState().angle),
+                            new SwerveModuleState((distances[3] - lastDistances[3]) / dt, m_rearRight.getState().angle));
+    lastDistances = distances;
   }
 
   /**
@@ -196,62 +202,41 @@ public class Drivetrain extends SubsystemBase {
    * @param speeds ChassisSpeeds object with the desired chassis speeds [m/s and rad/s].
    */
   @SuppressWarnings("ParameterName")
-  public void drive(ChassisSpeeds speeds, ChassisSpeeds percents) {
+  public void drive(ChassisSpeeds speeds, boolean normalize) {
 
     if (speeds.vxMetersPerSecond == 0 && speeds.vyMetersPerSecond == 0 && speeds.omegaRadiansPerSecond == 0) {
       brake();
       return;
     }
 
-    //double xDot, double yDot, double thetaDot, boolean fieldRelative
-    
     SwerveModuleState[] swerveModuleStates =
         DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
            
-    normalizeDrive(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond, percents);
+    if (normalize) normalizeDrive(swerveModuleStates, speeds);
+    
     setModuleStates(swerveModuleStates);
   }
 
-  @SuppressWarnings("ParameterName")
-  public void autoDrive(ChassisSpeeds speeds) {
+  public void normalizeDrive(SwerveModuleState[] desiredStates, ChassisSpeeds speeds) {
+    double translationalK = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) / DriveConstants.kMaxTranslationalVelocity;
+    double rotationalK = Math.abs(speeds.omegaRadiansPerSecond) / DriveConstants.kMaxRotationalVelocity;
+    double k = Math.max(translationalK, rotationalK);
 
-    if (speeds.vxMetersPerSecond == 0 && speeds.vyMetersPerSecond == 0 && speeds.omegaRadiansPerSecond == 0) {
-      brake();
-      return;
+    // Find the how fast the fastest spinning drive motor is spinning                                       
+    double realMaxSpeed = 0.0;
+    for (SwerveModuleState moduleState : desiredStates) {
+      realMaxSpeed = Math.max(realMaxSpeed, Math.abs(moduleState.speedMetersPerSecond));
     }
 
-    SwerveModuleState[] swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
-           
-    setModuleStates(swerveModuleStates);
+    double scale = Math.min(k * ModuleConstants.kMaxSpeedMetersPerSecond / realMaxSpeed, 1);
+    for (SwerveModuleState moduleState : desiredStates) {
+      moduleState.speedMetersPerSecond *= scale;
+    }
   }
 
   public void brake() {
     for (SwerveModule module : modules) {
       module.setDesiredState(new SwerveModuleState(0, module.getState().angle));
-    }
-  }
-
-  public void normalizeDrive(SwerveModuleState[] desiredStates, 
-                                      double maxVelocity,
-                                      ChassisSpeeds percents) {
-
-    double x = percents.vxMetersPerSecond;
-    double y = percents.vyMetersPerSecond;
-    double theta = percents.omegaRadiansPerSecond;
-
-    // Find the how fast the fastest spinning drive motor is spinning                                       
-    double realMaxSpeed = 0.0;
-    for (SwerveModuleState moduleState : desiredStates) {
-      if (Math.abs(moduleState.speedMetersPerSecond) > realMaxSpeed) {
-        realMaxSpeed = Math.abs(moduleState.speedMetersPerSecond);
-      }
-    }
-    
-    double k = Math.max(Math.hypot(x, y), Math.abs(theta));
-    if (realMaxSpeed != 0.0) {
-        for (SwerveModuleState moduleState : desiredStates) {
-          moduleState.speedMetersPerSecond *= (k * maxVelocity / realMaxSpeed);
-        }
     }
   }
 
@@ -263,7 +248,7 @@ public class Drivetrain extends SubsystemBase {
   public void setModuleStates(SwerveModuleState[] desiredStates) {
 
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        desiredStates, Preferences.getDouble("kMaxSpeedMetersPerSecond",DriveConstants.kMaxSpeedMetersPerSecond));
+        desiredStates, Preferences.getDouble("kMaxSpeedMetersPerSecond",ModuleConstants.kMaxSpeedMetersPerSecond));
 
         for (int i = 0; i <= 3; i++) {
           modules[i].setDesiredState(desiredStates[i]);
@@ -292,8 +277,6 @@ public class Drivetrain extends SubsystemBase {
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
     m_ahrs.zeroYaw();
-//    m_gyro.reset();
-//    m_pigeon.setYaw(0.0);
     m_targetPose = new Pose2d(new Translation2d(), new Rotation2d());
   }
 
@@ -309,21 +292,6 @@ public class Drivetrain extends SubsystemBase {
     if (0.0 > raw_yaw ) { // yaw is negative
       calc_yaw += 360.0;
     }
-    return Rotation2d.fromDegrees(calc_yaw);
-//    return m_gyro.getRotation2d();
-    // double[] ypr_deg = {0.0, 0.0, 0.0};
-    // m_pigeon.getYawPitchRoll(ypr_deg);
-    // return new Rotation2d(Math.toRadians(ypr_deg[0]));
-  }
-
-
-  /**
-   * Returns the turn rate of the robot.
-   *
-   * @return The turn rate of the robot, in degrees per second
-   */
-  public double getTurnRate() {
-    return m_ahrs.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
-    // return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return Rotation2d.fromDegrees(-calc_yaw);
   }
 }
