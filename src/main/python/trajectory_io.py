@@ -1,7 +1,7 @@
 from math import *
 import json
 
-def export_trajectory(x, y, theta, dts, N_per_segment, name):
+def export_trajectory(x, y, theta, vx, vy, omega, dts, N_per_segment, name):
     ts = [0]
     for dt in dts:
         for k in range(N_per_segment):
@@ -29,7 +29,7 @@ def export_trajectory(x, y, theta, dts, N_per_segment, name):
     f.write("public class " + name + " extends Path {\n")
     f.write("   private final static double[][] points = {\n")
     for j in range(len(x)):
-        f.write("       {" + str(ts[j]) + "," + str(x[j]) + "," + str(y[j]) + "," + str(theta[j]) + "," + str(y[j]) + "," + str(theta[j]) + "," + str(theta[j]) + "},\n")
+        f.write("       {"+str(round(ts[j],4))+","+str(round(x[j],4))+","+str(round(y[j],4))+","+str(round(theta[j],4))+","+str(round(vx[j],4))+","+str(round(vy[j],4))+","+str(round(omega[j],4))+"},\n")
     f.write("   };\n")
     f.write("   public SwerveTrajectory getPath() {\n")
     f.write("       return new SwerveTrajectory(points);\n")

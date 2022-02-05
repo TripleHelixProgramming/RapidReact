@@ -92,6 +92,7 @@ public class Drivetrain extends SubsystemBase {
       m_rearLeft.getDriveDistanceMeters(),
       m_rearRight.getDriveDistanceMeters(),
     };
+    timer = new Timer();
     timer.reset();
     timer.start();
     lastTime = 0;
@@ -100,6 +101,7 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
+    updateOdometry();
     // m_odometry.update(
     //     getHeading(),
     //     m_frontLeft.getState(),

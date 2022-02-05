@@ -9,7 +9,7 @@ class trajectory_generator:
       self.drive = drive
    
    def generate(self, waypoints, name):
-      self.N_per_segment = 150
+      self.N_per_segment = 100
       self.segments = len(waypoints) - 1
       self.N = self.N_per_segment * self.segments
 
@@ -75,10 +75,10 @@ class trajectory_generator:
          sol_dts.append(sol.value(Ts[k] / self.N_per_segment))
       print(sum(sol_dts) * self.N_per_segment)
 
-      xs, ys, thetas = export_trajectory(sol.value(self.x), sol.value(self.y), sol.value(self.theta), sol_dts, self.N_per_segment, name)
+      xs, ys, thetas = export_trajectory(sol.value(self.x), sol.value(self.y), sol.value(self.theta), sol.value(self.vx), sol.value(self.vy), sol.value(self.omega), sol_dts, self.N_per_segment, name)
 
-      # trajectory_util.draw_trajectory(xs,ys,thetas,waypoints,self.drive,name)
-      trajectory_util.animate_trajectory(xs,ys,thetas,waypoints,self.drive,0.02,"trajectory")
+      trajectory_util.draw_trajectory(xs,ys,thetas,waypoints,self.drive,name)
+      # trajectory_util.animate_trajectory(xs,ys,thetas,waypoints,self.drive,0.02,"trajectory")
 
       plt.show()
 

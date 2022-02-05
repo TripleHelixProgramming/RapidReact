@@ -13,6 +13,7 @@ def main():
         46.7,5.6,
         # Max velocity/force
         73, 1.1,
+        # 50, 1,
         # Wheel radius
         0.051)
     generator = trajectory_generator(drive)
@@ -20,8 +21,8 @@ def main():
     generator.generate(
                         [[5,5,0],
                         # [2,5,-math.pi]],
-                        [3,3,-math.pi*1.2],
-                        [2.75,3.5,-math.pi*1.5]],
+                        # [3,3,-math.pi*1.2],
+                        [7.0,5.0,math.pi]],
                         # trajectory_io.import_path("test"),
                         "gogogogadget")
 
