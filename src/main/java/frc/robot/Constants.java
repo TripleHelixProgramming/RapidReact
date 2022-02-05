@@ -137,6 +137,7 @@ public final class Constants {
 
   public static final class IntakeConstants {
     public static final double kRollerSpeed = 0.85; // power percentage
+    public static final double kRollerEjectSpeed = -0.50; // power percentage
   }
 
   public static final class ShooterConstants {
@@ -150,7 +151,7 @@ public final class Constants {
     public static final double kHoodGearingRatio = 4.075;  // 1 rev of the motor = 48/4240 revs of the hood = ~4.075 deg
 
     public static final double kHoodMinAngle = 50.0;
-    public static final double kHoodMaxAngle = 100.0;
+    public static final double kHoodMaxAngle = 102.5;
 
     // public static final double kHoodMinAngle = 45.0;
     // public static final double kHoodMaxAngle = 70.0;
@@ -164,7 +165,8 @@ public final class Constants {
     public static final double kShooterD = 0.0;
     public static final double kShooterFF = 0.00025;
 
-    public static final double kHoodCurrentLimit = 10.0; // WARNING: NOT REAL VALUE!!! CONSULT WITH ELECTRONICS TEAM TO DETERMINE REAL VALUE!!!
+    public static final double kHoodSafetyCurrentLimit = 30.0; // WARNING: NOT REAL VALUE!!! CONSULT WITH ELECTRONICS TEAM TO DETERMINE REAL VALUE!!!
+    public static final double kHoodStopCurrentLimit = 25.0; // WARNING: NOT REAL VALUE!!! CONSULT WITH ELECTRONICS TEAM TO DETERMINE REAL VALUE!!!
 
   }
 

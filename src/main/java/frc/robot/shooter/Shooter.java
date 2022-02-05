@@ -12,6 +12,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -21,8 +22,11 @@ public class Shooter extends SubsystemBase {
   public static boolean UP = true;
   public static boolean DOWN = false;
 
+  private boolean hoodDirection;
+
   private double targetVelocity = 0.0; // Target velocity of the shooter.
   private boolean triggerPull = false;
+  private boolean triggerEject = false;
   
   private CANSparkMax triggerMotor;
   private CANSparkMax hoodMotor;
@@ -55,7 +59,7 @@ public class Shooter extends SubsystemBase {
     masterMotor.setClosedLoopRampRate(0.1);
 
     // hoodMotor.setSmartCurrentLimit(10);
-    hoodMotor.setSmartCurrentLimit((int)Math.round(ShooterConstants.kHoodCurrentLimit));
+    hoodMotor.setSmartCurrentLimit((int)Math.round(ShooterConstants.kHoodSafetyCurrentLimit));
 
     hoodEncoder = hoodMotor.getEncoder();
     masterEncoder = masterMotor.getEncoder();
@@ -78,6 +82,9 @@ public class Shooter extends SubsystemBase {
   }
 
   public void periodic() {
+    SmartDashboard.putNumber("Hood Motor Current", hoodMotor.getOutputCurrent());
+    SmartDashboard.putNumber("Hood Angle", getHoodAngle());
+
     runTrigger();
   }
 
@@ -86,18 +93,25 @@ public class Shooter extends SubsystemBase {
     setHoodPosition(ShooterConstants.kHoodMinAngle);
   }
 
+  public boolean checkHoodCurrentLimit() {
+    if ( ShooterConstants.kHoodStopCurrentLimit < hoodMotor.getOutputCurrent()) {
+      SmartDashboard.putBoolean("Hood Hard Stop Hit", true);
+      stopHood();
+      // Assume a high current means we are at the bottom? And reset the encoder?
+      
+      if (DOWN == hoodDirection) {
+        resetHoodAngle();
+      }
+      return true;
+    }
+    else return false;
+  }
+
   public void moveHood(boolean direction) {
+    this.hoodDirection = direction;
 
     double speed = direction ? ShooterConstants.kHoodSpeed : -1.0 * ShooterConstants.kHoodSpeed;
-
-    if (ShooterConstants.kHoodCurrentLimit < hoodMotor.getOutputCurrent()) {
-      stopHood();
-      // Should we assume a high current means we are at the bottom? And reset the encoder?
-      /*
-      if (DOWN == direction) {
-        hoodEncoder.setPosition(0.0);
-      }
-      */
+    if (checkHoodCurrentLimit()) {
       return;
     }
 
@@ -112,8 +126,16 @@ public class Shooter extends SubsystemBase {
     }
   }
 
+  public void setHoodSpeed(double speed) {
+    hoodMotor.set(speed);
+  }
+
+  public double getHoodCurrent() {
+    return hoodMotor.getOutputCurrent();
+  }
+
   public void setHoodPosition(double degrees) {
-    degrees = Math.min(Math.max(degrees, ShooterConstants.kHoodMinAngle), ShooterConstants.kHoodMaxAngle);
+    // degrees = Math.min(Math.max(degrees, ShooterConstants.kHoodMinAngle), ShooterConstants.kHoodMaxAngle);
     hoodController.setReference(degrees, ControlType.kPosition, 0, 0.0, ArbFFUnits.kPercentOut);
   }
 
@@ -144,15 +166,24 @@ public class Shooter extends SubsystemBase {
   }
 
   public void startTrigger() {
+    triggerEject = false;
+    triggerPull = true;
+  }
+
+  public void reverseTrigger() {
+    triggerEject = true;
     triggerPull = true;
   }
 
   public void stopTrigger() {
     triggerPull = false;
+    triggerEject = false;
   }
 
   private void runTrigger() {
-    if (triggerPull && getShooterVelocity() > targetVelocity * ShooterConstants.kTriggerDeadband) {
+    if (triggerEject) {
+      triggerMotor.set(ShooterConstants.kTriggerSpeed);
+    } else if (triggerPull && getShooterVelocity() > targetVelocity * ShooterConstants.kTriggerDeadband) {
       triggerMotor.set(-ShooterConstants.kTriggerSpeed);
     } else {
       triggerMotor.stopMotor();

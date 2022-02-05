@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.intake.commands.RetractIntake;
 
 public class Intake extends SubsystemBase {
   private DoubleSolenoid solenoid = new DoubleSolenoid(
@@ -43,6 +42,10 @@ public class Intake extends SubsystemBase {
 
   public void rollerIn() {
     motor.set(ControlMode.PercentOutput, IntakeConstants.kRollerSpeed);
+  }
+
+  public void rollerOut() {
+    motor.set(ControlMode.PercentOutput, IntakeConstants.kRollerEjectSpeed);
   }
 
   public void rollerStop() {

@@ -31,13 +31,16 @@ import frc.robot.drive.commands.ZeroHeading;
 // import frc.robot.indexer.Indexer;
 import frc.robot.intake.Intake;
 import frc.robot.shooter.Shooter;
+import frc.robot.shooter.commands.EjectTrigger;
 import frc.robot.shooter.commands.MoveHoodButton;
 import frc.robot.shooter.commands.MoveHoodJoystick;
 import frc.robot.shooter.commands.PullTrigger;
+import frc.robot.shooter.commands.ResetHood;
 import frc.robot.shooter.commands.SpinUpShooter;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
 import frc.robot.intake.commands.DeployIntake;
+import frc.robot.intake.commands.EjectIntake;
 import frc.robot.intake.commands.RetractIntake;
 
 /*
@@ -73,7 +76,7 @@ public class RobotContainer {
     mDrive.setDefaultCommand(new JoystickDrive(mDrive, joysticks));
     // mDrive.setDefaultCommand(new TestDrive(mDrive));
     // mIntake.setDefaultCommand(new RetractIntake(mIntake));
-    // mShooter.setDefaultCommand(new SpinUpShooter(mShooter));
+    mShooter.setDefaultCommand(new SpinUpShooter(mShooter));
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Reset Encoders", new ResetEncoders(mDrive));
@@ -111,8 +114,8 @@ public class RobotContainer {
     // return null;
   }
 
-  public void resetHoodAngle() {
-    mShooter.resetHoodAngle();
+  public void moveHoodToHardStop() {
+    new ResetHood(mShooter).schedule();
   }
 
   public void configureButtonBindings() {
@@ -132,17 +135,26 @@ public class RobotContainer {
       new JoystickButton(driver, RM_SE_UP).whenPressed(new DeployIntake(mIntake));
       new JoystickButton(driver, RM_SE_UP).whenReleased(new RetractIntake(mIntake));
 
-      // Enable Hood adjustment
-      new JoystickButton(driver, RM_SB_FRONT).whileHeld(new MoveHoodButton(mShooter, Shooter.UP));
-      new JoystickButton(driver, RM_SB_BACK).whileHeld(new MoveHoodButton(mShooter, Shooter.DOWN));
+      new JoystickButton(driver, RM_SE_DOWN).whenPressed(new EjectIntake(mIntake));
+      new JoystickButton(driver, RM_SE_DOWN).whenPressed(new EjectTrigger(mShooter));
 
-      // Indexer
+      new JoystickButton(driver, RM_SE_DOWN).whenReleased(new RetractIntake(mIntake));
+      new JoystickButton(driver, RM_SE_DOWN).whenReleased(new StopTrigger(mShooter));
+
+      // Enable Hood adjustment
+      new JoystickButton(driver, RM_SB_FRONT).whenHeld(new MoveHoodButton(mShooter, Shooter.UP));
+      new JoystickButton(driver, RM_SB_BACK).whenHeld(new MoveHoodButton(mShooter, Shooter.DOWN));
+
+      // Trigger
       new JoystickButton(driver, RM_SH).whenPressed(new PullTrigger(mShooter));
       new JoystickButton(driver, RM_SH).whenReleased(new StopTrigger(mShooter));
 
       // Shoot
       new JoystickButton(driver, RM_SF).whenPressed(new SpinUpShooter(mShooter));
       new JoystickButton(driver, RM_SF).whenReleased(new StopShooter(mShooter));
+
+      // Reset Hood
+      new JoystickButton(driver, RM_SC_BACK).whenPressed(new ResetHood(mShooter));
 
     } else { // Assume XBox Controller
       new JoystickButton(driver, X_BOX_LOGO_LEFT).whenPressed(new ZeroHeading(mDrive));
@@ -155,6 +167,8 @@ public class RobotContainer {
       new JoystickButton(driver, X_BOX_B).whenPressed(new DeployIntake(mIntake));
       new JoystickButton(driver, X_BOX_A).whenReleased(new RetractIntake(mIntake));
 
+      // Reset Hood
+      new JoystickButton(driver, X_BOX_LOGO_RIGHT).whenPressed(new ResetHood(mShooter));
     }
 
     // Operator Buttons - Operator is always PS4
@@ -162,7 +176,13 @@ public class RobotContainer {
     if (operator.isConnected()) {
       // Intake Control
       new JoystickButton(operator, PS4_CIRCLE).whenPressed(new DeployIntake(mIntake));
-      new JoystickButton(operator, PS4_SQUARE).whenPressed(new RetractIntake(mIntake));
+      new JoystickButton(operator, PS4_CIRCLE).whenReleased(new RetractIntake(mIntake));
+
+      new JoystickButton(operator, PS4_SQUARE).whenPressed(new EjectIntake(mIntake));
+      new JoystickButton(operator, PS4_SQUARE).whenPressed(new EjectTrigger(mShooter));
+
+      new JoystickButton(operator, PS4_SQUARE).whenReleased(new RetractIntake(mIntake));
+      new JoystickButton(operator, PS4_SQUARE).whenReleased(new StopTrigger(mShooter));
 
       // Enable Hood adjustment
       // new JoystickButton(operator, PS4_TRIANGLE).whileHeld(new MoveHoodJoystick(mShooter, operator));
