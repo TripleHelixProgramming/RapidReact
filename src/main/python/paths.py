@@ -16,14 +16,15 @@ def main():
         # 50, 1,
         # Wheel radius
         0.051)
+
     generator = trajectory_generator(drive)
 
     generator.generate(
-                        [[5,5,0],
-                        # [2,5,-math.pi]],
-                        # [3,3,-math.pi*1.2],
-                        [7.0,5.0,math.pi]],
-                        # trajectory_io.import_path("test"),
+                        [[0.0,0,0],
+                        [-2,-0.75,0.1],
+                        [-1.7,1.7,-math.pi/2],
+                        [-1,1.8,-math.pi * 0.25]
+                        ],
                         "gogogogadget")
 
 main()
