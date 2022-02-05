@@ -106,7 +106,7 @@ public final class Constants {
 
     public static final boolean kGyroReversed = false;
 
-    public static final double kMaxSpeedMetersPerSecond = 2.0;
+    public static final double kMaxSpeedMetersPerSecond = 4.0;
   }
 
   public static final class ModuleConstants {
@@ -165,8 +165,8 @@ public final class Constants {
     public static final double kShooterD = 0.0;
     public static final double kShooterFF = 0.00025;
 
-    public static final double kHoodSafetyCurrentLimit = 30.0; // WARNING: NOT REAL VALUE!!! CONSULT WITH ELECTRONICS TEAM TO DETERMINE REAL VALUE!!!
-    public static final double kHoodStopCurrentLimit = 25.0; // WARNING: NOT REAL VALUE!!! CONSULT WITH ELECTRONICS TEAM TO DETERMINE REAL VALUE!!!
+    public static final double kHoodSafetyCurrentLimit = 35.0;
+    public static final double kHoodStopCurrentLimit = 30.0;
 
   }
 

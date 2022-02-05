@@ -127,7 +127,7 @@ public class RobotContainer {
     op_joysticks = new HelixJoysticks(operator, PS4_RIGHT_STICK_Y, PS4_RIGHT_STICK_X, PS4_LEFT_STICK_X);
 
     if (driver.getName().contains(OIConstants.kRadioMaster)) {
-      new JoystickButton(driver, RM_SG_UP).whenPressed(new ZeroHeading(mDrive));
+      new JoystickButton(driver, RM_SD_FRONT).whenPressed(new ZeroHeading(mDrive));
 
       // Because the RadioMaster has so many more buttons/switches, map many of the operator commands to it, too
 
