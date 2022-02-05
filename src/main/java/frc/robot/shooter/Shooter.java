@@ -4,19 +4,17 @@
 
 package frc.robot.shooter;
 
-import frc.robot.Constants.ElectricalConstants;
-import frc.robot.Constants.ShooterConstants;
-import frc.robot.shooter.commands.StopShooter;
-
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ElectricalConstants;
+import frc.robot.Constants.ShooterConstants;
 
 public class Shooter extends SubsystemBase {
 
@@ -24,6 +22,7 @@ public class Shooter extends SubsystemBase {
   public static boolean DOWN = false;
 
   private double targetVelocity = 0.0; // Target velocity of the shooter.
+  private boolean triggerPull = false;
   
   private CANSparkMax triggerMotor;
   private CANSparkMax hoodMotor;
@@ -76,6 +75,10 @@ public class Shooter extends SubsystemBase {
 
     hoodMotor.setIdleMode(IdleMode.kBrake);
     hoodEncoder.setPosition(ShooterConstants.kHoodMinAngle); // Assume hood starts completely down/retracted.
+  }
+
+  public void periodic() {
+    runTrigger();
   }
 
   public void resetHoodAngle() {
@@ -141,11 +144,18 @@ public class Shooter extends SubsystemBase {
   }
 
   public void startTrigger() {
-    triggerMotor.set(-ShooterConstants.kTriggerSpeed);
+    triggerPull = true;
   }
 
   public void stopTrigger() {
-    triggerMotor.stopMotor();
+    triggerPull = false;
   }
 
+  private void runTrigger() {
+    if (triggerPull && getShooterVelocity() > targetVelocity * ShooterConstants.kTriggerDeadband) {
+      triggerMotor.set(-ShooterConstants.kTriggerSpeed);
+    } else {
+      triggerMotor.stopMotor();
+    }
+  }
 }
