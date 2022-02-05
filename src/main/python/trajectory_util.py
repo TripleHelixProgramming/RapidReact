@@ -19,10 +19,10 @@ def solve_corners(pose, drive):
     length = drive.length
     sin = np.sin(theta)
     cos = np.cos(theta)
-    p0 = (x+(length/2)*cos-(width/2)*sin, y+(width/2)*cos+(length/2)*sin)
-    p1 = (x-(length/2)*cos-(width/2)*sin, y+(width/2)*cos-(length/2)*sin)
-    p2 = (x+(length/2)*cos+(width/2)*sin, y-(width/2)*cos+(length/2)*sin)
-    p3 = (x-(length/2)*cos+(width/2)*sin, y-(width/2)*cos-(length/2)*sin)
+    p0 = (x+(width/2)*cos-(length/2)*sin, y+(length/2)*cos+(width/2)*sin)
+    p1 = (x-(width/2)*cos-(length/2)*sin, y+(length/2)*cos-(width/2)*sin)
+    p2 = (x+(width/2)*cos+(length/2)*sin, y-(length/2)*cos+(width/2)*sin)
+    p3 = (x-(width/2)*cos+(length/2)*sin, y-(length/2)*cos-(width/2)*sin)
     return [[p0, p1], [p0, p2], [p1, p3], [p2, p3]]
 
 def draw_robot(ax, pose, drive):
@@ -41,10 +41,10 @@ def draw_field():
         facecolor="none",
     ))
     plt.title("Trajectory")
-    plt.xlabel("X Position (ft)")
-    plt.ylabel("y Position (ft)")
-    plt.ylim(0,15)
-    plt.xlim(0,30)
+    plt.xlabel("X Position (meters)")
+    plt.ylabel("y Position (meters)")
+    plt.ylim(0,8.23)
+    plt.xlim(0,16.46)
     plt.gca().set_aspect("equal", adjustable="box")
     return fig, ax
 

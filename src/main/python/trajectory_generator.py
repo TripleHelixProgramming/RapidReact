@@ -9,7 +9,7 @@ class trajectory_generator:
       self.drive = drive
    
    def generate(self, waypoints, name):
-      self.N_per_segment = 100
+      self.N_per_segment = 150
       self.segments = len(waypoints) - 1
       self.N = self.N_per_segment * self.segments
 
@@ -63,7 +63,7 @@ class trajectory_generator:
       self.opti.set_initial(self.theta, theta_init)
 
       # Add constraints
-      self.drive.add_kinematics_constraint(self.opti, self.theta, self.vx, self.vy, self.omega, self.ax, self.ay, self.alpha, self.N, 0.3, 1.5)
+      self.drive.add_kinematics_constraint(self.opti, self.theta, self.vx, self.vy, self.omega, self.ax, self.ay, self.alpha, self.N)
       self.add_boundry_constraint()
       self.add_waypoint_constraint(waypoints)
 
@@ -77,8 +77,8 @@ class trajectory_generator:
 
       xs, ys, thetas = export_trajectory(sol.value(self.x), sol.value(self.y), sol.value(self.theta), sol_dts, self.N_per_segment, name)
 
-      trajectory_util.draw_trajectory(xs,ys,thetas,waypoints,self.drive,name)
-      # trajectory_util.animate_trajectory(xs,ys,thetas,waypoints,self.drive,0.02,"trajectory")
+      # trajectory_util.draw_trajectory(xs,ys,thetas,waypoints,self.drive,name)
+      trajectory_util.animate_trajectory(xs,ys,thetas,waypoints,self.drive,0.02,"trajectory")
 
       plt.show()
 
