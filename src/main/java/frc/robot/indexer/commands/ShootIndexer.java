@@ -5,13 +5,19 @@
 package frc.robot.indexer.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.indexer.Indexer;
 
 public class ShootIndexer extends CommandBase {
-  public ShootIndexer() {
+  Indexer indexer;
+
+  public ShootIndexer(Indexer indexer) {
+    this.indexer = indexer;
   }
 
   @Override
-  public void initialize() {}
+  public void initialize() {
+    indexer.rollerIn();
+  }
 
   @Override
   public boolean isFinished() {

@@ -5,20 +5,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "java",
-      "name": "Launch main",
-      "request": "launch",
-      "mainClass": "frc.paths.main",
-      "projectName": "RapidReact"
-    },
-    {
-      "type": "java",
-      "name": "Launch gogogogadget",
-      "request": "launch",
-      "mainClass": "frc.paths.gogogogadget",
-      "projectName": "RapidReact"
-    },
-    {
       "type": "wpilib",
       "name": "WPILib Desktop Debug",
       "request": "launch",

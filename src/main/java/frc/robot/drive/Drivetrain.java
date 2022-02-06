@@ -55,8 +55,8 @@ public class Drivetrain extends SubsystemBase {
 
   private SwerveModule[] modules = {m_frontLeft, m_frontRight, m_rearLeft, m_rearRight};
   private double[] lastDistances;
-  private Timer timer;
   private double lastTime;
+  private final Timer timer;
 
   // The gyro sensor
   private final AHRS m_ahrs = new AHRS();
@@ -103,11 +103,12 @@ public class Drivetrain extends SubsystemBase {
     // Update the odometry in the periodic block
     updateOdometry();
     // m_odometry.update(
-    //     getHeading(),
-    //     m_frontLeft.getState(),
-    //     m_frontRight.getState(),
-    //     m_rearLeft.getState(),
-    //     m_rearRight.getState());
+        // getHeading(),
+        // m_frontLeft.getState(),
+        // m_frontRight.getState(),
+        // m_rearLeft.getState(),
+        // m_rearRight.getState());
+    updateOdometry();
     
     SmartDashboard.putNumber("Heading", getHeading().getDegrees());
     

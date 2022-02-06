@@ -24,6 +24,7 @@ public final class Constants {
     public static final PneumaticsModuleType kPneumaticHub = PneumaticsModuleType.CTREPCM;
     public static final ModuleType kPowerDistributionModule = ModuleType.kCTRE;
 
+    public static final int kRobotControllerPort = 0;
     public static final int kPowerDistributionPort = 1;
 
     public static final int kRearRightDriveMotorPort = 10;
@@ -43,14 +44,15 @@ public final class Constants {
     
     public static final int kGyroPort = 20;
 
-    public static final int kIntakeDeployPort = 0;
-    public static final int kIntakeRetractPort = 1;
-    public static final int kIntakeRollerPort = 2;
+    public static final int kIntakeRetractPort = 1; // Pneumatic Control Module Port, not CAN ID
+    public static final int kIntakeDeployPort = 0;  // Pneumatic Control Module Port, not CAN ID
+    public static final int kIntakeRollerPort = 21;
 
-    public static final int kIndexerPort = 2;
+    public static final int kIndexerPort = 14;
 
-    public static final int kShooterMasterPort = 1;
-    public static final int kShooterSlavePort = 1;
+    public static final int kShooterHoodPort = 15;
+    public static final int kShooterMasterPort = 16;
+    public static final int kShooterSlavePort = 17;
   }
 
   public static final class DriveConstants {
@@ -89,7 +91,7 @@ public final class Constants {
     public static final double kMaxTranslationalVelocity = 3.5; //max 4.5
 
     // Units are radians per second
-    public static final double kMaxRotationalVelocity = 3.0; //max 5.0
+    public static final double kMaxRotationalVelocity = 1.0; //max 5.0
 
     // Max veloc
 
@@ -135,7 +137,7 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final double kRollerSpeed = 0.7; // power percentage
+    public static final double kRollerSpeed = 0.85; // power percentage
   }
 
   public static final class IndexerConstants {
@@ -143,8 +145,29 @@ public final class Constants {
   }
 
   public static final class ShooterConstants {
-    public static final double kShootHighSpeed = 3500;
-    public static final double kShootLowSpeed = 2000;
+    public static final int kShootHighSpeed = 3500; // RPM
+    public static final int kShootLowSpeed = 2000;  // RPM
+
+    public static final double kHoodSpeed = 0.1; // May want to convert to RPM
+    public static final double kHoodGearingRatio = 4.075;  // 1 rev of the motor = 48/4240 revs of the hood = ~4.075 deg
+
+    public static final double kHoodMinAngle = 50.0;
+    public static final double kHoodMaxAngle = 100.0;
+
+    // public static final double kHoodMinAngle = 45.0;
+    // public static final double kHoodMaxAngle = 70.0;
+
+    public static final double kHoodP = 0.025;
+    public static final double kHoodI = 0.0;
+    public static final double kHoodD = 0.0;
+
+    public static final double kShooterP = 0.0;
+    public static final double kShooterI = 0.0;
+    public static final double kShooterD = 0.0;
+    public static final double kShooterFF = 0.00025;
+
+    public static final double kHoodCurrentLimit = 10.0; // WARNING: NOT REAL VALUE!!! CONSULT WITH ELECTRONICS TEAM TO DETERMINE REAL VALUE!!!
+
   }
 
   public static final class OIConstants {
