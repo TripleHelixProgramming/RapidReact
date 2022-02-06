@@ -4,39 +4,30 @@
 
 package frc.robot.drive.commands;
 
-import java.time.OffsetDateTime;
-
-import edu.wpi.first.math.*;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.numbers.*;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.Trajectory.State;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.lib.control.PIDController;
+import frc.lib.control.SwerveTrajectory;
+import frc.lib.control.SwerveTrajectory.State;
+import frc.paths.Path;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.drive.Drivetrain;
 
 public class TrajectoryFollower extends CommandBase {
   private Drivetrain drive;
-  private Matrix<N3, N3> K = new Matrix<N3, N3>(Nat.N3(), Nat.N3());
-  private Matrix<N3, N1> u, r, x, ff;
-  private Timer timer = new Timer();
-  private Trajectory trajectory;
+  private SwerveTrajectory trajectory;
+  private PIDController xController, yController, thetaController;
   private Rotation2d offset;
+  private double lastTime = 0;
+  private Timer timer = new Timer();
 
-  public TrajectoryFollower(Drivetrain drive, Trajectory trajectory) {
+  public TrajectoryFollower(Drivetrain drive, Path path) {
     addRequirements(drive);
     this.drive = drive;
-    this.trajectory = trajectory;
-
-    K.fill(0.0);
-    K.set(0, 0, AutoConstants.kPTranslationController);
-    K.set(1, 1, AutoConstants.kPTranslationController);
-    K.set(2, 2, AutoConstants.kPThetaController);
+    this.trajectory = path.getPath();
   }
 
   @Override
@@ -45,22 +36,39 @@ public class TrajectoryFollower extends CommandBase {
     timer.start();
     drive.resetOdometry(trajectory.getInitialPose());
     offset = trajectory.getInitialPose().getRotation().plus(drive.getHeading());
+    
+    xController = new PIDController(AutoConstants.kPTranslationController, 0, 0);
+    yController = new PIDController(AutoConstants.kPTranslationController, 0, 0);
+    thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
+    thetaController.setContinous(true);
+    thetaController.setInputRange(Math.PI * 2);
+
+    lastTime = 0;
   }
 
   @Override
   public void execute() {
     double time = timer.get();
+    double dt = time - lastTime;
     State refState = trajectory.sample(time);
-    r = StateSpaceUtil.poseTo3dVector(refState.poseMeters);
-    x = StateSpaceUtil.poseTo3dVector(drive.getPose());
-    // ff = VecBuilder.fill(1, 2, 3);
-    u = (K.times(r.minus(x)));
-    // u = (K.times(r.minus(x))).plus(ff);
-    drive.autoDrive(ChassisSpeeds.fromFieldRelativeSpeeds(
-                                                        u.get(0, 0), 
-                                                        u.get(1, 0), 
-                                                        u.get(2, 0), 
-                                                        drive.getHeading().times(-1.0).plus(offset)));
+    Pose2d currentPose = drive.getPose();
+
+    xController.setReference(refState.pose.getX());
+    yController.setReference(refState.pose.getY());
+    thetaController.setReference(refState.pose.getRotation().getRadians());
+
+    double vx = xController.calculate(currentPose.getX(), dt) + refState.velocity.x;
+    double vy = yController.calculate(currentPose.getY(), dt) + refState.velocity.y;
+    double omega = -thetaController.calculate(currentPose.getRotation().getRadians(), dt) - refState.velocity.z;
+
+
+    drive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(
+                                                        vx,
+                                                        vy,
+                                                        omega,
+                                                        drive.getHeading().minus(offset)),
+                                                        false);
+    lastTime = time;
   }
 
   @Override
@@ -70,6 +78,6 @@ public class TrajectoryFollower extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return timer.hasElapsed(trajectory.getTotalTimeSeconds());
+    return timer.hasElapsed(trajectory.getTotalTime());
   }
 }

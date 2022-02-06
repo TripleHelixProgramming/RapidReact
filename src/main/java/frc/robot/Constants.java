@@ -88,10 +88,12 @@ public final class Constants {
     public static final double kWheelBase = 0.6223; // 24.5 in
 
     // Units are meters per second
-    public static final double kMaxTranslationalVelocity = 0.75; //max 4.5
+    public static final double kMaxTranslationalVelocity = 3.5; //max 4.5
 
     // Units are radians per second
     public static final double kMaxRotationalVelocity = 1.0; //max 5.0
+
+    // Max veloc
 
     //The locations for the modules must be relative to the center of the robot. 
     // Positive x values represent moving toward the front of the robot 
@@ -105,12 +107,9 @@ public final class Constants {
             );
 
     public static final boolean kGyroReversed = false;
-
-    public static final double kMaxSpeedMetersPerSecond = 4.0;
   }
 
   public static final class ModuleConstants {
-
     public static final double kDriveP = 0.1;
     public static final double kDriveI = 0.0;
     public static final double kDriveD = 0.0;
@@ -133,6 +132,8 @@ public final class Constants {
     public static final double kDriveConversionFactor = (kWheelDiameterMeters * Math.PI) / kDriveGearRatio;
 
     public static final double kTurnPositionConversionFactor = 12.8;
+
+    public static final double kMaxSpeedMetersPerSecond = 4.0;
   }
 
   public static final class IntakeConstants {
@@ -187,12 +188,7 @@ public final class Constants {
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI / 2;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-    public static final double kPTranslationController = 4.0;
-    public static final double kPThetaController = 5.0;
-
-    // Constraint for the motion profilied robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
-        new TrapezoidProfile.Constraints(
-            kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+    public static final double kPTranslationController = 6.0;
+    public static final double kPThetaController = 6.0;
   }
 }

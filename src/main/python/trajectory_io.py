@@ -1,53 +1,44 @@
+import json
 from math import *
+import json
 
-from matplotlib.pyplot import xscale
+def export_trajectory(x, y, theta, vx, vy, omega, dts, N_per_segment, name):
+    ts = [0]
+    for dt in dts:
+        for k in range(N_per_segment):
+            ts.append(dt + ts[-1])
+    xs, ys, thetas = [], [], []
+    new_dt = 0.02
+    time = 0
+    index = 0
+    for k in range(int(ts[-1] / 0.02)):
+        while ts[index + 1] < k * 0.02:
+            index += 1
+        percent = (k * 0.02 - ts[index]) / (ts[index + 1] - ts[index])
+        xs.append(round((x[index + 1] - x[index]) * percent + x[index], 4))
+        ys.append(round((y[index + 1] - y[index]) * percent + y[index], 4))
+        thetas.append(round((theta[index + 1] - theta[index]) * percent + theta[index], 4))
+    xs.append(x[-1])
+    ys.append(y[-1])
+    thetas.append(theta[-1])
 
-def export_trajectory(x, y, theta, old_dt, T, name):
-        # data = []
-        # x = sol.value(self.x)
-        # y = sol.value(self.y)
-        # vl = sol.value(self.vl)
-        # vr = sol.value(self.vr)
-        # al = sol.value(self.al)
-        # ar = sol.value(self.ar)
-        # theta = sol.value(self.theta)
-        # for k in range(self.N+1):
-        #     data.append({
-        #         't':round(k*sol.value(self.dt),4),
-        #         'x':round(x[k],4),
-        #         'y':round(y[k],4),
-        #         'theta':round(theta[k],4),
-        #         'Vl': 0.0 if k>=self.N else round(vl[k] * self.kv + al[k] * self.ka,4),
-        #         'Vr': 0.0 if k>=self.N else round(vr[k] * self.kv + ar[k] * self.ka,4),
-        #         'vl':round(vl[k],4),
-        #         'vr':round(vr[k],4),
-        #         'al':0.0 if k>=self.N else round(al[k],4),
-        #         'ar':0.0 if k>=self.N else round(ar[k],4),
-        #     })
-        # with open('Trajectory.json', 'w') as outfile:
-        #     json.dump(data, outfile, indent=4)
-        xs, ys, thetas = [], [], []
-        new_dt = 0.02
-        time = 0
-        while time < T:
-            time = min(T, time + new_dt)
-            index = min(int(floor(time / old_dt)),99)
-            print(index)
-            percent = (time % new_dt) / new_dt
-            xs.append(round((x[index + 1] - x[index]) * percent + x[index], 4))
-            ys.append(round((y[index + 1] - y[index]) * percent + y[index], 4))
-            thetas.append(round((theta[index + 1] - theta[index]) * percent + theta[index], 4))
+    f = open("src/main/java/frc/paths/" + name + ".java", "w")
+    f.write("package frc.paths;\n")
+    f.write("\n")
+    f.write("import frc.lib.control.SwerveTrajectory;\n")
+    f.write("\n")
+    f.write("public class " + name + " extends Path {\n")
+    f.write("   private final static double[][] points = {\n")
+    for j in range(len(x)):
+        f.write("       {"+str(round(ts[j],4))+","+str(round(x[j],4))+","+str(round(y[j],4))+","+str(round(theta[j],4))+","+str(round(vx[j],4))+","+str(round(vy[j],4))+","+str(round(omega[j],4))+"},\n")
+    f.write("   };\n")
+    f.write("   public SwerveTrajectory getPath() {\n")
+    f.write("       return new SwerveTrajectory(points);\n")
+    f.write("   }\n")
+    f.write("}\n")
+    f.close()
 
-        f = open(name + ".java", "w")
-        f.write("package frc.paths;\n")
-        f.write("\n")
-        f.write("public class " + name + " extends Path {\n")
-        f.write("   private final static double[][] points = {\n")
-        for j in range(len(xs)):
-            f.write("       {" + str(xs[j]) + "," + str(ys[j]) + "," + str(thetas[j]) + "},\n")
-        f.write("   };\n")
-        f.write("   public double[][] getPath() {\n")
-        f.write("       return points;\n")
-        f.write("   }\n")
-        f.write("}\n")
-        f.close()
+    return xs, ys, theta
+
+def import_path(file):
+    return json.load(open("src/main/python/paths/" + file + ".json"))
