@@ -35,18 +35,24 @@ public class MoveHoodButton extends CommandBase {
     public void initialize() {
         // Start the hood motor.
         shooter.moveHood(direction);
-        SmartDashboard.putNumber("Hood Position", shooter.getHoodAngle());
+        SmartDashboard.putNumber("Input Velocity", 0);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         // Check if hard stop hit. Stop if so.
+        if (shooter.checkHoodCurrentLimit()) {
+            end(true);
+        }
+
         if ((Shooter.UP == direction) && (ShooterConstants.kHoodMaxAngle < shooter.getHoodAngle())
             || (Shooter.DOWN == direction) && (ShooterConstants.kHoodMinAngle > shooter.getHoodAngle())) {
                 end(true);
             }
-        
+        double velocity = SmartDashboard.getNumber("Input Velocity", 0);
+        shooter.setShooterVelocity(velocity);
+        SmartDashboard.putNumber("Shooter Velocity", shooter.getShooterVelocity());
     }
 
     // Called once the command ends or is interrupted.
@@ -54,7 +60,9 @@ public class MoveHoodButton extends CommandBase {
     public void end(boolean interrupted) {
         // Stop the motor
         double position = shooter.getHoodAngle();
+        SmartDashboard.putNumber("Target Position", position);
         shooter.setHoodPosition(position);
+
     }
 
     // Returns true when the command should end.

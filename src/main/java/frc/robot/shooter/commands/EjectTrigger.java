@@ -2,24 +2,23 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.indexer.commands;
+package frc.robot.shooter.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.indexer.Indexer;
+import frc.robot.shooter.Shooter;
 
-public class StopIndexer extends CommandBase {
-  Indexer indexer;
+public class EjectTrigger extends CommandBase {
+  Shooter shooter;
 
-  public StopIndexer(Indexer indexer) {
-    this.indexer = indexer;
+  public EjectTrigger(Shooter shooter) {
+    this.shooter = shooter;
   }
-
 
   @Override
   public void initialize() {
-    indexer.rollerStop();
+    shooter.reverseTrigger();
   }
-
+  
   @Override
   public boolean isFinished() {
     return true;
