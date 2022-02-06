@@ -9,9 +9,10 @@ class swerve_drive:
         self.length = length
         self.width = width
 
-    def add_kinematics_constraint(self, solver, theta, vx, vy, omega, ax, ay, alpha, f, v):
-        for k in range(100):
-            modules = self.solve_module_positions(k, theta)
+    def add_kinematics_constraint(self, solver, theta, vx, vy, omega, ax, ay, alpha, N, f, v):
+        for k in range(N):
+            xc = cos(theta)
+            yc = sin(theta)
 
             for module in modules:
                 m_vx = vx[k] + module[0] * omega[k]

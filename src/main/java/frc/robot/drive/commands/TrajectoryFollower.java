@@ -59,7 +59,8 @@ public class TrajectoryFollower extends CommandBase {
 
     double vx = xController.calculate(currentPose.getX(), dt) + refState.velocity.x;
     double vy = yController.calculate(currentPose.getY(), dt) + refState.velocity.y;
-    double omega = -thetaController.calculate(currentPose.getRotation().getRadians(), dt) + refState.velocity.z;
+    double omega = -thetaController.calculate(currentPose.getRotation().getRadians(), dt) - refState.velocity.z;
+
 
     drive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(
                                                         vx,

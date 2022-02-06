@@ -101,6 +101,7 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
+    updateOdometry();
     // m_odometry.update(
         // getHeading(),
         // m_frontLeft.getState(),

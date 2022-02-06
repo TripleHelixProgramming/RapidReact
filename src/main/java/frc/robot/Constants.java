@@ -88,7 +88,7 @@ public final class Constants {
     public static final double kWheelBase = 0.6223; // 24.5 in
 
     // Units are meters per second
-    public static final double kMaxTranslationalVelocity = 2.25; //max 4.5
+    public static final double kMaxTranslationalVelocity = 3.5; //max 4.5
 
     // Units are radians per second
     public static final double kMaxRotationalVelocity = 1.0; //max 5.0
@@ -133,7 +133,7 @@ public final class Constants {
 
     public static final double kTurnPositionConversionFactor = 12.8;
 
-    public static final double kMaxSpeedMetersPerSecond = 3.0;
+    public static final double kMaxSpeedMetersPerSecond = 4.0;
   }
 
   public static final class IntakeConstants {
