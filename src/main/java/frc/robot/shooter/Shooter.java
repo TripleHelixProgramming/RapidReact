@@ -4,16 +4,13 @@
 
 package frc.robot.shooter;
 
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.drivers.HelixSparkMax;
 import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.ShooterConstants;
 
@@ -28,73 +25,54 @@ public class Shooter extends SubsystemBase {
   private boolean triggerPull = false;
   private boolean triggerEject = false;
   
-  private CANSparkMax triggerMotor;
-  private CANSparkMax hoodMotor;
-  private CANSparkMax masterMotor;
-  private CANSparkMax slaveMotor;
-
-  private RelativeEncoder hoodEncoder;
-  private RelativeEncoder masterEncoder;
-
-  private SparkMaxPIDController hoodController;
-  private SparkMaxPIDController shooterController;
+  private HelixSparkMax trigger;
+  private HelixSparkMax hood;
+  private HelixSparkMax shooterMaster;
+  private HelixSparkMax shooterSlave;
 
   public Shooter() {
-    triggerMotor = new CANSparkMax(ElectricalConstants.kTriggerPort, MotorType.kBrushless);
-    hoodMotor = new CANSparkMax(ElectricalConstants.kShooterHoodPort, MotorType.kBrushless);
-    masterMotor = new CANSparkMax(ElectricalConstants.kShooterMasterPort, MotorType.kBrushless);
-    slaveMotor = new CANSparkMax(ElectricalConstants.kShooterSlavePort, MotorType.kBrushless);
-
-    triggerMotor.restoreFactoryDefaults();
-    hoodMotor.restoreFactoryDefaults();
-    masterMotor.restoreFactoryDefaults();
-    slaveMotor.restoreFactoryDefaults();
+    trigger = new HelixSparkMax(ElectricalConstants.kTriggerPort);
+    hood = new HelixSparkMax(ElectricalConstants.kShooterHoodPort);
+    shooterMaster = new HelixSparkMax(ElectricalConstants.kShooterMasterPort);
+    shooterSlave = new HelixSparkMax(ElectricalConstants.kShooterSlavePort);
   
-    slaveMotor.follow(masterMotor, true);
+    shooterSlave.follow(shooterMaster, true);
 
-    triggerMotor.enableVoltageCompensation(12);
-    hoodMotor.enableVoltageCompensation(12);
-    masterMotor.enableVoltageCompensation(12);
+    shooterMaster.setClosedLoopRampRate(0.1);
 
-    masterMotor.setClosedLoopRampRate(0.1);
+    // hood.setSmartCurrentLimit(10);
+    hood.setSmartCurrentLimit((int)Math.round(ShooterConstants.kHoodSafetyCurrentLimit));
 
-    // hoodMotor.setSmartCurrentLimit(10);
-    hoodMotor.setSmartCurrentLimit((int)Math.round(ShooterConstants.kHoodSafetyCurrentLimit));
+    hood.setConversionFactor(ShooterConstants.kHoodGearingRatio);
 
-    hoodEncoder = hoodMotor.getEncoder();
-    masterEncoder = masterMotor.getEncoder();
+    shooterMaster.setPIDF(ShooterConstants.kShooterP, 
+                ShooterConstants.kShooterI, 
+                ShooterConstants.kShooterD, 
+                ShooterConstants.kShooterFF);
 
-    hoodEncoder.setPositionConversionFactor(ShooterConstants.kHoodGearingRatio);
+    hood.setPIDF(ShooterConstants.kHoodP, 
+                ShooterConstants.kHoodI, 
+                ShooterConstants.kHoodD, 
+                0);
 
-    hoodController = hoodMotor.getPIDController();
-    shooterController = masterMotor.getPIDController();
-
-    hoodController.setP(ShooterConstants.kHoodP);
-    hoodController.setI(ShooterConstants.kHoodI);
-    hoodController.setD(ShooterConstants.kHoodD);
-
-    shooterController.setP(ShooterConstants.kShooterP);
-    shooterController.setI(ShooterConstants.kShooterI);
-    shooterController.setD(ShooterConstants.kShooterD);
-
-    hoodMotor.setIdleMode(IdleMode.kBrake);
-    hoodEncoder.setPosition(ShooterConstants.kHoodMinAngle); // Assume hood starts completely down/retracted.
+    hood.setIdleMode(IdleMode.kBrake);
+    hood.setPosition(ShooterConstants.kHoodMinAngle); // Assume hood starts completely down/retracted.
   }
 
   public void periodic() {
-    SmartDashboard.putNumber("Hood Motor Current", hoodMotor.getOutputCurrent());
+    SmartDashboard.putNumber("Hood Motor Current", hood.getOutputCurrent());
     SmartDashboard.putNumber("Hood Angle", getHoodAngle());
 
     runTrigger();
   }
 
   public void resetHoodAngle() {
-    hoodEncoder.setPosition(ShooterConstants.kHoodMinAngle);
+    hood.setPosition(ShooterConstants.kHoodMinAngle);
     setHoodPosition(ShooterConstants.kHoodMinAngle);
   }
 
   public boolean checkHoodCurrentLimit() {
-    if ( ShooterConstants.kHoodStopCurrentLimit < hoodMotor.getOutputCurrent()) {
+    if ( ShooterConstants.kHoodStopCurrentLimit < hood.getOutputCurrent()) {
       SmartDashboard.putBoolean("Hood Hard Stop Hit", true);
       stopHood();
       // Assume a high current means we are at the bottom? And reset the encoder?
@@ -117,35 +95,35 @@ public class Shooter extends SubsystemBase {
 
     // Allow the hood to move UP if the current angle is less than the max
     if ((getHoodAngle() < ShooterConstants.kHoodMaxAngle) && (UP == direction)) {      
-      hoodMotor.set(speed);
+      hood.set(speed);
     // Allow the hood to move DOWN if the current angle is greater than the min
     } else if (ShooterConstants.kHoodMinAngle <  getHoodAngle() && (DOWN == direction)) {
-      hoodMotor.set(speed);
+      hood.set(speed);
     } else { // Out of range! STOP!!!
       stopHood();
     }
   }
 
   public void setHoodSpeed(double speed) {
-    hoodMotor.set(speed);
+    hood.set(speed);
   }
 
   public double getHoodCurrent() {
-    return hoodMotor.getOutputCurrent();
+    return hood.getOutputCurrent();
   }
 
   public void setHoodPosition(double degrees) {
     // degrees = Math.min(Math.max(degrees, ShooterConstants.kHoodMinAngle), ShooterConstants.kHoodMaxAngle);
-    hoodController.setReference(degrees, ControlType.kPosition, 0, 0.0, ArbFFUnits.kPercentOut);
+    hood.setReference(degrees, ControlType.kPosition, 0.0, ArbFFUnits.kPercentOut);
   }
 
   public void setShooterVelocity(double velocity) {
     this.targetVelocity = velocity;
-    shooterController.setReference(targetVelocity, ControlType.kVelocity, 0, targetVelocity * ShooterConstants.kShooterFF, ArbFFUnits.kPercentOut);
+    shooterMaster.setReference(targetVelocity, ControlType.kVelocity, targetVelocity * ShooterConstants.kShooterFF, ArbFFUnits.kPercentOut);
   }
 
   public double getShooterVelocity() {
-    return masterEncoder.getVelocity();
+    return shooterMaster.getVelocity();
   }
 
   public double getTargetVelocity() {
@@ -153,16 +131,16 @@ public class Shooter extends SubsystemBase {
   }
 
   public void stopHood() {
-    hoodMotor.stopMotor();
+    hood.stopMotor();
   }
 
   public void stopShooter() {
-    masterMotor.stopMotor();
+    shooterMaster.stopMotor();
     this.targetVelocity = 0.0;
   }
 
   public double getHoodAngle() {
-    return hoodEncoder.getPosition();
+    return hood.getPosition();
   }
 
   public void startTrigger() {
@@ -182,11 +160,11 @@ public class Shooter extends SubsystemBase {
 
   private void runTrigger() {
     if (triggerEject) {
-      triggerMotor.set(ShooterConstants.kTriggerSpeed);
+      trigger.set(ShooterConstants.kTriggerSpeed);
     } else if (triggerPull && getShooterVelocity() > targetVelocity * ShooterConstants.kTriggerDeadband) {
-      triggerMotor.set(-ShooterConstants.kTriggerSpeed);
+      trigger.set(-ShooterConstants.kTriggerSpeed);
     } else {
-      triggerMotor.stopMotor();
+      trigger.stopMotor();
     }
   }
 }

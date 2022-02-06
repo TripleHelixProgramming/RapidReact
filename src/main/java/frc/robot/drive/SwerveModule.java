@@ -7,36 +7,25 @@ package frc.robot.drive;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.ControlType;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.lib.drivers.HelixSparkMax;
 import frc.robot.Constants.ModuleConstants;
 
 public class SwerveModule extends SubsystemBase {
 
-    private final CANSparkMax m_driveMotor;
-    private final CANSparkMax m_turningMotor;
-
-    private final RelativeEncoder m_driveEncoder;
-    private final RelativeEncoder m_turningEncoder;
+    private final HelixSparkMax m_driveMotor;
+    private final HelixSparkMax m_turningMotor;
 
     private final CANCoder m_turningCANCoder;
 
     // absolute offset for the CANCoder so that the wheels can be aligned when the
     // robot is turned on
 //    private final Rotation2d m_CANCoderOffset;
-
-    private final SparkMaxPIDController m_turningController;
-    private final SparkMaxPIDController m_driveController;    
 
     /**
      * Constructs a SwerveModule.
@@ -50,11 +39,8 @@ public class SwerveModule extends SubsystemBase {
                         int turningCANCoderChannel,
                         double turningCANCoderOffsetDegrees) {
 
-        m_driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
-        m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
-
-        m_driveEncoder = m_driveMotor.getEncoder();
-        m_turningEncoder = m_turningMotor.getEncoder();
+        m_driveMotor = new HelixSparkMax(driveMotorChannel);
+        m_turningMotor = new HelixSparkMax(turningMotorChannel);
 
         m_turningCANCoder = new CANCoder(turningCANCoderChannel);
         m_turningCANCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
@@ -62,31 +48,21 @@ public class SwerveModule extends SubsystemBase {
         
 //        m_CANCoderOffset = Rotation2d.fromDegrees(turningCANCoderOffsetDegrees);
 
-        // m_driveMotor.setIdleMode(IdleMode.kBrake);
-        // m_turningMotor.setIdleMode(IdleMode.kCoast);
-
         m_driveMotor.setIdleMode(IdleMode.kCoast);
         m_turningMotor.setIdleMode(IdleMode.kBrake);
 
-        // m_driveEncoder returns RPM by default. Use setVelocityConversionFactor() to
-        // convert that to meters per second.
-        m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveConversionFactor / 60.0);
-        m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveConversionFactor);
+        m_driveMotor.setConversionFactor(ModuleConstants.kDriveConversionFactor);
+        m_turningMotor.setConversionFactor(360.0 / ModuleConstants.kTurnPositionConversionFactor);
 
-        m_turningEncoder.setPositionConversionFactor(360.0 / ModuleConstants.kTurnPositionConversionFactor);
+        m_turningMotor.setPIDF(ModuleConstants.kTurningP,
+                            ModuleConstants.kTurningI,
+                            ModuleConstants.kTurningD,
+                            0);
 
-        m_turningController = m_turningMotor.getPIDController();
-        m_driveController = m_driveMotor.getPIDController();
-
-
-        m_turningController.setP(Constants.ModuleConstants.kTurningP);
-        m_turningController.setI(Constants.ModuleConstants.kTurningI);
-        m_turningController.setD(Constants.ModuleConstants.kTurningD);
-
-        // 401 only sets P of the drive PID
-        m_driveController.setP(Constants.ModuleConstants.kDriveP);
-        m_driveController.setI(Constants.ModuleConstants.kDriveI);
-        m_driveController.setD(Constants.ModuleConstants.kDriveD);
+        m_driveMotor.setPIDF(ModuleConstants.kDriveP,
+                            ModuleConstants.kDriveI,
+                            ModuleConstants.kDriveD,
+                            ModuleConstants.kDriveFF);
     }
 
     /**
@@ -100,17 +76,9 @@ public class SwerveModule extends SubsystemBase {
         // double m1 = m_turningEncoder.getPosition() % 360.0;
         // double m2 = (m1 < 0) ? m1 + 360 : m1;
 
-        double m2 = (m_turningEncoder.getPosition() % 360 + 360) % 360;
+        double m2 = (m_turningMotor.getPosition() % 360 + 360) % 360;
 
-        return new SwerveModuleState(m_driveEncoder.getVelocity(), new Rotation2d(m2 * Math.PI / 180));
-    }
-
-    public CANSparkMax getTurnMotor() {
-        return m_turningMotor;
-    }
-
-    public RelativeEncoder getTurnEncoder() {
-        return m_turningEncoder;
+        return new SwerveModuleState(m_driveMotor.getVelocity(), new Rotation2d(m2 * Math.PI / 180));
     }
 
     public CANCoder getTurnCANcoder() {
@@ -130,8 +98,7 @@ public class SwerveModule extends SubsystemBase {
      *              degrees).
      */
     public void setDesiredState(SwerveModuleState state) {
-
-        Rotation2d curAngle = Rotation2d.fromDegrees(m_turningEncoder.getPosition());
+        Rotation2d curAngle = Rotation2d.fromDegrees(m_turningMotor.getPosition());
 
         double delta = deltaAdjustedAngle(state.angle.getDegrees(), curAngle.getDegrees());
 
@@ -145,39 +112,32 @@ public class SwerveModule extends SubsystemBase {
 
         adjustedAngle = Rotation2d.fromDegrees(delta + curAngle.getDegrees());
 
-        m_turningController.setReference(
-            adjustedAngle.getDegrees(),
-            ControlType.kPosition
-        );        
-
-        SmartDashboard.putNumber("Commanded Velocity", driveOutput);
-
-        m_driveController.setReference(driveOutput, ControlType.kVelocity, 0, Constants.ModuleConstants.kDriveFF * driveOutput);
+        m_turningMotor.setReference(adjustedAngle.getDegrees(), ControlType.kPosition);        
+        m_driveMotor.setReference(driveOutput, ControlType.kVelocity);
     }
 
     //calculate the angle motor setpoint based on the desired angle and the current angle measurement
     // Arguments are in radians.
     public double deltaAdjustedAngle(double targetAngle, double currentAngle) {
-
         return ((targetAngle - currentAngle + 180) % 360 + 360) % 360 - 180;
     }
 
     public double getDriveDistanceMeters() {
-        return m_driveEncoder.getPosition();
+        return m_driveMotor.getPosition();
     }
 
     public void resetDistance() {
-        m_driveEncoder.setPosition(0.0);
+        m_driveMotor.setPosition(0.0);
     }
 
     public void syncTurningEncoders() {
-        m_turningEncoder.setPosition(m_turningCANCoder.getAbsolutePosition());
+        m_turningMotor.setPosition(m_turningCANCoder.getAbsolutePosition());
     }
 
     /** Zeros all the SwerveModule encoders. */
     public void resetEncoders() {
         // Reset the cumulative rotation counts of the SparkMax motors
-        m_turningEncoder.setPosition(0.0);
+        m_turningMotor.setPosition(0.0);
 
         m_turningCANCoder.setPosition(0.0);
         m_turningCANCoder.configMagnetOffset(m_turningCANCoder.configGetMagnetOffset() - m_turningCANCoder.getAbsolutePosition());
