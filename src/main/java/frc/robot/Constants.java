@@ -91,7 +91,7 @@ public final class Constants {
     public static final double kMaxTranslationalVelocity = 3.5; //max 4.5
 
     // Units are radians per second
-    public static final double kMaxRotationalVelocity = 1.0; //max 5.0
+    public static final double kMaxRotationalVelocity = 2.5; //max 5.0
 
     // Max veloc
 

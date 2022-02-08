@@ -35,7 +35,7 @@ public class TrajectoryFollower extends CommandBase {
     timer.reset();
     timer.start();
     drive.resetOdometry(trajectory.getInitialPose());
-    offset = trajectory.getInitialPose().getRotation().plus(drive.getHeading());
+    offset =(drive.getHeading()).minus(trajectory.getInitialPose().getRotation());
     
     xController = new PIDController(AutoConstants.kPTranslationController, 0, 0);
     yController = new PIDController(AutoConstants.kPTranslationController, 0, 0);
@@ -74,6 +74,7 @@ public class TrajectoryFollower extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     timer.stop();
+    drive.brake();
   }
 
   @Override

@@ -10,10 +10,12 @@ import frc.robot.shooter.Shooter;
 
 public class SpinUpShooter extends CommandBase {
   Shooter shooter;
-  public SpinUpShooter(Shooter shooter) {
+  int rpm;
+  public SpinUpShooter(Shooter shooter, int rpm) {
     this.shooter = shooter;
     addRequirements(shooter);
-    SmartDashboard.putNumber("Input Velocity", 0);
+    this.rpm = rpm;
+    SmartDashboard.putNumber("Input Velocity", this.rpm);
   }
 
   // Called when the command is initially scheduled.

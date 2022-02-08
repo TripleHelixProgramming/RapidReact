@@ -14,12 +14,14 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.lib.ControllerPatroller;
 import frc.lib.HelixJoysticks;
+import frc.paths.CollectSecondBall;
 // import frc.robot.indexer.Indexer;
 // import frc.robot.intake.Intake;
 // import frc.robot.shooter.Shooter;
 import frc.paths.gogogogadget;
 // import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.auto.groups.BackupAndShoot;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.JoystickDrive;
 import frc.robot.drive.commands.ResetEncoders;
@@ -73,7 +75,7 @@ public class RobotContainer {
     mDrive.setDefaultCommand(new JoystickDrive(mDrive, joysticks));
     // mDrive.setDefaultCommand(new TestDrive(mDrive));
     // mIntake.setDefaultCommand(new RetractIntake(mIntake));
-    mShooter.setDefaultCommand(new SpinUpShooter(mShooter));
+//    mShooter.setDefaultCommand(new StopShooter(mShooter));
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Reset Encoders", new ResetEncoders(mDrive));
@@ -85,8 +87,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    TrajectoryFollower follower = new TrajectoryFollower(mDrive, new gogogogadget());
-    return follower.andThen(() -> mDrive.brake());
+    return new BackupAndShoot(mDrive, mIntake, mShooter);
+    // return new TrajectoryFollower(mDrive, new CollectSecondBall());
   }
 
   public void moveHoodToHardStop() {
@@ -125,7 +127,7 @@ public class RobotContainer {
       new JoystickButton(driver, RM_SH).whenReleased(new StopTrigger(mShooter));
 
       // Shoot
-      new JoystickButton(driver, RM_SF).whenPressed(new SpinUpShooter(mShooter));
+      new JoystickButton(driver, RM_SF).whenPressed(new SpinUpShooter(mShooter, 1000));
       new JoystickButton(driver, RM_SF).whenReleased(new StopShooter(mShooter));
 
       // Reset Hood
@@ -167,7 +169,7 @@ public class RobotContainer {
       new JoystickButton(operator, PS4_R2).whileHeld(new MoveHoodButton(mShooter, Shooter.DOWN));
       
       // Shooter
-      new JoystickButton(operator, PS4_TRIANGLE).whenPressed(new SpinUpShooter(mShooter));
+      new JoystickButton(operator, PS4_TRIANGLE).whenPressed(new SpinUpShooter(mShooter,1000));
       new JoystickButton(operator, PS4_X).whenPressed(new StopShooter(mShooter));
 
       new JoystickButton(operator, PS4_L2).whenPressed(new PullTrigger(mShooter));
