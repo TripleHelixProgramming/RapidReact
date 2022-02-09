@@ -17,29 +17,26 @@ import frc.robot.intake.commands.DeployIntake;
 import frc.robot.intake.commands.RetractIntake;
 import frc.robot.shooter.Shooter;
 import frc.robot.shooter.commands.PullTrigger;
+import frc.robot.shooter.commands.SetShooterState;
 import frc.robot.shooter.commands.SpinUpShooter;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
 
-public class BackupAndShoot extends SequentialCommandGroup{
+public class DriveForwardAndShoot extends SequentialCommandGroup{
 
-    public BackupAndShoot(Drivetrain drive, Intake intake, Shooter shooter) {
+    public DriveForwardAndShoot(Drivetrain drive, Intake intake, Shooter shooter) {
         addCommands(
-            new DeployIntake(intake),
+            new TrajectoryFollower(drive, new OnePointEightMetersForward()),
             new ParallelDeadlineGroup(
-                new TrajectoryFollower(drive, new OnePointEightMetersForward()),
-                new SpinUpShooter(shooter, 1000) // Never Ends!
+                new WaitCommand(1), // Give shooter time to spin up & hood to move
+                new SetShooterState(shooter, 1980, 61.5)  // Never Ends!)
             ),
-            new RetractIntake(intake),
             new ParallelDeadlineGroup(
-                new WaitCommand(1.0),
+                new WaitCommand(1.25),
                 new PullTrigger(shooter)
             ),
-            new StopShooter(shooter),
             new StopTrigger(shooter),
-            new TrajectoryFollower(drive, new CollectSecondBall()),
-            new WaitCommand(1.0),
-            new TrajectoryFollower(drive, new GoHome())
+            new SetShooterState(shooter, 0, 50) // Stop shooter & reset hood.
         );
     }
     

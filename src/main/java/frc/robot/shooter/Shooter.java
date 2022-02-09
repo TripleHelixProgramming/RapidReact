@@ -144,8 +144,16 @@ public class Shooter extends SubsystemBase {
     shooterController.setReference(targetVelocity, ControlType.kVelocity, 0, targetVelocity * ShooterConstants.kShooterFF, ArbFFUnits.kPercentOut);
   }
 
+  public void setShooterVoltage(double voltage) {
+    masterMotor.setVoltage(voltage);
+  }
+
   public double getShooterVelocity() {
     return masterEncoder.getVelocity();
+  }
+
+  public double getShooterPosition() {
+    return masterEncoder.getPosition();
   }
 
   public double getTargetVelocity() {
