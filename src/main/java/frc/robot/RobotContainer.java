@@ -30,10 +30,12 @@ import frc.robot.drive.commands.ZeroHeading;
 import frc.robot.intake.Intake;
 import frc.robot.shooter.Shooter;
 import frc.robot.shooter.commands.EjectTrigger;
+import frc.robot.shooter.commands.FlywheelController;
 import frc.robot.shooter.commands.MoveHoodButton;
 import frc.robot.shooter.commands.MoveHoodJoystick;
 import frc.robot.shooter.commands.PullTrigger;
 import frc.robot.shooter.commands.ResetHood;
+import frc.robot.shooter.commands.SetShooterState;
 import frc.robot.shooter.commands.SpinUpShooter;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
@@ -76,6 +78,7 @@ public class RobotContainer {
     // mDrive.setDefaultCommand(new TestDrive(mDrive));
     // mIntake.setDefaultCommand(new RetractIntake(mIntake));
 //    mShooter.setDefaultCommand(new StopShooter(mShooter));
+    mShooter.setDefaultCommand(new FlywheelController(mShooter, 0));
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Reset Encoders", new ResetEncoders(mDrive));
@@ -119,18 +122,26 @@ public class RobotContainer {
       new JoystickButton(driver, RM_SE_DOWN).whenReleased(new StopTrigger(mShooter));
 
       // Enable Hood adjustment
-      new JoystickButton(driver, RM_SB_FRONT).whenHeld(new MoveHoodButton(mShooter, Shooter.UP));
-      new JoystickButton(driver, RM_SB_BACK).whenHeld(new MoveHoodButton(mShooter, Shooter.DOWN));
+      // new JoystickButton(driver, RM_SB_FRONT).whenHeld(new MoveHoodButton(mShooter, Shooter.UP));
+      // new JoystickButton(driver, RM_SB_BACK).whenHeld(new MoveHoodButton(mShooter, Shooter.DOWN));
 
       // Trigger
       new JoystickButton(driver, RM_SH).whenPressed(new PullTrigger(mShooter));
       new JoystickButton(driver, RM_SH).whenReleased(new StopTrigger(mShooter));
 
       // Shoot
-      new JoystickButton(driver, RM_SF).whenPressed(new SpinUpShooter(mShooter, 1000));
-      new JoystickButton(driver, RM_SF).whenReleased(new StopShooter(mShooter));
+      // Backward layup
+      new JoystickButton(driver, RM_SG_DOWN).whenPressed(new SetShooterState(mShooter, 1100, 61));
+      // Forward high layup
+      new JoystickButton(driver, RM_SG_UP).whenPressed(new SetShooterState(mShooter, 2000, 94));
+      // middle position - stop
+      new JoystickButton(driver, RM_SG_DOWN).whenReleased(new StopShooter(mShooter));
+      new JoystickButton(driver, RM_SG_UP).whenReleased(new StopShooter(mShooter));
 
-      // Reset Hood
+      new JoystickButton(driver, RM_SB_FRONT).whenPressed(new SetShooterState(mShooter, 1000, 70));
+      new JoystickButton(driver, RM_SB_BACK).whenReleased(new SetShooterState(mShooter, 0, 90));
+
+      // Reset Hood (zero with current limit)
       new JoystickButton(driver, RM_SC_BACK).whenPressed(new ResetHood(mShooter));
 
     } else { // Assume XBox Controller
