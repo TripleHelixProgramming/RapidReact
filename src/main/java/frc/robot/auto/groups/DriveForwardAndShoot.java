@@ -22,36 +22,21 @@ import frc.robot.shooter.commands.SpinUpShooter;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
 
-public class BackupAndShoot extends SequentialCommandGroup{
+public class DriveForwardAndShoot extends SequentialCommandGroup{
 
-    public BackupAndShoot(Drivetrain drive, Intake intake, Shooter shooter) {
+    public DriveForwardAndShoot(Drivetrain drive, Intake intake, Shooter shooter) {
         addCommands(
-            new DeployIntake(intake),
+            new TrajectoryFollower(drive, new OnePointEightMetersForward()),
             new ParallelDeadlineGroup(
-                new TrajectoryFollower(drive, new OnePointEightMetersForward())
+                new WaitCommand(1), // Give shooter time to spin up & hood to move
+                new SetShooterState(shooter, 1980, 61.5)  // Never Ends!)
             ),
-            new RetractIntake(intake),
-            new ParallelDeadlineGroup(new WaitCommand(1), 
-            new SetShooterState(shooter, 1980, 61.5)), // Never Ends!)
             new ParallelDeadlineGroup(
                 new WaitCommand(1.25),
                 new PullTrigger(shooter)
             ),
-            new SetShooterState(shooter, 0, 50),
             new StopTrigger(shooter),
-            new DeployIntake(intake),
-            new TrajectoryFollower(drive, new CollectSecondBall()),
-            new WaitCommand(0.75),
-            new RetractIntake(intake),
-            new TrajectoryFollower(drive, new GoHome()),
-            new ParallelDeadlineGroup(
-                new WaitCommand(0.65),
-                new SetShooterState(shooter, 1725, 65)
-            ),
-            new PullTrigger(shooter),
-            new WaitCommand(1.5),
-            new StopShooter(shooter),
-            new StopTrigger(shooter)
+            new SetShooterState(shooter, 0, 50) // Stop shooter & reset hood.
         );
     }
     
