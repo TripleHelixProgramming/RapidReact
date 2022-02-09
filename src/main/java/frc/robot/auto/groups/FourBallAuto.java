@@ -29,27 +29,21 @@ public class FourBallAuto extends SequentialCommandGroup{
             new DeployIntake(intake),
             new TrajectoryFollower(drive, new OnePointEightMetersForward()),
             new RetractIntake(intake),
-            new ParallelDeadlineGroup(
-                new WaitCommand(1), // Give shooter time to spin up & hood to move
-                new SetShooterState(shooter, 1980, 61.5)  // Never Ends!)
-            ),
-            new ParallelDeadlineGroup(
-                new WaitCommand(1.25),
-                new PullTrigger(shooter)
-            ),
+            new SetShooterState(shooter, 1980, 61.5),  // Fire and forget.
+            new WaitCommand(1), // Give shooter time to spin up & hood to move
+            new PullTrigger(shooter),
+            new WaitCommand(1.25), // Give balls time to be shot
             new StopTrigger(shooter),
             new SetShooterState(shooter, 0, 50), // Stop shooter & reset hood.
             new DeployIntake(intake),
             new TrajectoryFollower(drive, new CollectSecondBall()),
-            new WaitCommand(0.75),
+            new WaitCommand(0.75), // Give ball time to be picked up
             new RetractIntake(intake),
             new TrajectoryFollower(drive, new GoHome()),
-            new ParallelDeadlineGroup(
-                new WaitCommand(0.65), // Give shooter time to spin up & hood to move
-                new SetShooterState(shooter, 1725, 65)
-            ),
+            new SetShooterState(shooter, 1725, 65),
+            new WaitCommand(0.65), // Give shooter time to spin up & hood to move
             new PullTrigger(shooter),
-            new WaitCommand(1.5),
+            new WaitCommand(1.5), // Give balls time to be shot
             new StopShooter(shooter),
             new StopTrigger(shooter)
         );
