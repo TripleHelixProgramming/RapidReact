@@ -21,7 +21,7 @@ import frc.paths.CollectSecondBall;
 import frc.paths.gogogogadget;
 // import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.auto.groups.BackupAndShoot;
+import frc.robot.auto.groups.FourBallAuto;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.JoystickDrive;
 import frc.robot.drive.commands.ResetEncoders;
@@ -90,7 +90,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new BackupAndShoot(mDrive, mIntake, mShooter);
+    return new FourBallAuto(mDrive, mIntake, mShooter);
     // return new TrajectoryFollower(mDrive, new CollectSecondBall());
   }
 
