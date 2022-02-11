@@ -30,8 +30,8 @@ public class Shooter extends SubsystemBase {
   
   private CANSparkMax triggerMotor;
   private CANSparkMax hoodMotor;
-  private CANSparkMax masterMotor;
-  private CANSparkMax slaveMotor;
+  private CANSparkMax shooterLeader;
+  private CANSparkMax shooterFollower;
 
   private RelativeEncoder hoodEncoder;
   private RelativeEncoder masterEncoder;
@@ -42,32 +42,32 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
     triggerMotor = new CANSparkMax(ElectricalConstants.kTriggerPort, MotorType.kBrushless);
     hoodMotor = new CANSparkMax(ElectricalConstants.kShooterHoodPort, MotorType.kBrushless);
-    masterMotor = new CANSparkMax(ElectricalConstants.kShooterMasterPort, MotorType.kBrushless);
-    slaveMotor = new CANSparkMax(ElectricalConstants.kShooterSlavePort, MotorType.kBrushless);
+    shooterLeader = new CANSparkMax(ElectricalConstants.kShooterMasterPort, MotorType.kBrushless);
+    shooterFollower = new CANSparkMax(ElectricalConstants.kShooterSlavePort, MotorType.kBrushless);
 
     triggerMotor.restoreFactoryDefaults();
     hoodMotor.restoreFactoryDefaults();
-    masterMotor.restoreFactoryDefaults();
-    slaveMotor.restoreFactoryDefaults();
+    shooterLeader.restoreFactoryDefaults();
+    shooterFollower.restoreFactoryDefaults();
   
-    slaveMotor.follow(masterMotor, true);
+    shooterFollower.follow(shooterLeader, true);
 
     triggerMotor.enableVoltageCompensation(12);
     hoodMotor.enableVoltageCompensation(12);
-    masterMotor.enableVoltageCompensation(12);
+    shooterLeader.enableVoltageCompensation(12);
 
-    masterMotor.setClosedLoopRampRate(0.1);
+    shooterLeader.setClosedLoopRampRate(0.1);
 
     // hoodMotor.setSmartCurrentLimit(10);
     hoodMotor.setSmartCurrentLimit((int)Math.round(ShooterConstants.kHoodSafetyCurrentLimit));
 
     hoodEncoder = hoodMotor.getEncoder();
-    masterEncoder = masterMotor.getEncoder();
+    masterEncoder = shooterLeader.getEncoder();
 
     hoodEncoder.setPositionConversionFactor(ShooterConstants.kHoodGearingRatio);
 
     hoodController = hoodMotor.getPIDController();
-    shooterController = masterMotor.getPIDController();
+    shooterController = shooterLeader.getPIDController();
 
     hoodController.setP(ShooterConstants.kHoodP);
     hoodController.setI(ShooterConstants.kHoodI);
@@ -145,7 +145,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setShooterVoltage(double voltage) {
-    masterMotor.setVoltage(voltage);
+    shooterLeader.setVoltage(voltage);
   }
 
   public double getShooterVelocity() {
@@ -165,7 +165,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void stopShooter() {
-    masterMotor.stopMotor();
+    shooterLeader.stopMotor();
     this.targetVelocity = 0.0;
   }
 
