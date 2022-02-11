@@ -19,10 +19,10 @@ def main():
 
     generator = trajectory_generator(drive)
 
-    generator.generate(
-                        [[0,0,0],
-                        [-1.0,0,-0.15]],
-                        "OnePointEightMetersForward")
+    # generator.generate(
+    #                     [[0,0,0],
+    #                     [-1.0,0,-0.15]],
+    #                     "OnePointEightMetersForward")
 
     # generator.generate(
     #                 [[-1.0,0,-0.15],
@@ -34,5 +34,15 @@ def main():
     #             [[-0.42,6.121,-1],
     #             [-0.2,0.5,-0.575]],
     #             "GoHome")
+
+    # generator.generate([
+    #             [0,0,-0.7],
+    #             [-1.2,0,-0.4]],
+    #             "ShootTwoBalls")
+    
+    generator.generate([
+                [0,0,0],
+                [-0.4,0,-math.pi * 0.9]],
+                "GoForwardHalfMeter")
 
 main()
