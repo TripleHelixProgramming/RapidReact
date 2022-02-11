@@ -37,6 +37,7 @@ public class FlywheelController extends CommandBase {
         double position = shooter.getShooterPosition();
         double velocity = (position - lastPosition) / (time - lastTime);
         // double voltage = flywheel.solveFeedforward(velocity, 0);
+        SmartDashboard.putNumber("Estimated velocity", velocity * 60);
         double targetVelocity = SmartDashboard.getNumber("Set Velocity", 0);
         double voltage = flywheel.solveFeedforward(targetVelocity, 0);
         SmartDashboard.putNumber("Shooter Velocity", shooter.getShooterVelocity());
