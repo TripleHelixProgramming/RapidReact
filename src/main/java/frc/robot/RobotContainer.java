@@ -6,6 +6,7 @@ package frc.robot;
 
 import static com.team2363.utilities.ControllerMap.*;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,7 +22,9 @@ import frc.paths.CollectSecondBall;
 import frc.paths.gogogogadget;
 // import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.auto.groups.DriveForwardAndShoot;
 import frc.robot.auto.groups.FourBallAuto;
+import frc.robot.auto.groups.ShootAndDriveForward;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.JoystickDrive;
 import frc.robot.drive.commands.ResetEncoders;
@@ -90,8 +93,21 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new FourBallAuto(mDrive, mIntake, mShooter);
+    
+    // return new ShootAndDriveForward(mDrive, mIntake, mShooter);
+//    return new FourBallAuto(mDrive, mIntake, mShooter);
     // return new TrajectoryFollower(mDrive, new CollectSecondBall());
+    DigitalInput fourBallAuto = new DigitalInput(0);
+    DigitalInput oneBallAuto = new DigitalInput(1);
+    DigitalInput twoBallAuto = new DigitalInput(2);
+    if (!fourBallAuto.get()) {
+      return new FourBallAuto(mDrive, mIntake, mShooter);
+    } else if (!oneBallAuto.get()) {
+      return new ShootAndDriveForward(mDrive, mIntake, mShooter);
+    } else if (!twoBallAuto.get()) {
+      return new DriveForwardAndShoot(mDrive, mIntake, mShooter);
+    }
+    return null;
   }
 
   public void moveHoodToHardStop() {
