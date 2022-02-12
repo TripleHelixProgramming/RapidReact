@@ -121,6 +121,11 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Distance 1", modules[1].getDriveDistanceMeters());
     SmartDashboard.putNumber("Distance 2", modules[2].getDriveDistanceMeters());
     SmartDashboard.putNumber("Distance 3", modules[3].getDriveDistanceMeters());
+
+    SmartDashboard.putNumber("Angle 0", modules[0].getTurnCANcoderAngle());
+    SmartDashboard.putNumber("Angle 1", modules[1].getTurnCANcoderAngle());
+    SmartDashboard.putNumber("Angle 2", modules[2].getTurnCANcoderAngle());
+    SmartDashboard.putNumber("Angle 3", modules[3].getTurnCANcoderAngle());
   }
 
   public void updateOdometry() {

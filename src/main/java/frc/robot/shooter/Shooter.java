@@ -5,6 +5,7 @@
 package frc.robot.shooter;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.EncoderType;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -12,6 +13,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElectricalConstants;
@@ -33,6 +36,8 @@ public class Shooter extends SubsystemBase {
   private CANSparkMax shooterLeader;
   private CANSparkMax shooterFollower;
 
+  private Encoder shooterEncoder;
+
   private RelativeEncoder hoodEncoder;
   private RelativeEncoder masterEncoder;
 
@@ -42,8 +47,11 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
     triggerMotor = new CANSparkMax(ElectricalConstants.kTriggerPort, MotorType.kBrushless);
     hoodMotor = new CANSparkMax(ElectricalConstants.kShooterHoodPort, MotorType.kBrushless);
-    shooterLeader = new CANSparkMax(ElectricalConstants.kShooterMasterPort, MotorType.kBrushless);
-    shooterFollower = new CANSparkMax(ElectricalConstants.kShooterSlavePort, MotorType.kBrushless);
+    shooterLeader = new CANSparkMax(ElectricalConstants.kShooterLeaderPort, MotorType.kBrushless);
+    shooterFollower = new CANSparkMax(ElectricalConstants.kShooterFollowerPort, MotorType.kBrushless);
+
+    shooterEncoder = new Encoder(8,9,false,EncodingType.k4X);
+    shooterEncoder.setDistancePerPulse(1.0/360.0);
 
     triggerMotor.restoreFactoryDefaults();
     hoodMotor.restoreFactoryDefaults();
@@ -55,8 +63,9 @@ public class Shooter extends SubsystemBase {
     triggerMotor.enableVoltageCompensation(12);
     hoodMotor.enableVoltageCompensation(12);
     shooterLeader.enableVoltageCompensation(12);
+    shooterFollower.enableVoltageCompensation(12);
 
-    shooterLeader.setClosedLoopRampRate(0.1);
+    // shooterLeader.setClosedLoopRampRate(0.1);
 
     // hoodMotor.setSmartCurrentLimit(10);
     hoodMotor.setSmartCurrentLimit((int)Math.round(ShooterConstants.kHoodSafetyCurrentLimit));
@@ -84,6 +93,10 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Hood Motor Current", hoodMotor.getOutputCurrent());
     SmartDashboard.putNumber("Hood Angle", getHoodAngle());
+    SmartDashboard.putNumber("Shooter Velocity", getShooterVelocity());
+    SmartDashboard.putNumber("Shooter Encoder", shooterEncoder.getDistance());
+    SmartDashboard.putNumber("Leader Current", shooterLeader.getOutputCurrent());
+    SmartDashboard.putNumber("Follower Current", shooterFollower.getOutputCurrent());
 
     runTrigger();
   }
@@ -132,6 +145,10 @@ public class Shooter extends SubsystemBase {
 
   public double getHoodCurrent() {
     return hoodMotor.getOutputCurrent();
+  }
+
+  public double getEncoderPosition() {
+    return shooterEncoder.getDistance() / 2.0;
   }
 
   public void setHoodPosition(double degrees) {
