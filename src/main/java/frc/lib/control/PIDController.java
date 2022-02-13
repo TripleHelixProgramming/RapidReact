@@ -38,6 +38,14 @@ public class PIDController {
         return kP * error + kI * integral + kD * derivative;
     }
 
+    public void setP(double P) {
+        kP = P;
+    }
+
+    public void setD(double D) {
+        kD = D;
+    }
+
     public void setReference(double reference) {
         this.reference = reference;
     }

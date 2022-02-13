@@ -142,7 +142,7 @@ public class RobotContainer {
       // Backward layup
       new JoystickButton(driver, RM_SG_DOWN).whenPressed(new SetShooterState(mShooter, 1100, 61));
       // Forward high layup
-      new JoystickButton(driver, RM_SG_UP).whenPressed(new SetShooterState(mShooter, 2000, 94));
+      new JoystickButton(driver, RM_SG_UP).whenPressed(new SetShooterState(mShooter, 1625, 65));
       // middle position - stop
       new JoystickButton(driver, RM_SG_DOWN).whenReleased(new StopShooter(mShooter));
       new JoystickButton(driver, RM_SG_UP).whenReleased(new StopShooter(mShooter));
