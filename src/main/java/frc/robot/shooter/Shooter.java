@@ -26,6 +26,8 @@ public class Shooter extends SubsystemBase {
   public static boolean DOWN = false;
 
   private boolean hoodDirection;
+  int highCurrentCount = 0;
+  int lowCurrentCount = 0;
 
   private double targetVelocity = 0.0; // Target velocity of the shooter.
   private boolean triggerPull = false;
@@ -98,6 +100,8 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Leader Current", shooterLeader.getOutputCurrent());
     SmartDashboard.putNumber("Follower Current", shooterFollower.getOutputCurrent());
 
+    checkHoodCurrentLimit();
+
     runTrigger();
   }
 
@@ -108,16 +112,26 @@ public class Shooter extends SubsystemBase {
 
   public boolean checkHoodCurrentLimit() {
     if ( ShooterConstants.kHoodStopCurrentLimit < hoodMotor.getOutputCurrent()) {
-      SmartDashboard.putBoolean("Hood Hard Stop Hit", true);
-      stopHood();
-      // Assume a high current means we are at the bottom? And reset the encoder?
-      
-      if (DOWN == hoodDirection) {
+      highCurrentCount++;
+      if (10 <= highCurrentCount) {
+        SmartDashboard.putBoolean("Hood Hard Stop Hit", true);
+        // Reset accumulator
+        highCurrentCount = 0;
+        stopHood();
+        // Assume a high current means we are at the bottom. And reset the encoder.
         resetHoodAngle();
+        return true;
+      } else {  // high current, but accumulator not full
+        return false;
       }
-      return true;
+    } else { // Within current limit
+      lowCurrentCount++;
+      if (10 <= lowCurrentCount) {
+        highCurrentCount = 0;
+        lowCurrentCount = 0;
+      }
+      return false;
     }
-    else return false;
   }
 
   public void moveHood(boolean direction) {

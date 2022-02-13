@@ -23,7 +23,6 @@ public class ResetHood extends CommandBase {
   public void end(boolean interrupted) {
     shooter.resetHoodAngle();
     shooter.stopHood();
-    shooter.setHoodPosition(65);
   }
 
   @Override
