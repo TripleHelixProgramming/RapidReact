@@ -8,6 +8,7 @@ import static com.team2363.utilities.ControllerMap.*;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -199,19 +200,27 @@ public class RobotContainer {
       // JoystickButton xBoxR = new JoystickButton(operator,
       // X_BOX_RIGHT_STICK_BUTTON);
       JoystickButton xBoxA = new JoystickButton(operator, X_BOX_A);
-      xBoxA.whenPressed(new SetShooterState(mShooter, 1625, 65)); // baseline, upper goal, front shot
+      xBoxA.whenPressed(new SetShooterState(mShooter, 
+        Preferences.getInt("BUF.Velocity", 1625),
+        Preferences.getDouble("BUF.Angle", 65.0))); // baseline, upper goal, front shot
       xBoxA.whenReleased(new StopShooter(mShooter));
 
       JoystickButton xBoxB = new JoystickButton(operator, X_BOX_B);
-      xBoxB.whenPressed(new SetShooterState(mShooter, 1700, 100)); // baseline, upper goal, rear shot
+      xBoxB.whenPressed(new SetShooterState(mShooter, 
+        Preferences.getInt("BUR.Velocity", 1700),
+        Preferences.getDouble("BUR.Angle", 100.0))); // baseline, upper goal, rear shot
       xBoxB.whenReleased(new StopShooter(mShooter));
 
       JoystickButton xBoxX = new JoystickButton(operator, X_BOX_X);
-      xBoxX.whenPressed(new SetShooterState(mShooter, 800, 105)); // tarmac, lower goal, rear shot
+      xBoxX.whenPressed(new SetShooterState(mShooter, 
+        Preferences.getInt("TLR.Velocity", 800),
+        Preferences.getDouble("TLR.Angle", 105.0))); // tarmac, lower goal, rear shot    
       xBoxX.whenReleased(new StopShooter(mShooter));
 
       JoystickButton xBoxY = new JoystickButton(operator, X_BOX_Y);
-      xBoxY.whenPressed(new SetShooterState(mShooter, 1550, 92)); // tarmac, upper goal, rear shot
+      xBoxY.whenPressed(new SetShooterState(mShooter, 
+        Preferences.getInt("TUR.Velocity", 1550),
+        Preferences.getDouble("TUR.Angle", 92.0))); // tarmac, lower goal, rear shot    
       xBoxY.whenReleased(new StopShooter(mShooter));
       
       // new JoystickButton(operator, X_BOX_DPAD_UP);
