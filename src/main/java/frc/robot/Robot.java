@@ -39,6 +39,20 @@ public class Robot extends TimedRobot {
 
     Preferences.initDouble("kMaxSpeedMetersPerSecond", Constants.ModuleConstants.kMaxSpeedMetersPerSecond);
 
+    // Set preferences related to preset shots. Set hood angle and shooter wheel velocity for each shot.
+    // See the Robot Worksheet "Secondary Drive Interface" sheet for more details.
+    Preferences.initInt("TLR.Velocity", 800);
+    Preferences.initDouble("TLR.Angle", 105.0);
+
+    Preferences.initInt("TUR.Velocity", 1550);
+    Preferences.initDouble("TUR.Angle", 92.0);
+
+    Preferences.initInt("BUF.Velocity", 1625);
+    Preferences.initDouble("BUF.Angle", 65.0);
+    
+    Preferences.initInt("BUR.Velocity", 1700);
+    Preferences.initDouble("BUR.Angle", 100.0);
+
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
     // autonomous chooser on the dashboard.
