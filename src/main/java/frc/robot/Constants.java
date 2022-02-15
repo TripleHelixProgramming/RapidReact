@@ -91,7 +91,7 @@ public final class Constants {
     public static final double kMaxTranslationalVelocity = 3.5; //max 4.5
 
     // Units are radians per second
-    public static final double kMaxRotationalVelocity = 2.5; //max 5.0
+    public static final double kMaxRotationalVelocity = 3.75; //max 5.0
 
     // Max veloc
 
@@ -175,7 +175,9 @@ public final class Constants {
     public static final String kXbox = "XBOX";
     public static final String kPS4 = "P";
     public static final String kRadioMaster = "TX16S";
-    public static final String[] kDriverControllers = new String[]{kRadioMaster};
+    public static final String kZorro = "Zorro";
+
+    public static final String[] kDriverControllers = new String[]{kRadioMaster, kZorro};
     public static final String[] kOperatorControllers = new String[]{kXbox};
 
     public static final int kDriverPort = 0;

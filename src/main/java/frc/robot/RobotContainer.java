@@ -22,6 +22,7 @@ import frc.robot.auto.groups.DriveForwardAndShoot;
 import frc.robot.auto.groups.FourBallAuto;
 import frc.robot.auto.groups.ShootAndDriveForward;
 import frc.robot.drive.Drivetrain;
+import frc.robot.drive.commands.AbsoluteOrientation;
 import frc.robot.drive.commands.JoystickDrive;
 import frc.robot.drive.commands.ResetEncoders;
 import frc.robot.drive.commands.ZeroHeading;
@@ -124,7 +125,12 @@ public class RobotContainer {
     joysticks = new HelixJoysticks(driver, X_BOX_RIGHT_STICK_Y, X_BOX_RIGHT_STICK_X, X_BOX_LEFT_STICK_X);
     op_joysticks = new HelixJoysticks(operator, X_BOX_RIGHT_STICK_Y, X_BOX_RIGHT_STICK_X, X_BOX_LEFT_STICK_X);
 
-    if (driver.getName().contains(OIConstants.kRadioMaster)) {
+    if (driver.getName().contains(OIConstants.kZorro)) {
+
+      new JoystickButton(driver, RMZ_A_IN).whenPressed(new ZeroHeading(mDrive));
+      new JoystickButton(driver, RMZ_E_UP).whenHeld(new AbsoluteOrientation(mDrive, joysticks));
+      
+    } else if (driver.getName().contains(OIConstants.kRadioMaster)) {
       new JoystickButton(driver, RM_SD_FRONT).whenPressed(new ZeroHeading(mDrive));
 
       // Because the RadioMaster has so many more buttons/switches, map many of the
