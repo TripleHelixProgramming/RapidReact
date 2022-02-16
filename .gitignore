@@ -163,3 +163,7 @@ src/main/python/__pycache__
 *-window.json
 
 build/
+
+simgui-ds.json
+simgui.json
+networktables.ini
