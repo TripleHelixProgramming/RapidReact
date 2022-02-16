@@ -27,6 +27,6 @@ public class ResetHood extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return shooter.getHoodCurrent() > ShooterConstants.kHoodStopCurrentLimit;
+    return shooter.checkHoodCurrentLimit();
   }
 }

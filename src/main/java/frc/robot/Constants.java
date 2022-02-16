@@ -148,11 +148,11 @@ public final class Constants {
     public static final int kShootHighSpeed = 3500; // RPM
     public static final int kShootLowSpeed = 2000;  // RPM
 
-    public static final double kHoodSpeed = 0.1; // May want to convert to RPM
+    public static final double kHoodSpeed = 0.25; // May want to convert to RPM
     public static final double kHoodGearingRatio = 4.075 / 5.0;  // 1 rev of the motor = 48/4240 revs of the hood = ~4.075 deg
 
-    public static final double kHoodMinAngle = 50.0;
-    public static final double kHoodMaxAngle = 102.5;
+    public static final double kHoodMinAngle = 60.0;
+    public static final double kHoodMaxAngle = 110.0;
 
     // public static final double kHoodMinAngle = 45.0;
     // public static final double kHoodMaxAngle = 70.0;

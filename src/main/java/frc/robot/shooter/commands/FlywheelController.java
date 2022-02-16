@@ -10,17 +10,18 @@ import frc.robot.shooter.Shooter;
 
 public class FlywheelController extends CommandBase {
 
-    private Shooter shooter;
-    private double lastPosition, lastTime;
-    private int rpm;
+    Shooter shooter;
+    double lastPosition, lastTime, hoodAngle;
+    int rpm;
     private Timer timer = new Timer();
-    private Notifier controller = new Notifier(this::controller);
+    Notifier controller = new Notifier(this::controller);
     private DCMotor flywheel = new DCMotor(0.002081897, 0, 0.317466);
     private PIDController flywheelController = new PIDController(0.025, 0, 0.0002);
 
-    public FlywheelController(Shooter shooter, int rpm) {
+    public FlywheelController(Shooter shooter, int rpm, double hoodAngle) {
         this.shooter = shooter;
         this.rpm = rpm;
+        this.hoodAngle = hoodAngle;
         lastPosition = shooter.getEncoderPosition();
         lastTime = 0;
         timer.reset();
@@ -30,33 +31,22 @@ public class FlywheelController extends CommandBase {
 
     @Override
     public void initialize() {
-        controller.startPeriodic(0.02);
-        SmartDashboard.putNumber("Set Velocity", 0);
-        SmartDashboard.putNumber("Shooter P", 0.025);
-        SmartDashboard.putNumber("Shooter D", 0.000);
-        
+        shooter.setHoodPosition(hoodAngle);
+        controller.startPeriodic(0.02);        
     }
 
-    private void controller() {
-        // shooter.setHoodPosition(65);
+    void controller() {
         double time = timer.get();
         double position = shooter.getEncoderPosition();
         double dt = time - lastTime;
         double velocity = (position - lastPosition) / (dt) * 60;
 
-        double targetVelocity = SmartDashboard.getNumber("Set Velocity", 0);
-        double P = SmartDashboard.getNumber("Shooter P", 0);
-        double D = SmartDashboard.getNumber("Shooter D", 0);
-        flywheelController.setP(P);
-        flywheelController.setD(D);
-        flywheelController.setReference(targetVelocity);
-        SmartDashboard.putNumber("Shooter Velocity", shooter.getShooterVelocity());
+        flywheelController.setReference(rpm);
         SmartDashboard.putNumber("Estimated velocity", velocity);
-        // P = 0.03
-        // D = 0.00025
 
-        double voltage = flywheel.solveFeedforward(targetVelocity, 0) + flywheelController.calculate(velocity, dt);
-        // double voltage = flywheel.solveFeedforward(targetVelocity, 0);
+        double voltage = flywheel.solveFeedforward(rpm, 0) + flywheelController.calculate(velocity, dt);
+        // double voltage = flywheel.solveFeedforward(rpm, 0);
+
 
         shooter.setShooterVoltage(voltage);
 

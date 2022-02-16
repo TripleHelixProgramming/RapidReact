@@ -34,6 +34,7 @@ import frc.robot.shooter.Shooter;
 import frc.robot.shooter.commands.EjectTrigger;
 import frc.robot.shooter.commands.FlywheelController;
 import frc.robot.shooter.commands.MoveHoodButton;
+import frc.robot.shooter.commands.PresetFlywheelController;
 import frc.robot.shooter.commands.PullTrigger;
 import frc.robot.shooter.commands.ResetHood;
 import frc.robot.shooter.commands.SetShooterState;
@@ -128,7 +129,13 @@ public class RobotContainer {
     if (driver.getName().contains(OIConstants.kZorro)) {
 
       new JoystickButton(driver, RMZ_A_IN).whenPressed(new ZeroHeading(mDrive));
+      
+      new JoystickButton(driver, RMZ_D_IN).whenPressed(new PullTrigger(mShooter));
+      new JoystickButton(driver, RMZ_D_IN).whenReleased(new StopTrigger(mShooter));
+      
       new JoystickButton(driver, RMZ_E_UP).whenHeld(new AbsoluteOrientation(mDrive, joysticks));
+
+      new JoystickButton(driver, RMZ_F_UP).whenHeld(new DeployIntake(mIntake));
       
     } else if (driver.getName().contains(OIConstants.kRadioMaster)) {
       new JoystickButton(driver, RM_SD_FRONT).whenPressed(new ZeroHeading(mDrive));
@@ -206,27 +213,19 @@ public class RobotContainer {
       // JoystickButton xBoxR = new JoystickButton(operator,
       // X_BOX_RIGHT_STICK_BUTTON);
       JoystickButton xBoxA = new JoystickButton(operator, X_BOX_A);
-      xBoxA.whenPressed(new SetShooterState(mShooter, 
-        Preferences.getInt("BUF.Velocity", 1625),
-        Preferences.getDouble("BUF.Angle", 65.0))); // baseline, upper goal, front shot
+      xBoxA.whenPressed(new PresetFlywheelController(mShooter,"BUF")); // baseline, upper goal, front shot
       xBoxA.whenReleased(new StopShooter(mShooter));
 
       JoystickButton xBoxB = new JoystickButton(operator, X_BOX_B);
-      xBoxB.whenPressed(new SetShooterState(mShooter, 
-        Preferences.getInt("BUR.Velocity", 1700),
-        Preferences.getDouble("BUR.Angle", 100.0))); // baseline, upper goal, rear shot
+      xBoxB.whenPressed(new PresetFlywheelController(mShooter, "BUR")); // baseline, upper goal, rear shot
       xBoxB.whenReleased(new StopShooter(mShooter));
 
       JoystickButton xBoxX = new JoystickButton(operator, X_BOX_X);
-      xBoxX.whenPressed(new SetShooterState(mShooter, 
-        Preferences.getInt("TLR.Velocity", 800),
-        Preferences.getDouble("TLR.Angle", 105.0))); // tarmac, lower goal, rear shot    
+      xBoxX.whenPressed(new PresetFlywheelController(mShooter, "TLR")); // tarmac, lower goal, rear shot    
       xBoxX.whenReleased(new StopShooter(mShooter));
 
       JoystickButton xBoxY = new JoystickButton(operator, X_BOX_Y);
-      xBoxY.whenPressed(new SetShooterState(mShooter, 
-        Preferences.getInt("TUR.Velocity", 1550),
-        Preferences.getDouble("TUR.Angle", 92.0))); // tarmac, lower goal, rear shot    
+      xBoxY.whenPressed(new PresetFlywheelController(mShooter, "TUR")); // tarmac, upper goal, rear shot    
       xBoxY.whenReleased(new StopShooter(mShooter));
       
       // new JoystickButton(operator, X_BOX_DPAD_UP);
@@ -242,4 +241,6 @@ public class RobotContainer {
     }
 
   }
+
 }
+
