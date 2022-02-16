@@ -90,7 +90,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     // Scan the USB devices. If they change, remap the buttons.
-    /* Only check if controllers changed every 10 loops of disablePeriodic().
+    /* Only check if controllers changed every 40 loops of disablePeriodic().
      * This prevents us from hammering on some routines that cause the RIO to lock up.
      */
     delay--;

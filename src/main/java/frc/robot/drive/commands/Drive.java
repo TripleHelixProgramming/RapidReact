@@ -35,7 +35,7 @@ public abstract class Drive extends CommandBase {
     public void execute() {
         xDot = getX() * DriveConstants.kMaxTranslationalVelocity;
         yDot = getY() * DriveConstants.kMaxTranslationalVelocity;
-        thetaDot = getTheta() * DriveConstants.kMaxRotationalVelocity;
+        thetaDot = -getTheta() * DriveConstants.kMaxRotationalVelocity;
         fieldRelative = getFieldRelative();
 
         chassisSpeeds = fieldRelative
