@@ -25,6 +25,7 @@ import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.AbsoluteOrientation;
 import frc.robot.drive.commands.JoystickDrive;
 import frc.robot.drive.commands.ResetEncoders;
+import frc.robot.drive.commands.TurnToAngle;
 import frc.robot.drive.commands.ZeroHeading;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.DeployIntake;
@@ -41,6 +42,7 @@ import frc.robot.shooter.commands.SetShooterState;
 import frc.robot.shooter.commands.SpinUpShooter;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
+import frc.robot.vision.Limelight;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -52,9 +54,10 @@ public class RobotContainer {
 
   // The robot's subsystems
   private final Drivetrain mDrive = new Drivetrain();
+  private final Limelight limelight = new Limelight();
 
-  private final Intake mIntake = new Intake();
-  private final Shooter mShooter = new Shooter();
+  // private final Intake mIntake = new Intake();
+  // private final Shooter mShooter = new Shooter();
 
   /*
    * private final Indexer mIndexer = new Indexer();
@@ -74,7 +77,7 @@ public class RobotContainer {
     configureButtonBindings();
     mDrive.setDefaultCommand(new JoystickDrive(mDrive, joysticks));
     // mDrive.setDefaultCommand(new TestDrive(mDrive));
-    mIntake.setDefaultCommand(new RetractIntake(mIntake));
+    // mIntake.setDefaultCommand(new RetractIntake(mIntake));
     // mShooter.setDefaultCommand(new StopShooter(mShooter));
     // mShooter.setDefaultCommand(new FlywheelController(mShooter, 0));
 
@@ -88,34 +91,31 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    // Command autoCommand = null;
 
-    // return new ShootAndDriveForward(mDrive, mIntake, mShooter);
-    // return new FourBallAuto(mDrive, mIntake, mShooter);
-    // return new TrajectoryFollower(mDrive, new CollectSecondBall());
-    Command autoCommand = null;
+    // DigitalInput fourBallAuto = new DigitalInput(0);
+    // DigitalInput oneBallAuto = new DigitalInput(1);
+    // DigitalInput twoBallAuto = new DigitalInput(2);
 
-    DigitalInput fourBallAuto = new DigitalInput(0);
-    DigitalInput oneBallAuto = new DigitalInput(1);
-    DigitalInput twoBallAuto = new DigitalInput(2);
-
-    try {
-      if (!fourBallAuto.get()) {
-        autoCommand = new FourBallAuto(mDrive, mIntake, mShooter);
-      } else if (!oneBallAuto.get()) {
-        autoCommand = new ShootAndDriveForward(mDrive, mIntake, mShooter);
-      } else if (!twoBallAuto.get()) {
-        autoCommand = new DriveForwardAndShoot(mDrive, mIntake, mShooter);
-      }
-    } finally {
-      fourBallAuto.close();
-      oneBallAuto.close();
-      twoBallAuto.close();
-    }
-    return autoCommand;
+    // try {
+    //   if (!fourBallAuto.get()) {
+    //     autoCommand = new FourBallAuto(mDrive, mIntake, mShooter);
+    //   } else if (!oneBallAuto.get()) {
+    //     autoCommand = new ShootAndDriveForward(mDrive, mIntake, mShooter);
+    //   } else if (!twoBallAuto.get()) {
+    //     autoCommand = new DriveForwardAndShoot(mDrive, mIntake, mShooter);
+    //   }
+    // } finally {
+    //   fourBallAuto.close();
+    //   oneBallAuto.close();
+    //   twoBallAuto.close();
+    // }
+    // return autoCommand;
+    return new TurnToAngle(mDrive);
   }
 
   public void moveHoodToHardStop() {
-    new ResetHood(mShooter).schedule();
+    // new ResetHood(mShooter).schedule();
   }
 
   public void configureButtonBindings() {
@@ -130,12 +130,12 @@ public class RobotContainer {
 
       new JoystickButton(driver, RMZ_A_IN).whenPressed(new ZeroHeading(mDrive));
       
-      new JoystickButton(driver, RMZ_D_IN).whenPressed(new PullTrigger(mShooter));
-      new JoystickButton(driver, RMZ_D_IN).whenReleased(new StopTrigger(mShooter));
+      // new JoystickButton(driver, RMZ_D_IN).whenPressed(new PullTrigger(mShooter));
+      // new JoystickButton(driver, RMZ_D_IN).whenReleased(new StopTrigger(mShooter));
       
       new JoystickButton(driver, RMZ_E_UP).whenHeld(new AbsoluteOrientation(mDrive, joysticks));
 
-      new JoystickButton(driver, RMZ_F_UP).whenHeld(new DeployIntake(mIntake));
+      // new JoystickButton(driver, RMZ_F_UP).whenHeld(new DeployIntake(mIntake));
       
     } else if (driver.getName().contains(OIConstants.kRadioMaster)) {
       new JoystickButton(driver, RM_SD_FRONT).whenPressed(new ZeroHeading(mDrive));
@@ -144,14 +144,14 @@ public class RobotContainer {
       // operator commands to it, too
 
       // Intake Control
-      new JoystickButton(driver, RM_SE_UP).whenPressed(new DeployIntake(mIntake));
-      new JoystickButton(driver, RM_SE_UP).whenReleased(new RetractIntake(mIntake));
+      // new JoystickButton(driver, RM_SE_UP).whenPressed(new DeployIntake(mIntake));
+      // new JoystickButton(driver, RM_SE_UP).whenReleased(new RetractIntake(mIntake));
 
-      new JoystickButton(driver, RM_SE_DOWN).whenPressed(new EjectIntake(mIntake));
-      new JoystickButton(driver, RM_SE_DOWN).whenPressed(new EjectTrigger(mShooter));
+      // new JoystickButton(driver, RM_SE_DOWN).whenPressed(new EjectIntake(mIntake));
+      // new JoystickButton(driver, RM_SE_DOWN).whenPressed(new EjectTrigger(mShooter));
 
-      new JoystickButton(driver, RM_SE_DOWN).whenReleased(new RetractIntake(mIntake));
-      new JoystickButton(driver, RM_SE_DOWN).whenReleased(new StopTrigger(mShooter));
+      // new JoystickButton(driver, RM_SE_DOWN).whenReleased(new RetractIntake(mIntake));
+      // new JoystickButton(driver, RM_SE_DOWN).whenReleased(new StopTrigger(mShooter));
 
       // Enable Hood adjustment
       // new JoystickButton(driver, RM_SB_FRONT).whenHeld(new MoveHoodButton(mShooter,
@@ -160,23 +160,23 @@ public class RobotContainer {
       // Shooter.DOWN));
 
       // Trigger
-      new JoystickButton(driver, RM_SH).whenPressed(new PullTrigger(mShooter));
-      new JoystickButton(driver, RM_SH).whenReleased(new StopTrigger(mShooter));
+      // new JoystickButton(driver, RM_SH).whenPressed(new PullTrigger(mShooter));
+      // new JoystickButton(driver, RM_SH).whenReleased(new StopTrigger(mShooter));
 
-      // Shoot
-      // Backward layup
-      new JoystickButton(driver, RM_SG_DOWN).whenPressed(new SetShooterState(mShooter, 1100, 61));
-      // Forward high layup
-      new JoystickButton(driver, RM_SG_UP).whenPressed(new SetShooterState(mShooter, 1625, 65));
-      // middle position - stop
-      new JoystickButton(driver, RM_SG_DOWN).whenReleased(new StopShooter(mShooter));
-      new JoystickButton(driver, RM_SG_UP).whenReleased(new StopShooter(mShooter));
+      // // Shoot
+      // // Backward layup
+      // new JoystickButton(driver, RM_SG_DOWN).whenPressed(new SetShooterState(mShooter, 1100, 61));
+      // // Forward high layup
+      // new JoystickButton(driver, RM_SG_UP).whenPressed(new SetShooterState(mShooter, 1625, 65));
+      // // middle position - stop
+      // new JoystickButton(driver, RM_SG_DOWN).whenReleased(new StopShooter(mShooter));
+      // new JoystickButton(driver, RM_SG_UP).whenReleased(new StopShooter(mShooter));
 
-      new JoystickButton(driver, RM_SB_FRONT).whenPressed(new SetShooterState(mShooter, 1000, 70));
-      new JoystickButton(driver, RM_SB_BACK).whenReleased(new SetShooterState(mShooter, 0, 90));
+      // new JoystickButton(driver, RM_SB_FRONT).whenPressed(new SetShooterState(mShooter, 1000, 70));
+      // new JoystickButton(driver, RM_SB_BACK).whenReleased(new SetShooterState(mShooter, 0, 90));
 
       // Reset Hood (zero with current limit)
-      new JoystickButton(driver, RM_SC_BACK).whenPressed(new ResetHood(mShooter));
+      // new JoystickButton(driver, RM_SC_BACK).whenPressed(new ResetHood(mShooter));
 
     } else { // Assume XBox Controller
 /* XBox Controller is now the operator. 
@@ -204,29 +204,29 @@ public class RobotContainer {
       // new JoystickButton(operator, X_BOX_LEFT_TRIGGER);
       // new JoystickButton(operator, X_BOX_RIGHT_TRIGGER);
       JoystickButton xBoxLB = new JoystickButton(operator, X_BOX_LB);
-      xBoxLB.whenHeld(new DeployIntake(mIntake));
+      // xBoxLB.whenHeld(new DeployIntake(mIntake));
       // xBoxLB.whenReleased(new RetractIntake(mIntake));
       JoystickButton xBoxRB = new JoystickButton(operator, X_BOX_RB);
-      xBoxRB.whenHeld(new EjectIntake(mIntake));
+      // xBoxRB.whenHeld(new EjectIntake(mIntake));
       // xBoxRB.whenReleased(new RetractIntake(mIntake));
       // JoystickButton xBoxL = new JoystickButton(operator, X_BOX_LEFT_STICK_BUTTON);
       // JoystickButton xBoxR = new JoystickButton(operator,
       // X_BOX_RIGHT_STICK_BUTTON);
       JoystickButton xBoxA = new JoystickButton(operator, X_BOX_A);
-      xBoxA.whenPressed(new PresetFlywheelController(mShooter,"BUF")); // baseline, upper goal, front shot
-      xBoxA.whenReleased(new StopShooter(mShooter));
+      // xBoxA.whenPressed(new PresetFlywheelController(mShooter,"BUF")); // baseline, upper goal, front shot
+      // xBoxA.whenReleased(new StopShooter(mShooter));
 
       JoystickButton xBoxB = new JoystickButton(operator, X_BOX_B);
-      xBoxB.whenPressed(new PresetFlywheelController(mShooter, "BUR")); // baseline, upper goal, rear shot
-      xBoxB.whenReleased(new StopShooter(mShooter));
+      // xBoxB.whenPressed(new PresetFlywheelController(mShooter, "BUR")); // baseline, upper goal, rear shot
+      // xBoxB.whenReleased(new StopShooter(mShooter));
 
       JoystickButton xBoxX = new JoystickButton(operator, X_BOX_X);
-      xBoxX.whenPressed(new PresetFlywheelController(mShooter, "TLR")); // tarmac, lower goal, rear shot    
-      xBoxX.whenReleased(new StopShooter(mShooter));
+      // xBoxX.whenPressed(new PresetFlywheelController(mShooter, "TLR")); // tarmac, lower goal, rear shot    
+      // xBoxX.whenReleased(new StopShooter(mShooter));
 
       JoystickButton xBoxY = new JoystickButton(operator, X_BOX_Y);
-      xBoxY.whenPressed(new PresetFlywheelController(mShooter, "TUR")); // tarmac, upper goal, rear shot    
-      xBoxY.whenReleased(new StopShooter(mShooter));
+      // xBoxY.whenPressed(new PresetFlywheelController(mShooter, "TUR")); // tarmac, upper goal, rear shot    
+      // xBoxY.whenReleased(new StopShooter(mShooter));
       
       // new JoystickButton(operator, X_BOX_DPAD_UP);
       // new JoystickButton(operator, X_BOX_DPAD_DOWN);
@@ -235,8 +235,8 @@ public class RobotContainer {
       JoystickButton xBoxLogoLeft = new JoystickButton(operator, X_BOX_LOGO_LEFT);
 
       JoystickButton xBoxLogoRight = new JoystickButton(operator, X_BOX_LOGO_RIGHT);
-      xBoxLogoRight.whenPressed(new PullTrigger(mShooter));
-      xBoxLogoRight.whenReleased(new StopTrigger(mShooter));
+      // xBoxLogoRight.whenPressed(new PullTrigger(mShooter));
+      // xBoxLogoRight.whenReleased(new StopTrigger(mShooter));
 
     }
 

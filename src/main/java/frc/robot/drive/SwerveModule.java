@@ -78,6 +78,7 @@ public class SwerveModule extends SubsystemBase {
         m_turningController = m_turningMotor.getPIDController();
         m_driveController = m_driveMotor.getPIDController();
 
+        m_driveMotor.enableVoltageCompensation(12);
 
         m_turningController.setP(Constants.ModuleConstants.kTurningP);
         m_turningController.setI(Constants.ModuleConstants.kTurningI);
