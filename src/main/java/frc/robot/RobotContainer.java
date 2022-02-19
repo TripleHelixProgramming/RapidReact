@@ -6,6 +6,7 @@ package frc.robot;
 
 import static com.team2363.utilities.ControllerMap.*;
 
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
@@ -19,28 +20,21 @@ import frc.lib.HelixJoysticks;
 // import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.auto.groups.DriveForwardAndShoot;
+import frc.robot.auto.groups.FiveBallAuto;
 import frc.robot.auto.groups.FourBallAuto;
 import frc.robot.auto.groups.ShootAndDriveForward;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.AbsoluteOrientation;
 import frc.robot.drive.commands.JoystickDrive;
 import frc.robot.drive.commands.ResetEncoders;
+import frc.robot.drive.commands.ResetOdometry;
 import frc.robot.drive.commands.ZeroHeading;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.DeployIntake;
 import frc.robot.intake.commands.EjectIntake;
 import frc.robot.intake.commands.RetractIntake;
 import frc.robot.shooter.Shooter;
-import frc.robot.shooter.commands.EjectTrigger;
-import frc.robot.shooter.commands.FlywheelController;
-import frc.robot.shooter.commands.MoveHoodButton;
-import frc.robot.shooter.commands.PresetFlywheelController;
-import frc.robot.shooter.commands.PullTrigger;
-import frc.robot.shooter.commands.ResetHood;
-import frc.robot.shooter.commands.SetShooterState;
-import frc.robot.shooter.commands.SpinUpShooter;
-import frc.robot.shooter.commands.StopShooter;
-import frc.robot.shooter.commands.StopTrigger;
+import frc.robot.shooter.commands.*;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -111,9 +105,14 @@ public class RobotContainer {
       oneBallAuto.close();
       twoBallAuto.close();
     }
-    return autoCommand;
+    // return autoCommand;
+    return new FiveBallAuto(mDrive, mIntake, mShooter);
   }
 
+  public void stopShooter() {
+    new StopShooter(mShooter).schedule();
+  }
+  
   public void moveHoodToHardStop() {
     new ResetHood(mShooter).schedule();
   }
@@ -213,19 +212,19 @@ public class RobotContainer {
       // JoystickButton xBoxR = new JoystickButton(operator,
       // X_BOX_RIGHT_STICK_BUTTON);
       JoystickButton xBoxA = new JoystickButton(operator, X_BOX_A);
-      xBoxA.whenPressed(new PresetFlywheelController(mShooter,"BUF")); // baseline, upper goal, front shot
+      xBoxA.whileHeld(new PresetFlywheelController(mShooter,"BUF")); // baseline, upper goal, front shot
       xBoxA.whenReleased(new StopShooter(mShooter));
 
       JoystickButton xBoxB = new JoystickButton(operator, X_BOX_B);
-      xBoxB.whenPressed(new PresetFlywheelController(mShooter, "BUR")); // baseline, upper goal, rear shot
+      xBoxB.whileHeld(new PresetFlywheelController(mShooter, "BUR")); // baseline, upper goal, rear shot
       xBoxB.whenReleased(new StopShooter(mShooter));
 
       JoystickButton xBoxX = new JoystickButton(operator, X_BOX_X);
-      xBoxX.whenPressed(new PresetFlywheelController(mShooter, "TLR")); // tarmac, lower goal, rear shot    
+      xBoxX.whileHeld(new PresetFlywheelController(mShooter, "TLR")); // tarmac, lower goal, rear shot    
       xBoxX.whenReleased(new StopShooter(mShooter));
 
       JoystickButton xBoxY = new JoystickButton(operator, X_BOX_Y);
-      xBoxY.whenPressed(new PresetFlywheelController(mShooter, "TUR")); // tarmac, upper goal, rear shot    
+      xBoxY.whileHeld(new PresetFlywheelController(mShooter, "TUR")); // tarmac, upper goal, rear shot    
       xBoxY.whenReleased(new StopShooter(mShooter));
       
       // new JoystickButton(operator, X_BOX_DPAD_UP);

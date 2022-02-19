@@ -20,7 +20,6 @@ public class TrajectoryFollower extends CommandBase {
   private Drivetrain drive;
   private SwerveTrajectory trajectory;
   private PIDController xController, yController, thetaController;
-  private Rotation2d offset;
   private double lastTime = 0;
   private Timer timer = new Timer();
 
@@ -34,8 +33,6 @@ public class TrajectoryFollower extends CommandBase {
   public void initialize() {
     timer.reset();
     timer.start();
-    drive.resetOdometry(trajectory.getInitialPose());
-    offset =(drive.getHeading()).minus(trajectory.getInitialPose().getRotation());
     
     xController = new PIDController(AutoConstants.kPTranslationController, 0, 0);
     yController = new PIDController(AutoConstants.kPTranslationController, 0, 0);
@@ -66,7 +63,7 @@ public class TrajectoryFollower extends CommandBase {
                                                         vx,
                                                         vy,
                                                         omega,
-                                                        drive.getHeading().minus(offset)),
+                                                        drive.getHeading()),
                                                         false);
     lastTime = time;
   }

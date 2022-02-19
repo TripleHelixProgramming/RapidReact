@@ -16,7 +16,8 @@ public class FlywheelController extends CommandBase {
     private Timer timer = new Timer();
     Notifier controller = new Notifier(this::controller);
     private DCMotor flywheel = new DCMotor(0.002081897, 0, 0.317466);
-    private PIDController flywheelController = new PIDController(0.025, 0, 0.0002);
+    private PIDController flywheelController = new PIDController(0.02, 0, 0);
+    // private PIDController flywheelController = new PIDController(0.05, 0, 0);
 
     public FlywheelController(Shooter shooter, int rpm, double hoodAngle) {
         this.shooter = shooter;
