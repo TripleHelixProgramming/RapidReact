@@ -4,46 +4,39 @@
 
 package frc.robot.vision;
 
-import org.photonvision.PhotonCamera;
-
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static edu.wpi.first.networktables.NetworkTableInstance.getDefault;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Limelight extends SubsystemBase {
-  private VisionState state;
-  private int loops = 0;
+  private volatile VisionState state = new VisionState(0,0,0);
 
   public Limelight() {
-    SmartDashboard.putString("Limelight", "Enabled");
     getDefault().getTable("limelight").getEntry("tx").addListener(event -> {
-      state = new VisionState(getXOffset(), Timer.getFPGATimestamp());
+      if (getDefault().getTable("limelight").getEntry("tv").getDouble(0) == 1) {
+        double xOffset = getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+        double yOffset = getDefault().getTable("limelight").getEntry("ty").getDouble(0);
+        double latency = getDefault().getTable("limelight").getEntry("tl").getDouble(0) + 0.011;
+        state = new VisionState(xOffset, yOffset, Timer.getFPGATimestamp() - latency);
+      }
     }, EntryListenerFlags.kUpdate);
   }
-  
-  @Override
-  public void periodic() {
-    state = new VisionState(getXOffset(), Timer.getFPGATimestamp());
-  }
 
-  public double getXOffset() {
-    double xOffset = getDefault().getTable("limelight").getEntry("tx").getDouble(0);
-    loops++;
-    SmartDashboard.putNumber("X offset", xOffset);
-    SmartDashboard.putNumber("Loops", loops);
-    return xOffset;
+  public VisionState getState() {
+    return state;
   }
 
   public static class VisionState {
-    double tx;
-    double timestamp;
+    public final double xOffset;
+    public final double yOffset;
+    public final double timestamp;
 
-    public VisionState(double tx, double timestamp) {
-      this.tx = tx;
+    public VisionState(double xOffset, double yOffset, double timestamp) {
+      this.xOffset = xOffset;
+      this.yOffset = yOffset;
       this.timestamp = timestamp;
     }
   }

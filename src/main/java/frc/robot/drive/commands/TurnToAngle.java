@@ -14,18 +14,20 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.drive.Drivetrain;
+import frc.robot.vision.Limelight;
 
 public class TurnToAngle extends CommandBase {
   private Drivetrain drive;
+  private Limelight limelight;
   private PIDController thetaController;
-  private Rotation2d offset;
   private double lastTime = 0;
   private Timer timer = new Timer();
   private InterpolatingPoseMap map;
 
-  public TurnToAngle(Drivetrain drive) {
+  public TurnToAngle(Drivetrain drive, Limelight limelight) {
     addRequirements(drive);
     this.drive = drive;
+    this.limelight = limelight;
   }
 
   @Override
@@ -34,9 +36,9 @@ public class TurnToAngle extends CommandBase {
     timer.start();
     drive.resetOdometry(new Pose2d(new Translation2d(0,0),  new Rotation2d(0)));
     
-    thetaController = new PIDController(5.5, 0, 0.0);
+    thetaController = new PIDController(0.1, 0, 0.0);
     thetaController.setContinous(true);
-    thetaController.setInputRange(Math.PI * 2);
+    // thetaController.setInputRange(Math.PI * 2);
 
     lastTime = 0;
 
@@ -50,9 +52,10 @@ public class TurnToAngle extends CommandBase {
     double dt = time - lastTime;
     Pose2d currentPose = drive.getPose();
 
-    thetaController.setReference(0.5);
+    thetaController.setReference(0);
 
-    double omega = -thetaController.calculate(currentPose.getRotation().getRadians(), dt);
+    // double omega = -thetaController.calculate(currentPose.getRotation().getRadians(), dt);
+    double omega = -thetaController.calculate(limelight.getState().xOffset, dt);
 
     drive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(
                                                         0,

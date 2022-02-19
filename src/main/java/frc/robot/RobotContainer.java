@@ -28,6 +28,7 @@ import frc.robot.drive.commands.AbsoluteOrientation;
 import frc.robot.drive.commands.JoystickDrive;
 import frc.robot.drive.commands.ResetEncoders;
 import frc.robot.drive.commands.ResetOdometry;
+import frc.robot.drive.commands.TurnToAngle;
 import frc.robot.drive.commands.ZeroHeading;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.DeployIntake;
@@ -35,6 +36,7 @@ import frc.robot.intake.commands.EjectIntake;
 import frc.robot.intake.commands.RetractIntake;
 import frc.robot.shooter.Shooter;
 import frc.robot.shooter.commands.*;
+import frc.robot.vision.Limelight;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -49,6 +51,7 @@ public class RobotContainer {
 
   private final Intake mIntake = new Intake();
   private final Shooter mShooter = new Shooter();
+  private final Limelight mLimelight = new Limelight();
 
   /*
    * private final Indexer mIndexer = new Indexer();
@@ -106,7 +109,8 @@ public class RobotContainer {
       twoBallAuto.close();
     }
     // return autoCommand;
-    return new FiveBallAuto(mDrive, mIntake, mShooter);
+    // return new FiveBallAuto(mDrive, mIntake, mShooter);
+    return new TurnToAngle(mDrive, mLimelight);
   }
 
   public void stopShooter() {
@@ -127,12 +131,14 @@ public class RobotContainer {
 
     if (driver.getName().contains(OIConstants.kZorro)) {
 
-      new JoystickButton(driver, RMZ_A_IN).whenPressed(new ZeroHeading(mDrive));
+      new JoystickButton(driver, RMZ_E_UP).whenPressed(new ZeroHeading(mDrive));
+
+      new JoystickButton(driver, RMZ_A_IN).whenHeld(new TurnToAngle(mDrive, mLimelight));
       
       new JoystickButton(driver, RMZ_D_IN).whenPressed(new PullTrigger(mShooter));
       new JoystickButton(driver, RMZ_D_IN).whenReleased(new StopTrigger(mShooter));
       
-      new JoystickButton(driver, RMZ_E_UP).whenHeld(new AbsoluteOrientation(mDrive, joysticks));
+      // new JoystickButton(driver, RMZ_E_UP).whenHeld(new AbsoluteOrientation(mDrive, joysticks));
 
       new JoystickButton(driver, RMZ_F_UP).whenHeld(new DeployIntake(mIntake));
       
