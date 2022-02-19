@@ -109,8 +109,8 @@ public class RobotContainer {
       twoBallAuto.close();
     }
     // return autoCommand;
-    // return new FiveBallAuto(mDrive, mIntake, mShooter);
-    return new TurnToAngle(mDrive, mLimelight);
+    return new FiveBallAuto(mDrive, mIntake, mShooter);
+    // return new TurnToAngle(mDrive, mLimelight);
   }
 
   public void stopShooter() {
@@ -133,7 +133,7 @@ public class RobotContainer {
 
       new JoystickButton(driver, RMZ_E_UP).whenPressed(new ZeroHeading(mDrive));
 
-      new JoystickButton(driver, RMZ_A_IN).whenHeld(new TurnToAngle(mDrive, mLimelight));
+      new JoystickButton(driver, RMZ_A_IN).whenHeld(new TurnToAngle(mDrive, mLimelight, joysticks));
       
       new JoystickButton(driver, RMZ_D_IN).whenPressed(new PullTrigger(mShooter));
       new JoystickButton(driver, RMZ_D_IN).whenReleased(new StopTrigger(mShooter));
