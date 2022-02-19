@@ -59,7 +59,7 @@ public class FiveBallAuto extends SequentialCommandGroup {
     new TrajectoryFollower(drive, new FiveBallPartThree()),
     new WaitCommand(1),
     new TrajectoryFollower(drive, new FiveBallPartFour()),
-    new WaitCommand(1),
+    new WaitCommand(1)
     );
   }
 }
