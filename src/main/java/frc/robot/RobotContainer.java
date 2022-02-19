@@ -23,6 +23,7 @@ import frc.robot.auto.groups.DriveForwardAndShoot;
 import frc.robot.auto.groups.FiveBallAuto;
 import frc.robot.auto.groups.FourBallAuto;
 import frc.robot.auto.groups.ShootAndDriveForward;
+import frc.robot.climber.Climber;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.AbsoluteOrientation;
 import frc.robot.drive.commands.JoystickDrive;
@@ -52,6 +53,7 @@ public class RobotContainer {
   private final Intake mIntake = new Intake();
   private final Shooter mShooter = new Shooter();
   private final Limelight mLimelight = new Limelight();
+  private final Climber climber = new Climber();
 
   /*
    * private final Indexer mIndexer = new Indexer();
