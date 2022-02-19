@@ -67,9 +67,8 @@ public class Shooter extends SubsystemBase {
     shooterLeader.enableVoltageCompensation(12);
     shooterFollower.enableVoltageCompensation(12);
 
-    // shooterLeader.setClosedLoopRampRate(0.1);
+    // shooterLeader.setClosedLoopRampRate(0.5);
 
-    // hoodMotor.setSmartCurrentLimit(10);
     hoodMotor.setSmartCurrentLimit((int)Math.round(ShooterConstants.kHoodSafetyCurrentLimit));
 
     hoodEncoder = hoodMotor.getEncoder();
@@ -85,10 +84,13 @@ public class Shooter extends SubsystemBase {
     hoodController.setD(ShooterConstants.kHoodD);
 
     shooterController.setP(ShooterConstants.kShooterP);
-    shooterController.setI(ShooterConstants.kShooterI);
+    shooterController.setI(ShooterConstants.kShooterI); 
     shooterController.setD(ShooterConstants.kShooterD);
 
+    shooterLeader.setIdleMode(IdleMode.kBrake);
     hoodMotor.setIdleMode(IdleMode.kBrake);
+    triggerMotor.setIdleMode(IdleMode.kBrake);
+
     hoodEncoder.setPosition(ShooterConstants.kHoodMinAngle); // Assume hood starts completely down/retracted.
   }
 

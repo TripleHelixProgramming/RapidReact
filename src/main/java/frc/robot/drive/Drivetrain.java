@@ -56,6 +56,7 @@ public class Drivetrain extends SubsystemBase {
   private SwerveModule[] modules = {m_frontLeft, m_frontRight, m_rearLeft, m_rearRight};
   private double[] lastDistances;
   private double lastTime;
+  private double offset = 0.0;
   private final Timer timer;
 
   // The gyro sensor
@@ -126,6 +127,8 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Angle 1", modules[1].getTurnCANcoderAngle());
     SmartDashboard.putNumber("Angle 2", modules[2].getTurnCANcoderAngle());
     SmartDashboard.putNumber("Angle 3", modules[3].getTurnCANcoderAngle());
+
+    SmartDashboard.putNumber("Drive heading", getHeading().getDegrees());
   }
 
   public void updateOdometry() {
@@ -283,7 +286,14 @@ public class Drivetrain extends SubsystemBase {
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
     m_ahrs.zeroYaw();
+    offset = 0;
     m_targetPose = new Pose2d(new Translation2d(), new Rotation2d());
+  }
+
+  public void resetOdometry(double heading, Pose2d pose) {
+    zeroHeading();
+    offset = heading;
+    m_odometry.resetPosition(pose, Rotation2d.fromDegrees(heading));
   }
 
   /**
@@ -292,7 +302,8 @@ public class Drivetrain extends SubsystemBase {
    * @return the robot's heading as a Rotation2d
    */
   public Rotation2d getHeading() {
-    float raw_yaw = m_ahrs.getYaw(); // Returns yaw as -180 to +180.
+    float raw_yaw = m_ahrs.getYaw() - (float)offset; // Returns yaw as -180 to +180.
+    // float raw_yaw = m_ahrs.getYaw(); // Returns yaw as -180 to +180.
     float calc_yaw = raw_yaw;
 
     if (0.0 > raw_yaw ) { // yaw is negative

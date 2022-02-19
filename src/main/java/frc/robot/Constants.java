@@ -143,7 +143,7 @@ public final class Constants {
 
   public static final class ShooterConstants {
     public static final double kTriggerSpeed = 1.0; // power percentage
-    public static final double kTriggerDeadband = 0.5;
+    public static final double kTriggerDeadband = 0.7;
 
     public static final int kShootHighSpeed = 3500; // RPM
     public static final int kShootLowSpeed = 2000;  // RPM
