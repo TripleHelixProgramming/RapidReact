@@ -23,6 +23,7 @@ import frc.robot.auto.groups.DriveForwardAndShoot;
 import frc.robot.auto.groups.FiveBallAuto;
 import frc.robot.auto.groups.FourBallAuto;
 import frc.robot.auto.groups.ShootAndDriveForward;
+import frc.robot.auto.groups.WeirdAuto;
 import frc.robot.climber.Climber;
 import frc.robot.climber.commands.DeployClimber;
 import frc.robot.climber.commands.RetractClimber;
@@ -116,6 +117,8 @@ public class RobotContainer {
     }
     // return autoCommand;
     return new FiveBallAuto(mDrive, mIntake, mShooter);
+    // return new DriveForwardAndShoot(mDrive, mIntake, mShooter);
+    // return new WeirdAuto(mDrive, mIntake, mShooter);
     // return new TurnToAngle(mDrive, mLimelight);
   }
 
@@ -143,6 +146,10 @@ public class RobotContainer {
       
       new JoystickButton(driver, RMZ_D_IN).whenPressed(new PullTrigger(mShooter));
       new JoystickButton(driver, RMZ_D_IN).whenReleased(new StopTrigger(mShooter));
+
+      new JoystickButton(driver, RMZ_H_IN).whenPressed(new DeployClimber(mClimber));
+      new JoystickButton(driver, RMZ_G_IN).whenReleased(new RetractClimber(mClimber));
+
       
       // new JoystickButton(driver, RMZ_E_UP).whenHeld(new AbsoluteOrientation(mDrive, joysticks));
 

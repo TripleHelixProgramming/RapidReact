@@ -38,7 +38,7 @@ public class FiveBallAuto extends SequentialCommandGroup {
             new WaitCommand(0.5)
         ),
         new TrajectoryFollower(drive, new FiveBallPartOne()), // Turn to point at center
-        new FlywheelController(shooter, 1700, 79)),
+        new FlywheelController(shooter, 1775, 79)),
     new StopShooter(shooter),
     new StopTrigger(shooter),
     new ParallelDeadlineGroup(
@@ -50,16 +50,28 @@ public class FiveBallAuto extends SequentialCommandGroup {
             new WaitCommand(1.0), // Give shooter time to spin up & hood to move
             new ParallelDeadlineGroup(
               new WaitCommand(1), 
-              new PullTrigger(shooter),
-              new RetractIntake(intake))
-        ),
-        new FlywheelController(shooter, 1900, 72.5)),
+              new PullTrigger(shooter))),
+        new RetractIntake(intake),
+        new FlywheelController(shooter, 1800, 73)),
     new StopShooter(shooter),
     new StopTrigger(shooter),
-    new TrajectoryFollower(drive, new FiveBallPartThree()),
-    new WaitCommand(1),
-    new TrajectoryFollower(drive, new FiveBallPartFour()),
-    new WaitCommand(1)
+    new ParallelDeadlineGroup(
+      new TrajectoryFollower(drive, new FiveBallPartThree()),
+      new DeployIntake(intake)),
+    new WaitCommand(1), // Pick up balls 4 & 5
+    new ParallelDeadlineGroup(
+      new SequentialCommandGroup(
+        new WaitCommand(1.75),
+        new ParallelDeadlineGroup(
+          new WaitCommand(2.75),
+          new FlywheelController(shooter, 1775, 79))),
+      new SequentialCommandGroup(
+        new WaitCommand(3),
+        new PullTrigger(shooter)),
+      new TrajectoryFollower(drive, new FiveBallPartFour()),
+      new RetractIntake(intake)),
+    new StopShooter(shooter),
+    new StopTrigger(shooter)
     );
   }
 }

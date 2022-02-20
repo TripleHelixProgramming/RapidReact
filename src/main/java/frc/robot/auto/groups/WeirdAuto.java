@@ -15,6 +15,8 @@ import frc.paths.OnePointEightMetersForward;
 import frc.paths.ShootTwoBalls;
 import frc.paths.TwoBallPartOne;
 import frc.paths.TwoBallPartTwo;
+import frc.paths.WeirdAutoPartOne;
+import frc.paths.WeirdAutoPartTwo;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.ResetOdometry;
 import frc.robot.drive.commands.TrajectoryFollower;
@@ -28,23 +30,23 @@ import frc.robot.shooter.commands.SetShooterState;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
 
-public class DriveForwardAndShoot extends SequentialCommandGroup{
-    public DriveForwardAndShoot(Drivetrain drive, Intake intake, Shooter shooter) {
+public class WeirdAuto extends SequentialCommandGroup{
+    public WeirdAuto(Drivetrain drive, Intake intake, Shooter shooter) {
         addCommands(
-            new ResetOdometry(drive, new Pose2d(new Translation2d(0,0),new Rotation2d(2.32))),
+            new ResetOdometry(drive, new Pose2d(new Translation2d(0,0),Rotation2d.fromDegrees(-90))),
             new ParallelDeadlineGroup(
-                new TrajectoryFollower(drive, new TwoBallPartOne()),  
+                new TrajectoryFollower(drive, new WeirdAutoPartOne()),  
                 new DeployIntake(intake)),
             new ParallelDeadlineGroup(
                 new SequentialCommandGroup(
                     new WaitCommand(1.5), // Give shooter time to spin up & hood to move
                     new PullTrigger(shooter),
                     new WaitCommand(2)),
-                new FlywheelController(shooter, 1700, 79),
+                new FlywheelController(shooter, 1775, 79),
                 new RetractIntake(intake)),
             new StopTrigger(shooter),
             new StopShooter(shooter),
-            new TrajectoryFollower(drive, new TwoBallPartTwo())
+            new TrajectoryFollower(drive, new WeirdAutoPartTwo())
         );
     }    
 }
