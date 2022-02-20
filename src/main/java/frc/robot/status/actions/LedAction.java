@@ -88,7 +88,7 @@ public class LedAction extends Action {
         updateBuffer();
 
         // Send the buffer to the leds.
-        Status.getStatus().setLedData(buffer);
+        Status.getInstance().setLedData(buffer);
 
         // Only decrement the intervalCount if it's over 0.
         // Otherwise it may overflow backwords and cause problems.

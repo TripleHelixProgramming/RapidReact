@@ -19,7 +19,7 @@ public class ActionCommand extends Command {
 
     public ActionCommand(Action action, double timeout) {
         super(timeout);
-        this.status = Status.getStatus();
+        this.status = Status.getInstance();
         requires(status);
         this.action = action;
     }

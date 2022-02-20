@@ -36,6 +36,7 @@ import frc.robot.intake.commands.EjectIntake;
 import frc.robot.intake.commands.RetractIntake;
 import frc.robot.shooter.Shooter;
 import frc.robot.shooter.commands.*;
+import frc.robot.status.Status;
 import frc.robot.vision.Limelight;
 
 /*
@@ -52,6 +53,7 @@ public class RobotContainer {
   private final Intake mIntake = new Intake();
   private final Shooter mShooter = new Shooter();
   private final Limelight mLimelight = new Limelight();
+  private final Status mStatus = Status.getInstance();
 
   /*
    * private final Indexer mIndexer = new Indexer();

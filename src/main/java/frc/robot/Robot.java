@@ -5,7 +5,11 @@
 package frc.robot;
 
 import frc.lib.ControllerPatroller;
-
+import frc.robot.auto.groups.LEDDemoCG;
+import frc.robot.shooter.Shooter;
+import frc.robot.status.Status;
+import frc.robot.status.actions.ImageAction;
+import frc.robot.status.commands.ActionCommand;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -131,6 +135,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
