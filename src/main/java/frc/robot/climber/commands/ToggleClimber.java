@@ -11,6 +11,7 @@ public class ToggleClimber extends CommandBase {
   private Climber climber;
   public ToggleClimber(Climber climber) {
     this.climber = climber;
+    addRequirements(climber);
   }
 
   @Override
@@ -20,6 +21,6 @@ public class ToggleClimber extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

@@ -79,7 +79,7 @@ public class RobotContainer {
     mIntake.setDefaultCommand(new RetractIntake(mIntake));
     // mShooter.setDefaultCommand(new StopShooter(mShooter));
     // mShooter.setDefaultCommand(new FlywheelController(mShooter, 0));
-    mClimber.setDefaultCommand(new RetractClimber(mClimber));
+//    mClimber.setDefaultCommand(new RetractClimber(mClimber));
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Reset Encoders", new ResetEncoders(mDrive));

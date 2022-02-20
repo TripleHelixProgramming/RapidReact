@@ -11,6 +11,7 @@ public class RetractClimber extends CommandBase {
   private Climber climber;
   public RetractClimber(Climber climber) {
     this.climber = climber;
+    addRequirements(climber);
   }
 
   @Override

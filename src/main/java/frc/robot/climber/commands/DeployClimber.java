@@ -11,6 +11,7 @@ public class DeployClimber extends CommandBase {
   private Climber climber;
   public DeployClimber(Climber climber) {
     this.climber = climber;
+    addRequirements(climber);
   }
 
   @Override
