@@ -23,6 +23,10 @@ import frc.robot.auto.groups.DriveForwardAndShoot;
 import frc.robot.auto.groups.FiveBallAuto;
 import frc.robot.auto.groups.FourBallAuto;
 import frc.robot.auto.groups.ShootAndDriveForward;
+import frc.robot.climber.Climber;
+import frc.robot.climber.commands.DeployClimber;
+import frc.robot.climber.commands.RetractClimber;
+import frc.robot.climber.commands.ToggleClimber;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.AbsoluteOrientation;
 import frc.robot.drive.commands.JoystickDrive;
@@ -52,6 +56,7 @@ public class RobotContainer {
   private final Intake mIntake = new Intake();
   private final Shooter mShooter = new Shooter();
   private final Limelight mLimelight = new Limelight();
+  private final Climber mClimber = new Climber();
 
   /*
    * private final Indexer mIndexer = new Indexer();
@@ -74,6 +79,7 @@ public class RobotContainer {
     mIntake.setDefaultCommand(new RetractIntake(mIntake));
     // mShooter.setDefaultCommand(new StopShooter(mShooter));
     // mShooter.setDefaultCommand(new FlywheelController(mShooter, 0));
+//    mClimber.setDefaultCommand(new RetractClimber(mClimber));
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Reset Encoders", new ResetEncoders(mDrive));
@@ -183,8 +189,9 @@ public class RobotContainer {
       // Reset Hood (zero with current limit)
       new JoystickButton(driver, RM_SC_BACK).whenPressed(new ResetHood(mShooter));
 
-    } else { // Assume XBox Controller
-/* XBox Controller is now the operator. 
+    }  
+/* XBox Controller is now the operator.     
+    else { // Assume XBox Controller
 
       new JoystickButton(driver, X_BOX_LOGO_LEFT).whenPressed(new ZeroHeading(mDrive));
 
@@ -198,9 +205,9 @@ public class RobotContainer {
 
       // Reset Hood
       new JoystickButton(driver, X_BOX_LOGO_RIGHT).whenPressed(new ResetHood(mShooter));
-*/      
 
     }
+*/      
 
     // Operator Buttons - Operator is always XBox
 
@@ -233,19 +240,20 @@ public class RobotContainer {
       xBoxY.whileHeld(new PresetFlywheelController(mShooter, "TUR")); // tarmac, upper goal, rear shot    
       xBoxY.whenReleased(new StopShooter(mShooter));
       
-      // new JoystickButton(operator, X_BOX_DPAD_UP);
-      // new JoystickButton(operator, X_BOX_DPAD_DOWN);
-      // new JoystickButton(operator, X_BOX_DPAD_LEFT);
-      // new JoystickButton(operator, X_BOX_DPAD_RIGHT);
-      JoystickButton xBoxLogoLeft = new JoystickButton(operator, X_BOX_LOGO_LEFT);
+      // JoystickButton xBoxLogoLeft = new JoystickButton(operator, X_BOX_LOGO_LEFT);
 
-      JoystickButton xBoxLogoRight = new JoystickButton(operator, X_BOX_LOGO_RIGHT);
-      xBoxLogoRight.whenPressed(new PullTrigger(mShooter));
-      xBoxLogoRight.whenReleased(new StopTrigger(mShooter));
+      // JoystickButton xBoxLogoRight = new JoystickButton(operator, X_BOX_LOGO_RIGHT);
+      // xBoxLogoRight.whenPressed(new PullTrigger(mShooter));
+      // xBoxLogoRight.whenReleased(new StopTrigger(mShooter));
 
+      // Climber
+      new JoystickButton(operator, X_BOX_LOGO_RIGHT).whenPressed(new DeployClimber(mClimber));
+      new JoystickButton(operator, X_BOX_LOGO_LEFT).whenPressed(new RetractClimber(mClimber));
+
+        // .and(new JoystickButton(operator, X_BOX_LOGO_LEFT))
+        // .whenActive(new ToggleClimber(mClimber));
     }
 
   }
-
 }
 
