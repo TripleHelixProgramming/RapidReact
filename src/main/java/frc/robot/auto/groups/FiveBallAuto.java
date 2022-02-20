@@ -20,10 +20,12 @@ import frc.robot.drive.commands.ResetOdometry;
 import frc.robot.drive.commands.TrajectoryFollower;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.DeployIntake;
+import frc.robot.intake.commands.FastIntake;
 import frc.robot.intake.commands.RetractIntake;
 import frc.robot.shooter.Shooter;
 import frc.robot.shooter.commands.FlywheelController;
 import frc.robot.shooter.commands.PullTrigger;
+import frc.robot.shooter.commands.ResetHood;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
 
@@ -43,8 +45,7 @@ public class FiveBallAuto extends SequentialCommandGroup {
     new StopTrigger(shooter),
     new ParallelDeadlineGroup(
       new TrajectoryFollower(drive, new FiveBallPartTwo()),
-      new DeployIntake(intake)
-    ),
+      new FastIntake(intake)),
     new ParallelDeadlineGroup(
         new SequentialCommandGroup(
             new WaitCommand(1.0), // Give shooter time to spin up & hood to move
@@ -57,21 +58,24 @@ public class FiveBallAuto extends SequentialCommandGroup {
     new StopTrigger(shooter),
     new ParallelDeadlineGroup(
       new TrajectoryFollower(drive, new FiveBallPartThree()),
-      new DeployIntake(intake)),
+      new FastIntake(intake)),
     new WaitCommand(1), // Pick up balls 4 & 5
     new ParallelDeadlineGroup(
       new SequentialCommandGroup(
         new WaitCommand(1.75),
         new ParallelDeadlineGroup(
           new WaitCommand(2.75),
-          new FlywheelController(shooter, 1775, 79))),
+          new FlywheelController(shooter, 1775, 78.5))),
       new SequentialCommandGroup(
         new WaitCommand(3),
         new PullTrigger(shooter)),
-      new TrajectoryFollower(drive, new FiveBallPartFour()),
-      new RetractIntake(intake)),
+      new SequentialCommandGroup(
+        new WaitCommand(1.5),
+        new RetractIntake(intake)),
+      new TrajectoryFollower(drive, new FiveBallPartFour())),
     new StopShooter(shooter),
-    new StopTrigger(shooter)
+    new StopTrigger(shooter),
+    new ResetHood(shooter)
     );
   }
 }

@@ -60,21 +60,21 @@ def main():
 
     generator.generate([
                     [0,0,-1.85],
-                    [0.0,1.0,-1.85],
+                    [-0.2,0.9,-1.85],
                     [1.85,-0.5,-math.pi+0.2],
-                    [1.65,-0.7,-math.pi+0.55]
+                    [1.3,-0.5,-math.pi+0.65]
                     ],
                     "FiveBallPartTwo")
 
-    generator.generate([
-                    [1.65,-0.7,-math.pi+0.55],
-                    [6.47,0.2,-math.pi+0.7]
-                    ],
-                    "FiveBallPartThree")
+    # generator.generate([
+    #                 [1.4,-0.95,-math.pi+0.55],
+    #                 [6.47,0.2,-math.pi+0.7]
+    #                 ],
+    #                 "FiveBallPartThree")
 
     # generator.generate([
     #                 [6.47,0.2,-math.pi+0.7],
-    #                 [0.15,-0.25,-math.pi+0.9]
+    #                 [0.15,-0.325,-math.pi+0.9]
     #                 ],
     #                 "FiveBallPartFour")
 

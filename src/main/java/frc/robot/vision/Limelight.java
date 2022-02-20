@@ -19,7 +19,7 @@ public class Limelight extends SubsystemBase {
       if (getDefault().getTable("limelight").getEntry("tv").getDouble(0) == 1) {
         double xOffset = getDefault().getTable("limelight").getEntry("tx").getDouble(0);
         double yOffset = getDefault().getTable("limelight").getEntry("ty").getDouble(0);
-        double latency = getDefault().getTable("limelight").getEntry("tl").getDouble(0) + 0.011;
+        double latency = getDefault().getTable("limelight").getEntry("tl").getDouble(0) / 1000.0 + 0.011;
         state = new VisionState(xOffset, yOffset, Timer.getFPGATimestamp() - latency);
       }
     }, EntryListenerFlags.kUpdate);

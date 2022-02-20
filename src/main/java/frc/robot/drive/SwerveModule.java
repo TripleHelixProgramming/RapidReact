@@ -156,6 +156,31 @@ public class SwerveModule extends SubsystemBase {
         m_driveController.setReference(driveOutput, ControlType.kVelocity, 0, Constants.ModuleConstants.kDriveFF * driveOutput);
     }
 
+    public void setOpenLoopState(SwerveModuleState state) {
+        Rotation2d curAngle = Rotation2d.fromDegrees(m_turningEncoder.getPosition());
+
+        double delta = deltaAdjustedAngle(state.angle.getDegrees(), curAngle.getDegrees());
+
+        // Calculate the drive motor output from the drive PID controller.
+        double driveOutput = state.speedMetersPerSecond;
+
+        if (Math.abs(delta) > 90) {
+            driveOutput *= -1;
+            delta -= Math.signum(delta) * 180;
+        }
+
+        adjustedAngle = Rotation2d.fromDegrees(delta + curAngle.getDegrees());
+
+        m_turningController.setReference(
+            adjustedAngle.getDegrees(),
+            ControlType.kPosition
+        );        
+
+        SmartDashboard.putNumber("Commanded Velocity", driveOutput);
+
+        m_driveMotor.setVoltage(Constants.ModuleConstants.kDriveFF * driveOutput);
+    }
+
     //calculate the angle motor setpoint based on the desired angle and the current angle measurement
     // Arguments are in radians.
     public double deltaAdjustedAngle(double targetAngle, double currentAngle) {

@@ -13,12 +13,14 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.util.InterpolatingPoseMap;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.ModuleConstants;
 
 @SuppressWarnings("PMD.ExcessiveImports")
 public class Drivetrain extends SubsystemBase {
+  private InterpolatingPoseMap map = new InterpolatingPoseMap(500);
 
   // Robot swerve modules
   private final SwerveModule m_frontLeft =
@@ -103,13 +105,7 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     // Update the odometry in the periodic block
     updateOdometry();
-    // m_odometry.update(
-        // getHeading(),
-        // m_frontLeft.getState(),
-        // m_frontRight.getState(),
-        // m_rearLeft.getState(),
-        // m_rearRight.getState());
-    updateOdometry();
+    map.addPose(m_odometry.getPoseMeters(), Timer.getFPGATimestamp());
     
     SmartDashboard.putNumber("Heading", getHeading().getDegrees());
     
@@ -158,6 +154,10 @@ public class Drivetrain extends SubsystemBase {
    */
   public Pose2d getPose() {
     return m_odometry.getPoseMeters();
+  }
+
+  public Pose2d getPose(double timestamp) {
+    return map.getPose(timestamp);
   }
 
   /**
@@ -226,6 +226,20 @@ public class Drivetrain extends SubsystemBase {
     setModuleStates(swerveModuleStates);
   }
 
+  public void openLoopDrive(ChassisSpeeds speeds) {
+    if (speeds.vxMetersPerSecond == 0 && speeds.vyMetersPerSecond == 0 && speeds.omegaRadiansPerSecond == 0) {
+      brake();
+      return;
+    }
+
+    SwerveModuleState[] swerveModuleStates =
+        DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
+           
+    normalizeDrive(swerveModuleStates, speeds);
+    
+    setModuleStates(swerveModuleStates);
+  }
+
   public void normalizeDrive(SwerveModuleState[] desiredStates, ChassisSpeeds speeds) {
     double translationalK = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) / DriveConstants.kMaxTranslationalVelocity;
     double rotationalK = Math.abs(speeds.omegaRadiansPerSecond) / DriveConstants.kMaxRotationalVelocity;
@@ -262,6 +276,15 @@ public class Drivetrain extends SubsystemBase {
         for (int i = 0; i <= 3; i++) {
           modules[i].setDesiredState(desiredStates[i]);
         }
+  }
+
+  public void setOpenLoopStates(SwerveModuleState[] desiredStates) {
+    SwerveDriveKinematics.desaturateWheelSpeeds(
+        desiredStates, Preferences.getDouble("kMaxSpeedMetersPerSecond",ModuleConstants.kMaxSpeedMetersPerSecond));
+
+    for (int i = 0; i <= 3; i++) {
+      modules[i].setOpenLoopState(desiredStates[i]);
+    }
   }
 
   public SwerveModuleState[] getModuleStates() {
