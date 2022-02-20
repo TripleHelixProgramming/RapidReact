@@ -247,9 +247,11 @@ public class RobotContainer {
       // xBoxLogoRight.whenReleased(new StopTrigger(mShooter));
 
       // Climber
-      new JoystickButton(operator, X_BOX_LOGO_RIGHT)
-        .and(new JoystickButton(operator, X_BOX_LOGO_LEFT))
-        .whenActive(new ToggleClimber(mClimber));
+      new JoystickButton(operator, X_BOX_LOGO_RIGHT).whenPressed(new DeployClimber(mClimber));
+      new JoystickButton(operator, X_BOX_LOGO_LEFT).whenPressed(new RetractClimber(mClimber));
+
+        // .and(new JoystickButton(operator, X_BOX_LOGO_LEFT))
+        // .whenActive(new ToggleClimber(mClimber));
     }
 
   }

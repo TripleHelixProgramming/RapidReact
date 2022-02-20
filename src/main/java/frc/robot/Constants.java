@@ -54,7 +54,9 @@ public final class Constants {
     public static final int kShooterLeaderPort = 16;
     public static final int kShooterFollowerPort = 17;
 
-    public static final int kClimberPort = 4;
+    public static final int kClimberDeployPort = 2;
+    public static final int kClimberRetractPort = 3;
+
   }
 
   public static final class DriveConstants {

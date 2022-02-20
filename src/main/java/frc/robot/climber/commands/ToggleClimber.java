@@ -16,7 +16,7 @@ public class ToggleClimber extends CommandBase {
 
   @Override
   public void initialize() {
-    climber.toggle();
+    // climber.toggle();
   }
 
   @Override
