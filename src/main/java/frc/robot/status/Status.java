@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.status.actions.Action;
 import frc.robot.status.actions.ChaseAction;
 import frc.robot.status.actions.ImageAction;
@@ -36,7 +37,7 @@ import frc.robot.status.commands.ActionCommand;
 // TODO: This class is really dedicated to doing LED stuff with the addressable led class.
 // Remove all the other stuff, and rename it as such.
 
-public class Status extends Subsystem {
+public class Status extends SubsystemBase {
 
     private static Status INSTANCE = null;
 
@@ -295,12 +296,12 @@ public class Status extends Subsystem {
         setFlashlightState(!isOn);
     }
 
-    @Override
-    public void initDefaultCommand() {
-        String imagePath = Filesystem.getDeployDirectory().getAbsolutePath() + "/images/" + "fade.png";
-        ImageAction ia = new ImageAction(imagePath).oscillate();
-        setDefaultCommand(new ActionCommand(ia, 1000.0)); 
-    }
+    // @Override
+    // public void initDefaultCommand() {
+    //     String imagePath = Filesystem.getDeployDirectory().getAbsolutePath() + "/images/" + "fade.png";
+    //     ImageAction ia = new ImageAction(imagePath).oscillate();
+    //     setDefaultCommand(new ActionCommand(ia, 1000.0)); 
+    // }
 
     @Override
     public void periodic() {

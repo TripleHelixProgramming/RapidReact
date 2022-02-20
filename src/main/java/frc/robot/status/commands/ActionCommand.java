@@ -4,23 +4,19 @@ package frc.robot.status.commands;
 // import com.team2363.logger.HelixEvents;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.status.actions.Action;
 import frc.robot.status.Status;
 
-public class ActionCommand extends Command {
+public class ActionCommand extends CommandBase {
 
     private Status status = null;
     private Action action = null;
 
     // Default constructor.
     public ActionCommand(Action action) {
-        this(action, 0.0); // Make the command complete instantly.
-    }
-
-    public ActionCommand(Action action, double timeout) {
-        super(timeout);
         this.status = Status.getInstance();
-        requires(status);
+        addRequirements(status);
         this.action = action;
     }
 
