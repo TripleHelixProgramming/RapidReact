@@ -11,6 +11,11 @@ import frc.robot.Constants.ElectricalConstants;
 public class Climber extends SubsystemBase {
   private Solenoid climber = new Solenoid(ElectricalConstants.kPneumaticHub, ElectricalConstants.kClimberPort);
 
+  public void toggle() {
+    boolean deployed = climber.get();
+    climber.set(!deployed);
+  }
+
   public void deploy() {
     climber.set(true);
   }
