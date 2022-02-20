@@ -25,6 +25,7 @@ import frc.robot.auto.groups.FourBallAuto;
 import frc.robot.auto.groups.ShootAndDriveForward;
 import frc.robot.climber.Climber;
 import frc.robot.climber.commands.DeployClimber;
+import frc.robot.climber.commands.RetractClimber;
 import frc.robot.climber.commands.ToggleClimber;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.AbsoluteOrientation;
@@ -78,6 +79,7 @@ public class RobotContainer {
     mIntake.setDefaultCommand(new RetractIntake(mIntake));
     // mShooter.setDefaultCommand(new StopShooter(mShooter));
     // mShooter.setDefaultCommand(new FlywheelController(mShooter, 0));
+    mClimber.setDefaultCommand(new RetractClimber(mClimber));
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Reset Encoders", new ResetEncoders(mDrive));
