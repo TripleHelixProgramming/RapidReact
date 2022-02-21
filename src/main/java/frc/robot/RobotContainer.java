@@ -116,9 +116,9 @@ public class RobotContainer {
       twoBallAuto.close();
     }
     // return autoCommand;
-    return new FiveBallAuto(mDrive, mIntake, mShooter);
+    // return new FiveBallAuto(mDrive, mIntake, mShooter);
     // return new DriveForwardAndShoot(mDrive, mIntake, mShooter);
-    // return new WeirdAuto(mDrive, mIntake, mShooter);
+    return new WeirdAuto(mDrive, mIntake, mShooter);
     // return new TurnToAngle(mDrive, mLimelight);
   }
 

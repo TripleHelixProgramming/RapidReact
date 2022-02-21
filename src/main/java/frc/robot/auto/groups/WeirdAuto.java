@@ -39,14 +39,26 @@ public class WeirdAuto extends SequentialCommandGroup{
                 new DeployIntake(intake)),
             new ParallelDeadlineGroup(
                 new SequentialCommandGroup(
-                    new WaitCommand(1.5), // Give shooter time to spin up & hood to move
+                    new WaitCommand(2), // Give shooter time to spin up & hood to move
                     new PullTrigger(shooter),
                     new WaitCommand(2)),
-                new FlywheelController(shooter, 1775, 79),
+                new FlywheelController(shooter, 1800, 78.25),
                 new RetractIntake(intake)),
             new StopTrigger(shooter),
             new StopShooter(shooter),
-            new TrajectoryFollower(drive, new WeirdAutoPartTwo())
+            new ParallelDeadlineGroup(
+                new TrajectoryFollower(drive, new WeirdAutoPartTwo()),
+                new DeployIntake(intake)),
+            new WaitCommand(1.5),
+            new ParallelDeadlineGroup(
+                new SequentialCommandGroup(
+                    new WaitCommand(1),
+                    new PullTrigger(shooter),
+                    new WaitCommand(1)), 
+                new FlywheelController(shooter, 1800, 65),
+                new RetractIntake(intake)),
+            new StopShooter(shooter),
+            new StopTrigger(shooter)
         );
     }    
 }
