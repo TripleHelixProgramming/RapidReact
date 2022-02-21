@@ -1,4 +1,4 @@
-package frc.robot.auto.groups;
+package frc.robot.status.groups;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;

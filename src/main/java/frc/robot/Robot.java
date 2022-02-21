@@ -5,7 +5,6 @@
 package frc.robot;
 
 import frc.lib.ControllerPatroller;
-import frc.robot.auto.groups.LEDDemoCG;
 import frc.robot.shooter.Shooter;
 import frc.robot.status.Status;
 import frc.robot.status.actions.ChaseAction;
@@ -14,6 +13,7 @@ import frc.robot.status.actions.PowerUpAction;
 import frc.robot.status.actions.ScannerAction;
 import frc.robot.status.commands.ActionCommand;
 import frc.robot.status.commands.SetColor;
+import frc.robot.status.groups.LEDDemoCG;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Filesystem;
