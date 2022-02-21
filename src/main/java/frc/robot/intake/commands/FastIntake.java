@@ -20,7 +20,7 @@ public class FastIntake extends CommandBase {
   public void initialize() {
     intake.deploy();
     Timer.delay(0.2);
-    intake.rollerIn();
+    intake.fastRollerIn();
   }
 
   @Override

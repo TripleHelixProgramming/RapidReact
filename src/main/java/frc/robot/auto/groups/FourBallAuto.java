@@ -35,7 +35,7 @@ public class FourBallAuto extends SequentialCommandGroup{
                 new ResetHood(shooter),
                 new SequentialCommandGroup(
                     new WaitCommand(1.5),
-                    new FlywheelController(shooter, 1830, 78.25)),
+                    new FlywheelController(shooter, 1800, 78.25)),
                 new SequentialCommandGroup(
                     new WaitCommand(3.0),
                     new PullTrigger(shooter)),
@@ -55,7 +55,7 @@ public class FourBallAuto extends SequentialCommandGroup{
                 new WaitCommand(4.25),
                 new SequentialCommandGroup(
                     new WaitCommand(1.75),
-                    new FlywheelController(shooter, 1830, 78.5)),
+                    new FlywheelController(shooter, 1800, 78.25)),
                 new SequentialCommandGroup(
                     new WaitCommand(1.25),
                     new RetractIntake(intake)),

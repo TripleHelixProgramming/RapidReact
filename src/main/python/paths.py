@@ -54,18 +54,18 @@ def main():
     #             [0.9,-1.52,0]],
     #             "TwoBallPartTwo")
     
-    generator.generate([
-                    [0,0,-1.95],
-                    [2.5,0.85,-1.95],
-                    [5.7,-0.3,-2.1],
-                    [6.35,0.0,-2.1]],
-                    "FourBallPartTwo")
+    # generator.generate([
+    #                 [0,0,-1.95],
+    #                 [2.5,0.85,-1.95],
+    #                 [5.7,-0.3,-2.1],
+    #                 [6.35,0.0,-2.1]],
+    #                 "FourBallPartTwo")
 
-    generator.generate([
-                    [6.35,0.0,-2.1],
-                    [2.5,0.85,-2.1],
-                    [-0.3,-0.3,-1.95]],
-                    "FourBallPartThree")
+    # generator.generate([
+    #                 [6.35,0.0,-2.1],
+    #                 [2.5,0.85,-2.1],
+    #                 [-0.3,-0.3,-1.95]],
+    #                 "FourBallPartThree")
 
     # generator.generate([
     #                 [0,0,-1.57],
@@ -75,21 +75,20 @@ def main():
     # generator.generate([
     #                 [0,0,-1.85],
     #                 [-0.2,0.9,-1.85],
-    #                 [1.85,-0.5,-math.pi+0.2],
-    #                 [1.3,-0.5,-math.pi+0.65]
+    #                 [1.85,-0.5,-math.pi+0.6]
     #                 ],
     #                 "FiveBallPartTwo")
 
     # generator.generate([
-    #                 [1.4,-0.95,-math.pi+0.55],
+    #                 [1.85,-0.5,-math.pi+0.6],
     #                 [6.47,0.2,-math.pi+0.7]
     #                 ],
     #                 "FiveBallPartThree")
 
-    # generator.generate([
-    #                 [6.47,0.2,-math.pi+0.7],
-    #                 [0.15,-0.325,-math.pi+0.9]
-    #                 ],
-    #                 "FiveBallPartFour")
+    generator.generate([
+                    [6.47,0.2,-math.pi+0.7],
+                    [0.10,-0.375,-math.pi+0.9]
+                    ],
+                    "FiveBallPartFour")
 
 main()

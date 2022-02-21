@@ -26,6 +26,7 @@ import frc.robot.intake.commands.RetractIntake;
 import frc.robot.shooter.Shooter;
 import frc.robot.shooter.commands.FlywheelController;
 import frc.robot.shooter.commands.PullTrigger;
+import frc.robot.shooter.commands.ResetHood;
 import frc.robot.shooter.commands.SetShooterState;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
@@ -35,7 +36,8 @@ public class WeirdAuto extends SequentialCommandGroup{
         addCommands(
             new ResetOdometry(drive, new Pose2d(new Translation2d(0,0),Rotation2d.fromDegrees(-90))),
             new ParallelDeadlineGroup(
-                new TrajectoryFollower(drive, new WeirdAutoPartOne()),  
+                new TrajectoryFollower(drive, new WeirdAutoPartOne()),
+                new ResetHood(shooter),  
                 new DeployIntake(intake)),
             new ParallelDeadlineGroup(
                 new SequentialCommandGroup(
