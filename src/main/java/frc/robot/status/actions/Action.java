@@ -7,8 +7,10 @@
 
 package frc.robot.status.actions;
 
-public class Action implements Runnable {
+import frc.robot.status.Status;
 
+public class Action implements Runnable {
+    Status status;
     // How long to delay intervals.
     protected double intervalTime = 0.0;
 

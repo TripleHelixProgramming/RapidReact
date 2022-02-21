@@ -8,10 +8,18 @@ import frc.lib.ControllerPatroller;
 import frc.robot.auto.groups.LEDDemoCG;
 import frc.robot.shooter.Shooter;
 import frc.robot.status.Status;
+import frc.robot.status.actions.ChaseAction;
 import frc.robot.status.actions.ImageAction;
+import frc.robot.status.actions.PowerUpAction;
+import frc.robot.status.actions.ScannerAction;
 import frc.robot.status.commands.ActionCommand;
+import frc.robot.status.commands.SetColor;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.util.Color;
 // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -113,6 +121,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+
     m_autonomousCommand = mRobotContainer.getAutonomousCommand();
 
     /*
@@ -135,6 +144,17 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+
+    // new SetColor(Status.getInstance(), Color.kCrimson).schedule();
+    // new ActionCommand(new ScannerAction(245, 0, 255, 200)).schedule();
+    // new ActionCommand(new ChaseAction(255, 100, 100, 200)).schedule();
+    // new ActionCommand(new PowerUpAction(100, 100, 200, 255)).schedule();
+
+    // String imagePath = Filesystem.getDeployDirectory().getAbsolutePath() + "/images/" + "THfade.png";
+    // String imagePath = Filesystem.getDeployDirectory().getAbsolutePath() + "/images/" + "pulse.png";
+    // new ActionCommand(new ImageAction(imagePath).oscillate()).schedule();
+
+    new LEDDemoCG().schedule();
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to

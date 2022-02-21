@@ -7,10 +7,13 @@ package frc.robot;
 import static com.team2363.utilities.ControllerMap.*;
 
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 // import edu.wpi.first.wpilibj.PowerDistribution;
@@ -37,6 +40,7 @@ import frc.robot.intake.commands.RetractIntake;
 import frc.robot.shooter.Shooter;
 import frc.robot.shooter.commands.*;
 import frc.robot.status.Status;
+import frc.robot.status.commands.SetColor;
 import frc.robot.vision.Limelight;
 
 /*
@@ -70,6 +74,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+
     configureButtonBindings();
     mDrive.setDefaultCommand(new JoystickDrive(mDrive, joysticks));
     // mDrive.setDefaultCommand(new TestDrive(mDrive));
@@ -113,6 +118,22 @@ public class RobotContainer {
     // return autoCommand;
     return new FiveBallAuto(mDrive, mIntake, mShooter);
     // return new TurnToAngle(mDrive, mLimelight);
+  }
+
+  public void setLEDs() {
+    new SetColor(mStatus, Color.kCornsilk).schedule();
+/*    
+    AddressableLED addressableLed = new AddressableLED(0);
+    addressableLed.setLength(28);
+    final AddressableLEDBuffer buffer = new AddressableLEDBuffer(28);
+    for (var i = 0; i < buffer.getLength(); i++) {
+        buffer.setRGB(i, 100, 200, 100);
+    }
+    addressableLed.setData(buffer);
+    addressableLed.start();
+
+    // addressableLed.close();
+*/    
   }
 
   public void stopShooter() {

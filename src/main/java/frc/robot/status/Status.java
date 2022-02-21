@@ -14,12 +14,11 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.status.actions.Action;
 import frc.robot.status.actions.ChaseAction;
 import frc.robot.status.actions.ImageAction;
@@ -46,13 +45,13 @@ public class Status extends SubsystemBase {
 
     // Addressable LEDs use the PWM port and its +6v power.
     private static int ADDRESSABLE_LED_PWM_CHANNEL = 0;
-    public static int ADDRESSABLE_LED_COUNT = 60; // accessable to actions
+    public static int ADDRESSABLE_LED_COUNT = 28; // accessable to actions
 
     // The DO object that controls the flashlight.
     private DigitalOutput flashlightOutput = null;
 
     // Addressable LED support.
-    private AddressableLED addressableLed = null;
+    private volatile AddressableLED addressableLed = null;
 
     // The current LED action
     private Action currentAction = null;
@@ -70,14 +69,7 @@ public class Status extends SubsystemBase {
     private boolean inTeleOp = false;
 
     private Status() {
-        super();
-
-        // The RIO DIO ports as outputs have a high pullup resistor.
-        // The high pullup causes the voltage regulator to be enabled so
-        // here as soon as we initialize the output we set it to false to
-        // disable the regulator which turns off the flashlight.
-        flashlightOutput = new DigitalOutput(FLASHLIGHT_DIO_CHANNEL);
-        flashlightOutput.set(false);
+//        super();
 
         // Init the addressable led stuff. Note that the docs indicate
         // setting the length is expensive, so doing so here in a singleton
@@ -91,7 +83,6 @@ public class Status extends SubsystemBase {
 
         // Initialize to black.
         setColor(Color.kBlack, 0);
-
         // This will output whatever was set in the last setData call continuously.
         addressableLed.start();
 
@@ -135,7 +126,7 @@ public class Status extends SubsystemBase {
 
     // Things to do when auto resets/inits.
     // This can be scheduled commands, command groups, etc.
-    private void scheduleAutoActions() {
+    public void scheduleAutoActions() {
 
         // Power up to purple, and stay on.
         /*
@@ -147,13 +138,15 @@ public class Status extends SubsystemBase {
         // ia.setOscillate(true);
         // setAction(ia);
 
-        final CommandGroup commandGroup = new CommandGroup();
+        final SequentialCommandGroup commandGroup = new SequentialCommandGroup();
 
         String imagePath = deployDir.getAbsolutePath() + "/images/" + "blueredfade.png";
         ImageAction ia = new ImageAction(imagePath, 0.050).oscillate();
-        commandGroup.addSequential(new ActionCommand(ia));
-        commandGroup.addSequential(new WaitCommand(10));
-
+        commandGroup.addCommands(
+            new ActionCommand(ia),
+            new WaitCommand(10)
+            );
+/*
         imagePath = deployDir.getAbsolutePath() + "/images/" + "fade.png";
         ia = new ImageAction(imagePath, 0.050).oscillate();
         commandGroup.addSequential(new ActionCommand(ia));
@@ -196,12 +189,13 @@ public class Status extends SubsystemBase {
 
         // LedAction blackAction = new LedAction(0, 0, 0, 0);
         // commandGroup.addSequential(new ActionCommand(blackAction));
-
-        Scheduler.getInstance().add(commandGroup);
+*/
+        commandGroup.schedule();
     }
 
     // This is what we want to run when teleop starts.
     // This can be scheduled commands, command groups, etc.
+/*    
     private void scheduleTeleOpActions() {
 
         // Power up to purple, and stay on - should be on already in match.
@@ -234,6 +228,7 @@ public class Status extends SubsystemBase {
 
         Scheduler.getInstance().add(commandGroup);
     }
+    */
 
     /**
      * @return the singleton instance of the Status subsystem
@@ -276,25 +271,9 @@ public class Status extends SubsystemBase {
         // Resets the timer so that it represents "time since teleOp init".
         timer.reset();
 
-        scheduleTeleOpActions();
+//        scheduleTeleOpActions();
     }
 
-    // Determines if the flashlight is on.
-    public boolean isFlashlightOn() {
-        // The DIO port maps nicely to the state we need.
-        return flashlightOutput.get();
-    }
-
-    // Specifically sets the flashlight on/true or off/false.
-    public void setFlashlightState(final boolean state) {
-        flashlightOutput.set(state);
-    }
-
-    // Toggles the state of the flashlight.
-    public void toggleFlashlight() {
-        final boolean isOn = isFlashlightOn();
-        setFlashlightState(!isOn);
-    }
 
     // @Override
     // public void initDefaultCommand() {
@@ -315,7 +294,8 @@ public class Status extends SubsystemBase {
     // Set a color from the predefined wpilib Color
     // Brightness is on a scale of 0-255
     public void setColor(final Color color, final int brightness) {
-        setColor((int) color.red, (int) color.green, (int) color.blue, brightness);
+        Color8Bit intColor = new Color8Bit(color);
+        setColor(intColor.red, intColor.green, intColor.blue, brightness);
     }
 
     // Set RGB color values.
@@ -329,6 +309,10 @@ public class Status extends SubsystemBase {
         green = (int) (green * b);
         blue = (int) (blue * b);
 
+        System.out.println (red);
+        System.out.println (green);
+        System.out.println (blue);
+
         // Create a buffer for all the LEDs, set all of them to the same value, and
         // output the buffer.
         final AddressableLEDBuffer buffer = new AddressableLEDBuffer(ADDRESSABLE_LED_COUNT);
@@ -336,6 +320,7 @@ public class Status extends SubsystemBase {
             buffer.setRGB(i, red, green, blue);
         }
         addressableLed.setData(buffer);
+        addressableLed.start();
     }
 
     // This is the thread that runs the current action.
