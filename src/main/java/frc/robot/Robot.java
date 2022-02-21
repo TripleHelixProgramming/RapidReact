@@ -145,7 +145,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
 
-    // new SetColor(Status.getInstance(), Color.kCrimson).schedule();
+    // new SetColor(Status.getInstance(), Color.kDarkOrchid).schedule();
     // new ActionCommand(new ScannerAction(245, 0, 255, 200)).schedule();
     // new ActionCommand(new ChaseAction(255, 100, 100, 200)).schedule();
     // new ActionCommand(new PowerUpAction(100, 100, 200, 255)).schedule();

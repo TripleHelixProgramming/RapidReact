@@ -122,18 +122,6 @@ public class RobotContainer {
 
   public void setLEDs() {
     new SetColor(mStatus, Color.kCornsilk).schedule();
-/*    
-    AddressableLED addressableLed = new AddressableLED(0);
-    addressableLed.setLength(28);
-    final AddressableLEDBuffer buffer = new AddressableLEDBuffer(28);
-    for (var i = 0; i < buffer.getLength(); i++) {
-        buffer.setRGB(i, 100, 200, 100);
-    }
-    addressableLed.setData(buffer);
-    addressableLed.start();
-
-    // addressableLed.close();
-*/    
   }
 
   public void stopShooter() {
