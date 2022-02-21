@@ -4,6 +4,7 @@
 
 package frc.robot.intake.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.intake.Intake;
 
@@ -17,8 +18,10 @@ public class RetractIntake extends CommandBase {
 
   @Override
   public void initialize() {
-    intake.rollerStop();
     intake.retract();
+    Timer.delay(0.2);
+    intake.rollerStop();
+    
   }
 
   @Override

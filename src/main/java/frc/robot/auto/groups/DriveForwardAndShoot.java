@@ -44,7 +44,19 @@ public class DriveForwardAndShoot extends SequentialCommandGroup{
                 new RetractIntake(intake)),
             new StopTrigger(shooter),
             new StopShooter(shooter),
-            new TrajectoryFollower(drive, new TwoBallPartTwo())
+            new ParallelDeadlineGroup(
+                new WaitCommand(4.0),
+                new DeployIntake(intake),
+                new TrajectoryFollower(drive, new TwoBallPartTwo())),
+            new ParallelDeadlineGroup(
+                new SequentialCommandGroup(
+                    new WaitCommand(1.5), // Give shooter time to spin up & hood to move
+                    new PullTrigger(shooter),
+                    new WaitCommand(2)),
+                new FlywheelController(shooter, 650, 60),
+                new RetractIntake(intake)),
+            new StopShooter(shooter),
+            new StopTrigger(shooter)
         );
     }    
 }

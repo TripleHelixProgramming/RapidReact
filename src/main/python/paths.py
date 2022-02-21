@@ -26,10 +26,10 @@ def main():
     #                 [0,0,-1.95]],
     #                 "WeirdAutoPartOne")
 
-    generator.generate(
-                    [[0,0,-1.95],
-                    [-1.25,1.225,-0.6]],
-                    "WeirdAutoPartTwo")
+    # generator.generate(
+    #                 [[0,0,-1.95],
+    #                 [-1.25,1.225,-0.6]],
+    #                 "WeirdAutoPartTwo")
 
     # generator.generate(
     #                 [[-1.0,0,-0.15],
@@ -50,8 +50,22 @@ def main():
 
     # generator.generate([
     #             [0,0,2.32],
-    #             [1.8,0,0]],
+    #             [1.8,-1.52,0],
+    #             [0.9,-1.52,0]],
     #             "TwoBallPartTwo")
+    
+    generator.generate([
+                    [0,0,-1.95],
+                    [2.5,0.85,-1.95],
+                    [5.7,-0.3,-2.1],
+                    [6.35,0.0,-2.1]],
+                    "FourBallPartTwo")
+
+    generator.generate([
+                    [6.35,0.0,-2.1],
+                    [2.5,0.85,-2.1],
+                    [-0.3,-0.3,-1.95]],
+                    "FourBallPartThree")
 
     # generator.generate([
     #                 [0,0,-1.57],
