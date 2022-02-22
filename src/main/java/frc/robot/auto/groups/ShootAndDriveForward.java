@@ -16,6 +16,7 @@ import frc.robot.intake.commands.RetractIntake;
 import frc.robot.shooter.Shooter;
 import frc.robot.shooter.commands.FlywheelController;
 import frc.robot.shooter.commands.PullTrigger;
+import frc.robot.shooter.commands.ResetHood;
 import frc.robot.shooter.commands.SetShooterState;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
@@ -36,7 +37,8 @@ public class ShootAndDriveForward extends SequentialCommandGroup{
             new StopTrigger(shooter),
             new StopShooter(shooter), // Stop shooter & reset hood.
             new TrajectoryFollower(drive, new OnePointEightMetersForward()),
-            new TrajectoryFollower(drive, new OnePointEightMetersForward())
+            new TrajectoryFollower(drive, new OnePointEightMetersForward()),
+            new ResetHood(shooter)
         );
     }    
 }

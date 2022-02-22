@@ -65,8 +65,9 @@ public class FourBallAuto extends SequentialCommandGroup{
                     new PullTrigger(shooter)),
                 new TrajectoryFollower(drive, new FourBallPartThree())),
             new StopShooter(shooter),
-            new StopTrigger(shooter)
-        );
+            new StopTrigger(shooter),
+            new ResetHood(shooter)
+            );
     }
     
 }
