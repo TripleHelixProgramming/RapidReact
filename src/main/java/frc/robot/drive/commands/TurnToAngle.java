@@ -6,14 +6,8 @@ package frc.robot.drive.commands;
 
 import frc.lib.HelixJoysticks;
 import frc.lib.control.PIDController;
-import frc.lib.util.InterpolatingPoseMap;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.drive.Drivetrain;
 import frc.robot.vision.Limelight;
@@ -23,10 +17,8 @@ public class TurnToAngle extends CommandBase {
   private Drivetrain drive;
   private Limelight limelight;
   private PIDController thetaController;
-  private double lastTime = 0;
-  private Timer timer = new Timer();
-  private InterpolatingPoseMap map;
   private HelixJoysticks joysticks;
+  private boolean sawTarget;
 
   public TurnToAngle(Drivetrain drive, Limelight limelight, HelixJoysticks joysticks) {
     addRequirements(drive);
@@ -37,46 +29,36 @@ public class TurnToAngle extends CommandBase {
 
   @Override
   public void initialize() {
-    timer.reset();
-    timer.start();
-    
-    thetaController = new PIDController(0.1, 0, 0.0);
+    thetaController = new PIDController(0.16, 0, 0.0);
     thetaController.setContinous(true);
     thetaController.setInputRange(360);
-
-    lastTime = 0;
-
-    map = new InterpolatingPoseMap(1000);
-    map.addPose(drive.getPose(), timer.get());
+    // limelight.turnOnLEDs();
+    // sawTarget = limelight.hasTarget();
   }
 
   @Override
   public void execute() {
-    double time = timer.get();
-    double dt = time - lastTime;
-    VisionState state = limelight.getState();
-    map.addPose(drive.getPose(), Timer.getFPGATimestamp());
-    double offset = 0;
-    // double offset = map.getLatestPose().getRotation().minus(map.getPose(state.timestamp).getRotation()).getDegrees();
+    // sawTarget = limelight.hasTarget();
+    // if (sawTarget) {
+      VisionState state = limelight.getState();
 
-    thetaController.setReference(0);
+      thetaController.setReference(drive.getPose(state.timestamp).getRotation().getDegrees() - state.xOffset);
 
-    // double omega = -thetaController.calculate(currentPose.getRotation().getRadians(), dt);
-    double omega = -thetaController.calculate(state.xOffset + offset, dt);
+      double omega = -thetaController.calculate(drive.getPose().getRotation().getDegrees(), 0.02);
 
-    drive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(
-                                                        joysticks.getX() * DriveConstants.kMaxTranslationalVelocity,
-                                                        joysticks.getY() * DriveConstants.kMaxTranslationalVelocity,
-                                                        omega,
-                                                        drive.getHeading()),
-                                                        true);
-    lastTime = time;
+      drive.openLoopDrive(ChassisSpeeds.fromFieldRelativeSpeeds(
+                                                          joysticks.getX() * DriveConstants.kMaxTranslationalVelocity,
+                                                          joysticks.getY() * DriveConstants.kMaxTranslationalVelocity,
+                                                          omega,
+                                                          drive.getHeading()));
+    // }
+    
   }
 
   @Override
   public void end(boolean interrupted) {
-    timer.stop();
     drive.brake();
+    // limelight.turnOffLEDs();
   }
 
   @Override

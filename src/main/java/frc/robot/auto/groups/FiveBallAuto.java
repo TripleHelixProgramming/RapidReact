@@ -20,10 +20,12 @@ import frc.robot.drive.commands.ResetOdometry;
 import frc.robot.drive.commands.TrajectoryFollower;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.DeployIntake;
+import frc.robot.intake.commands.FastIntake;
 import frc.robot.intake.commands.RetractIntake;
 import frc.robot.shooter.Shooter;
 import frc.robot.shooter.commands.FlywheelController;
 import frc.robot.shooter.commands.PullTrigger;
+import frc.robot.shooter.commands.ResetHood;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
 
@@ -35,31 +37,46 @@ public class FiveBallAuto extends SequentialCommandGroup {
         new SequentialCommandGroup(
             new WaitCommand(1.0), // Give shooter time to spin up & hood to move
             new PullTrigger(shooter),
-            new WaitCommand(0.5)
-        ),
+            new WaitCommand(0.5)),
         new TrajectoryFollower(drive, new FiveBallPartOne()), // Turn to point at center
-        new FlywheelController(shooter, 1700, 79)),
-    new StopShooter(shooter),
-    new StopTrigger(shooter),
+        new FlywheelController(shooter, 1810, 77.90)),
     new ParallelDeadlineGroup(
+      new StopShooter(shooter),
+      new StopTrigger(shooter),
+      new FastIntake(intake)),
+    new ParallelDeadlineGroup(
+      new WaitCommand(4.60),
+      new SequentialCommandGroup(
+        new WaitCommand(1.1), 
+        new FlywheelController(shooter, 1990, 73.25)),
       new TrajectoryFollower(drive, new FiveBallPartTwo()),
-      new DeployIntake(intake)
-    ),
-    new ParallelDeadlineGroup(
-        new SequentialCommandGroup(
-            new WaitCommand(1.0), // Give shooter time to spin up & hood to move
-            new ParallelDeadlineGroup(
-              new WaitCommand(1), 
-              new PullTrigger(shooter),
-              new RetractIntake(intake))
-        ),
-        new FlywheelController(shooter, 1900, 72.5)),
+      new SequentialCommandGroup(
+        new WaitCommand(3.35),
+        new PullTrigger(shooter)),
+      new SequentialCommandGroup(
+        new WaitCommand(3.1),
+        new RetractIntake(intake))),
     new StopShooter(shooter),
     new StopTrigger(shooter),
-    new TrajectoryFollower(drive, new FiveBallPartThree()),
-    new WaitCommand(1),
-    new TrajectoryFollower(drive, new FiveBallPartFour()),
-    new WaitCommand(1)
+    new ParallelDeadlineGroup(
+      new TrajectoryFollower(drive, new FiveBallPartThree()),
+      new FastIntake(intake)),
+    new WaitCommand(0.9), // Pick up balls 4 & 5
+    new ParallelDeadlineGroup(
+      new WaitCommand(4.5),
+      new SequentialCommandGroup(
+        new WaitCommand(1.75),
+        new FlywheelController(shooter, 1830, 77.60)),
+      new SequentialCommandGroup(
+        new WaitCommand(3.0),
+        new PullTrigger(shooter)),
+      new SequentialCommandGroup(
+        new WaitCommand(1.5),
+        new RetractIntake(intake)),
+      new TrajectoryFollower(drive, new FiveBallPartFour())),
+    new StopShooter(shooter),
+    new StopTrigger(shooter),
+    new ResetHood(shooter)
     );
   }
 }

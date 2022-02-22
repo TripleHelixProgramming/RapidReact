@@ -8,20 +8,19 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.intake.Intake;
 
-public class RetractIntake extends CommandBase {
+public class FastIntake extends CommandBase {
   private Intake intake;
 
-  public RetractIntake(Intake intake) {
-    this.intake = intake;
+  public FastIntake(Intake intake) {
+    this.intake = intake; 
     addRequirements(intake);
   }
 
   @Override
   public void initialize() {
-    intake.retract();
+    intake.deploy();
     Timer.delay(0.2);
-    intake.rollerStop();
-    
+    intake.fastRollerIn();
   }
 
   @Override

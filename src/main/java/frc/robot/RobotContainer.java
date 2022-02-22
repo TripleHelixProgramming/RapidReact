@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 // import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.lib.ControllerPatroller;
@@ -26,6 +28,7 @@ import frc.robot.auto.groups.DriveForwardAndShoot;
 import frc.robot.auto.groups.FiveBallAuto;
 import frc.robot.auto.groups.FourBallAuto;
 import frc.robot.auto.groups.ShootAndDriveForward;
+import frc.robot.auto.groups.WeirdAuto;
 import frc.robot.climber.Climber;
 import frc.robot.climber.commands.DeployClimber;
 import frc.robot.climber.commands.RetractClimber;
@@ -40,12 +43,15 @@ import frc.robot.drive.commands.ZeroHeading;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.DeployIntake;
 import frc.robot.intake.commands.EjectIntake;
+import frc.robot.intake.commands.FastIntake;
 import frc.robot.intake.commands.RetractIntake;
 import frc.robot.shooter.Shooter;
 import frc.robot.shooter.commands.*;
 import frc.robot.status.Status;
 import frc.robot.status.commands.SetColor;
 import frc.robot.vision.Limelight;
+import frc.robot.vision.commands.TurnOffLEDs;
+import frc.robot.vision.commands.TurnOnLEDs;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -121,9 +127,12 @@ public class RobotContainer {
       oneBallAuto.close();
       twoBallAuto.close();
     }
+
     // return autoCommand;
-    return new FiveBallAuto(mDrive, mIntake, mShooter);
-    // return new TurnToAngle(mDrive, mLimelight);
+    // return new FiveBallAuto(mDrive, mIntake, mShooter);
+    return new FourBallAuto(mDrive, mIntake, mShooter);
+    // return new DriveForwardAndShoot(mDrive, mIntake, mShooter);
+    // return new WeirdAuto(mDrive, mIntake, mShooter);
   }
 
   public void setLEDs() {
@@ -136,6 +145,14 @@ public class RobotContainer {
   
   public void moveHoodToHardStop() {
     new ResetHood(mShooter).schedule();
+  }
+
+  public void enableLights() {
+    mLimelight.turnOnLEDs();
+  }
+
+  public void disableLights() {
+    mLimelight.turnOffLEDs();
   }
 
   public void configureButtonBindings() {
@@ -154,6 +171,10 @@ public class RobotContainer {
       
       new JoystickButton(driver, RMZ_D_IN).whenPressed(new PullTrigger(mShooter));
       new JoystickButton(driver, RMZ_D_IN).whenReleased(new StopTrigger(mShooter));
+
+      new JoystickButton(driver, RMZ_H_IN).whenPressed(new DeployClimber(mClimber));
+      new JoystickButton(driver, RMZ_G_IN).whenReleased(new RetractClimber(mClimber));
+
       
       // new JoystickButton(driver, RMZ_E_UP).whenHeld(new AbsoluteOrientation(mDrive, joysticks));
 
@@ -227,7 +248,8 @@ public class RobotContainer {
       // new JoystickButton(operator, X_BOX_LEFT_TRIGGER);
       // new JoystickButton(operator, X_BOX_RIGHT_TRIGGER);
       JoystickButton xBoxLB = new JoystickButton(operator, X_BOX_LB);
-      xBoxLB.whenHeld(new DeployIntake(mIntake));
+      // xBoxLB.whenHeld(new DeployIntake(mIntake));
+      xBoxLB.whenHeld(new FastIntake(mIntake));
       // xBoxLB.whenReleased(new RetractIntake(mIntake));
       JoystickButton xBoxRB = new JoystickButton(operator, X_BOX_RB);
       xBoxRB.whenHeld(new EjectIntake(mIntake));
@@ -236,20 +258,20 @@ public class RobotContainer {
       // JoystickButton xBoxR = new JoystickButton(operator,
       // X_BOX_RIGHT_STICK_BUTTON);
       JoystickButton xBoxA = new JoystickButton(operator, X_BOX_A);
-      xBoxA.whileHeld(new PresetFlywheelController(mShooter,"BUF")); // baseline, upper goal, front shot
-      xBoxA.whenReleased(new StopShooter(mShooter));
+      xBoxA.whileHeld(new PresetFlywheelController(mShooter,"BUF").alongWith(new TurnOnLEDs(mLimelight))); // baseline, upper goal, front shot
+      xBoxA.whenReleased(new StopShooter(mShooter).alongWith(new TurnOffLEDs(mLimelight)));
 
       JoystickButton xBoxB = new JoystickButton(operator, X_BOX_B);
-      xBoxB.whileHeld(new PresetFlywheelController(mShooter, "BUR")); // baseline, upper goal, rear shot
-      xBoxB.whenReleased(new StopShooter(mShooter));
+      xBoxB.whileHeld(new PresetFlywheelController(mShooter, "BUR").alongWith(new TurnOnLEDs(mLimelight))); // baseline, upper goal, rear shot
+      xBoxB.whenReleased(new StopShooter(mShooter).alongWith(new TurnOnLEDs(mLimelight)));
 
       JoystickButton xBoxX = new JoystickButton(operator, X_BOX_X);
-      xBoxX.whileHeld(new PresetFlywheelController(mShooter, "TLR")); // tarmac, lower goal, rear shot    
-      xBoxX.whenReleased(new StopShooter(mShooter));
+      xBoxX.whileHeld(new PresetFlywheelController(mShooter, "TLR").alongWith(new TurnOnLEDs(mLimelight))); // tarmac, lower goal, rear shot    
+      xBoxX.whenReleased(new StopShooter(mShooter).alongWith(new TurnOffLEDs(mLimelight)));
 
       JoystickButton xBoxY = new JoystickButton(operator, X_BOX_Y);
-      xBoxY.whileHeld(new PresetFlywheelController(mShooter, "TUR")); // tarmac, upper goal, rear shot    
-      xBoxY.whenReleased(new StopShooter(mShooter));
+      xBoxY.whileHeld(new PresetFlywheelController(mShooter, "TUR").alongWith(new TurnOnLEDs(mLimelight))); // tarmac, upper goal, rear shot    
+      xBoxY.whenReleased(new StopShooter(mShooter).alongWith(new TurnOffLEDs(mLimelight)));
       
       // JoystickButton xBoxLogoLeft = new JoystickButton(operator, X_BOX_LOGO_LEFT);
 

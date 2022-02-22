@@ -40,6 +40,10 @@ public class Intake extends SubsystemBase {
     solenoid.set(Value.kReverse);
   }
 
+  public void fastRollerIn() {
+    motor.set(ControlMode.PercentOutput, 0.95);
+  }
+
   public void rollerIn() {
     motor.set(ControlMode.PercentOutput, IntakeConstants.kRollerSpeed);
   }

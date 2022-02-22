@@ -13,7 +13,7 @@ def main():
         46.7,5.6,
         # Max velocity/force
         90, 1.5,
-        # 73, 1
+        # 73, 1,
         # 50, 1,
         # Wheel radius
         0.051)
@@ -21,9 +21,15 @@ def main():
     generator = trajectory_generator(drive)
 
     # generator.generate(
-    #                     [[0,0,0],
-    #                     [-1.0,0,-0.15]],
-    #                     "OnePointEightMetersForward")
+    #                 [[0,0,-1.57],
+    #                 [0,1.0,-1.57],
+    #                 [0,0,-1.95]],
+    #                 "WeirdAutoPartOne")
+
+    # generator.generate(
+    #                 [[0,0,-1.95],
+    #                 [-1.25,1.225,-0.6]],
+    #                 "WeirdAutoPartTwo")
 
     # generator.generate(
     #                 [[-1.0,0,-0.15],
@@ -37,14 +43,29 @@ def main():
     #             "GoHome")
 
     # generator.generate([
-    #             [0,0,-0.7],
-    #             [-1.2,0,-0.4]],
-    #             "ShootTwoBalls")
+    #             [0,0,2.32],
+    #             [1.2,0,2.62],
+    #             [0,0,2.32]],
+    #             "TwoBallPartOne")
+
+    # generator.generate([
+    #             [0,0,2.32],
+    #             [1.8,-1.52,0],
+    #             [0.9,-1.52,0]],
+    #             "TwoBallPartTwo")
     
     # generator.generate([
-    #             [0,0,0],
-    #             [-0.4,0,-math.pi * 0.9]],
-    #             "GoForwardHalfMeter")
+    #                 [0,0,-1.95],
+    #                 [2.5,0.85,-1.95],
+    #                 [5.7,-0.3,-2.1],
+    #                 [6.35,0.0,-2.1]],
+    #                 "FourBallPartTwo")
+
+    # generator.generate([
+    #                 [6.35,0.0,-2.1],
+    #                 [2.5,0.85,-2.1],
+    #                 [-0.3,-0.3,-1.95]],
+    #                 "FourBallPartThree")
 
     # generator.generate([
     #                 [0,0,-1.57],
@@ -53,31 +74,21 @@ def main():
 
     # generator.generate([
     #                 [0,0,-1.85],
-    #                 [0.0,1.0,-1.85],
-    #                 [1.85,-0.5,-math.pi+0.2],
-    #                 [1.65,-0.7,-math.pi+0.55]
+    #                 [-0.2,0.9,-1.85],
+    #                 [1.85,-0.5,-math.pi+0.6]
     #                 ],
     #                 "FiveBallPartTwo")
 
     # generator.generate([
-    #                 [1.65,-0.7,-math.pi+0.55],
-    #                 [6.15,0.3,-math.pi+0.7]
+    #                 [1.85,-0.5,-math.pi+0.6],
+    #                 [6.47,0.2,-math.pi+0.7]
     #                 ],
     #                 "FiveBallPartThree")
 
-    # generator.generate([
-    #                 [6.15,0.3,-math.pi+0.7],
-    #                 [0.15,-0.25,-math.pi+0.9]
-    #                 ],
-    #                 "FiveBallPartFour")
-
     generator.generate([
-                    [0.15,-0.25,-math.pi+0.9],
-                    [0.15,-0.2500001,0.7],
-                    [0.15,-0.2500002,math.pi+0.7],
-                    [0.15,-0.2500003,2*math.pi+0.7],
+                    [6.47,0.2,-math.pi+0.7],
+                    [0.10,-0.375,-math.pi+0.9]
                     ],
-                    "Spinnnn")
-                    
+                    "FiveBallPartFour")
 
 main()

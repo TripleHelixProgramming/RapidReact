@@ -2,6 +2,7 @@ package frc.robot.shooter.commands;
 
 import edu.wpi.first.wpilibj.Preferences;
 import frc.robot.shooter.Shooter;
+import frc.robot.vision.Limelight;
 
 public class PresetFlywheelController extends FlywheelController {
 
