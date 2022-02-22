@@ -119,7 +119,7 @@ public class RobotContainer {
       if(!fiveBallAuto.get()){
         autoCommand = new FiveBallAuto(mDrive, mIntake, mShooter);
       } else if (!twoBallSouthAuto.get()) {
-        autoCommand = new ShootAndDriveForward(mDrive, mIntake, mShooter);
+        autoCommand = new TwoBallSouthAuto(mDrive, mIntake, mShooter);
       } else if (!twoBallEastAuto.get()) {
         autoCommand = new TwoBallEastAuto(mDrive, mIntake, mShooter);
       } else if (!fourBallAuto.get()) {
