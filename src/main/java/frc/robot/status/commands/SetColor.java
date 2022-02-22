@@ -26,6 +26,11 @@ public class SetColor extends CommandBase{
     }
 
     @Override
+    public boolean runsWhenDisabled() {
+        return true;
+    }
+
+    @Override
     public boolean isFinished() {
       return true;
     }      

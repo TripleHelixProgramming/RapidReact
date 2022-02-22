@@ -4,25 +4,16 @@
 
 package frc.robot;
 
-import frc.lib.ControllerPatroller;
-import frc.robot.shooter.Shooter;
-import frc.robot.status.Status;
-import frc.robot.status.actions.ChaseAction;
-import frc.robot.status.actions.ImageAction;
-import frc.robot.status.actions.PowerUpAction;
-import frc.robot.status.actions.ScannerAction;
-import frc.robot.status.commands.ActionCommand;
-import frc.robot.status.commands.SetColor;
-import frc.robot.status.groups.LEDDemoCG;
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.util.Color;
 // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.lib.ControllerPatroller;
+import frc.robot.status.Status;
+import frc.robot.status.commands.SetColor;
+import frc.robot.status.groups.LEDDemoCG;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -97,6 +88,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    new SetColor(Status.getInstance(), Color.kBlack).schedule();
   }
 
   @Override
@@ -121,6 +113,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    new SetColor(Status.getInstance(), Color.kBlack).schedule();
 
     m_autonomousCommand = mRobotContainer.getAutonomousCommand();
 
@@ -144,6 +137,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+
+    new SetColor(Status.getInstance(), Color.kBlack).schedule();
 
     // new SetColor(Status.getInstance(), Color.kDarkOrchid).schedule();
     // new ActionCommand(new ScannerAction(245, 0, 255, 200)).schedule();
