@@ -15,8 +15,6 @@ import frc.paths.OnePointEightMetersForward;
 import frc.paths.ShootTwoBalls;
 import frc.paths.TwoBallPartOne;
 import frc.paths.TwoBallPartTwo;
-import frc.paths.WeirdAutoPartOne;
-import frc.paths.WeirdAutoPartTwo;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.ResetOdometry;
 import frc.robot.drive.commands.TrajectoryFollower;
@@ -31,36 +29,37 @@ import frc.robot.shooter.commands.SetShooterState;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
 
-public class WeirdAuto extends SequentialCommandGroup{
-    public WeirdAuto(Drivetrain drive, Intake intake, Shooter shooter) {
+public class TwoBallSouthAuto extends SequentialCommandGroup{
+    public TwoBallSouthAuto(Drivetrain drive, Intake intake, Shooter shooter) {
         addCommands(
-            new ResetOdometry(drive, new Pose2d(new Translation2d(0,0),Rotation2d.fromDegrees(-90))),
-            new ParallelDeadlineGroup(
-                new TrajectoryFollower(drive, new WeirdAutoPartOne()),
-                new ResetHood(shooter),  
+            new ResetOdometry(drive, new Pose2d(new Translation2d(0,0),new Rotation2d(2.32))),
+            new ParallelDeadlineGroup( // Pick up blue ball
+                new TrajectoryFollower(drive, new TwoBallPartOne()),
+                new ResetHood(shooter),
                 new DeployIntake(intake)),
-            new ParallelDeadlineGroup(
+            new ParallelDeadlineGroup( // Shoot the balls
                 new SequentialCommandGroup(
-                    new WaitCommand(2), // Give shooter time to spin up & hood to move
+                    new WaitCommand(1.5), // Give shooter time to spin up & hood to move
                     new PullTrigger(shooter),
                     new WaitCommand(2)),
-                new FlywheelController(shooter, 1800, 78.25),
+                new FlywheelController(shooter, 1805, 78.25),
                 new RetractIntake(intake)),
             new StopTrigger(shooter),
             new StopShooter(shooter),
-            new ParallelDeadlineGroup(
-                new TrajectoryFollower(drive, new WeirdAutoPartTwo()),
-                new DeployIntake(intake)),
-            new WaitCommand(1.5),
-            new ParallelDeadlineGroup(
+            new ParallelDeadlineGroup( // Pick up red ball
+                new WaitCommand(4.0),
+                new DeployIntake(intake),
+                new TrajectoryFollower(drive, new TwoBallPartTwo())),
+            new ParallelDeadlineGroup( // Toss red ball away
                 new SequentialCommandGroup(
-                    new WaitCommand(1),
+                    new WaitCommand(1.5), // Give shooter time to spin up & hood to move
                     new PullTrigger(shooter),
-                    new WaitCommand(1)), 
-                new FlywheelController(shooter, 1800, 65),
+                    new WaitCommand(2)),
+                new FlywheelController(shooter, 650, 60),
                 new RetractIntake(intake)),
             new StopShooter(shooter),
-            new StopTrigger(shooter)
+            new StopTrigger(shooter),
+            new ResetHood(shooter)
         );
     }    
 }

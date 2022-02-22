@@ -32,7 +32,7 @@ import frc.robot.shooter.commands.StopTrigger;
 public class FiveBallAuto extends SequentialCommandGroup {
   public FiveBallAuto(Drivetrain drive, Intake intake, Shooter shooter) {
     addCommands(
-      new ResetOdometry(drive, new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(-90))),
+      new ResetOdometry(drive, new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(-90.0))),
       new ParallelDeadlineGroup(
         new SequentialCommandGroup(
             new WaitCommand(1.0), // Give shooter time to spin up & hood to move

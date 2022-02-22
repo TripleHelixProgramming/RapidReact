@@ -24,11 +24,11 @@ import frc.lib.ControllerPatroller;
 import frc.lib.HelixJoysticks;
 // import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.auto.groups.DriveForwardAndShoot;
+import frc.robot.auto.groups.TwoBallSouthAuto;
 import frc.robot.auto.groups.FiveBallAuto;
 import frc.robot.auto.groups.FourBallAuto;
 import frc.robot.auto.groups.ShootAndDriveForward;
-import frc.robot.auto.groups.WeirdAuto;
+import frc.robot.auto.groups.TwoBallEastAuto;
 import frc.robot.climber.Climber;
 import frc.robot.climber.commands.DeployClimber;
 import frc.robot.climber.commands.RetractClimber;
@@ -121,7 +121,7 @@ public class RobotContainer {
       } else if (!twoBallSouthAuto.get()) {
         autoCommand = new ShootAndDriveForward(mDrive, mIntake, mShooter);
       } else if (!twoBallEastAuto.get()) {
-        autoCommand = new DriveForwardAndShoot(mDrive, mIntake, mShooter);
+        autoCommand = new TwoBallEastAuto(mDrive, mIntake, mShooter);
       } else if (!fourBallAuto.get()) {
         autoCommand = new FourBallAuto(mDrive, mIntake, mShooter);
       }
