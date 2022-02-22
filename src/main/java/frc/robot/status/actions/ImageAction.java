@@ -3,6 +3,8 @@ package frc.robot.status.actions;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.util.Color;
 import java.awt.image.BufferedImage;
 
@@ -57,7 +59,10 @@ public class ImageAction extends LedAction {
         super();
         intervalTime = interval;
         try {
-            imageFile = new File(pathname);
+            File deployDir = Filesystem.getDeployDirectory();
+            String pathPrefix = deployDir.getAbsolutePath() + "/images/";
+
+            imageFile = new File( pathPrefix+ pathname);
             image = ImageIO.read(imageFile);
             intervalCount = count * image.getWidth();
             curIntCount = intervalCount;
