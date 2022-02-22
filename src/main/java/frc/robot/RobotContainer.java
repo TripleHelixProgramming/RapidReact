@@ -104,26 +104,28 @@ public class RobotContainer {
     // return new TrajectoryFollower(mDrive, new CollectSecondBall());
     Command autoCommand = null;
 
-    DigitalInput fourBallAuto = new DigitalInput(0);
-    DigitalInput oneBallAuto = new DigitalInput(1);
-    DigitalInput twoBallAuto = new DigitalInput(2);
+    DigitalInput fiveBallAuto = new DigitalInput(0);
+    DigitalInput twoBallSouthAuto = new DigitalInput(1);
+    DigitalInput twoBallEastAuto = new DigitalInput(2);
+    DigitalInput fourBallAuto = new DigitalInput(4);
 
     try {
-      if (!fourBallAuto.get()) {
-        autoCommand = new FourBallAuto(mDrive, mIntake, mShooter);
-      } else if (!oneBallAuto.get()) {
+      if(!fiveBallAuto.get()){
+        autoCommand = new FiveBallAuto(mDrive, mIntake, mShooter);
+      } else if (!twoBallSouthAuto.get()) {
         autoCommand = new ShootAndDriveForward(mDrive, mIntake, mShooter);
-      } else if (!twoBallAuto.get()) {
+      } else if (!twoBallEastAuto.get()) {
         autoCommand = new DriveForwardAndShoot(mDrive, mIntake, mShooter);
+      } else if (!fourBallAuto.get()) {
+        autoCommand = new FourBallAuto(mDrive, mIntake, mShooter);
       }
     } finally {
+      fiveBallAuto.close();
+      twoBallSouthAuto.close();
+      twoBallEastAuto.close();
       fourBallAuto.close();
-      oneBallAuto.close();
-      twoBallAuto.close();
     }
-    // return autoCommand;
-    return new FiveBallAuto(mDrive, mIntake, mShooter);
-    // return new TurnToAngle(mDrive, mLimelight);
+    return autoCommand;
   }
 
   public void setLEDs() {
