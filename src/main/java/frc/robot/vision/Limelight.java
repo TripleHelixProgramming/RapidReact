@@ -29,6 +29,18 @@ public class Limelight extends SubsystemBase {
     return state;
   }
 
+  public boolean hasTarget() {
+    return getDefault().getTable("limelight").getEntry("tv").getDouble(0) == 1.0;
+  }
+
+  public void turnOffLEDs() {
+    getDefault().getTable("limelight").getEntry("ledMode").setDouble(1.0);
+  }
+
+  public void turnOnLEDs() {
+    getDefault().getTable("limelight").getEntry("ledMode").setDouble(3.0);
+  }
+
   public static class VisionState {
     public final double xOffset;
     public final double yOffset;

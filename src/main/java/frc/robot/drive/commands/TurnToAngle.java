@@ -18,6 +18,7 @@ public class TurnToAngle extends CommandBase {
   private Limelight limelight;
   private PIDController thetaController;
   private HelixJoysticks joysticks;
+  private boolean sawTarget;
 
   public TurnToAngle(Drivetrain drive, Limelight limelight, HelixJoysticks joysticks) {
     addRequirements(drive);
@@ -31,26 +32,33 @@ public class TurnToAngle extends CommandBase {
     thetaController = new PIDController(0.16, 0, 0.0);
     thetaController.setContinous(true);
     thetaController.setInputRange(360);
+    // limelight.turnOnLEDs();
+    // sawTarget = limelight.hasTarget();
   }
 
   @Override
   public void execute() {
-    VisionState state = limelight.getState();
+    // sawTarget = limelight.hasTarget();
+    // if (sawTarget) {
+      VisionState state = limelight.getState();
 
-    thetaController.setReference(drive.getPose(state.timestamp).getRotation().getDegrees() - state.xOffset);
+      thetaController.setReference(drive.getPose(state.timestamp).getRotation().getDegrees() - state.xOffset);
 
-    double omega = -thetaController.calculate(drive.getPose().getRotation().getDegrees(), 0.02);
+      double omega = -thetaController.calculate(drive.getPose().getRotation().getDegrees(), 0.02);
 
-    drive.openLoopDrive(ChassisSpeeds.fromFieldRelativeSpeeds(
-                                                        joysticks.getX() * DriveConstants.kMaxTranslationalVelocity,
-                                                        joysticks.getY() * DriveConstants.kMaxTranslationalVelocity,
-                                                        omega,
-                                                        drive.getHeading()));
+      drive.openLoopDrive(ChassisSpeeds.fromFieldRelativeSpeeds(
+                                                          joysticks.getX() * DriveConstants.kMaxTranslationalVelocity,
+                                                          joysticks.getY() * DriveConstants.kMaxTranslationalVelocity,
+                                                          omega,
+                                                          drive.getHeading()));
+    // }
+    
   }
 
   @Override
   public void end(boolean interrupted) {
     drive.brake();
+    // limelight.turnOffLEDs();
   }
 
   @Override

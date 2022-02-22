@@ -17,6 +17,7 @@ import frc.robot.drive.commands.ResetOdometry;
 import frc.robot.drive.commands.TrajectoryFollower;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.DeployIntake;
+import frc.robot.intake.commands.FastIntake;
 import frc.robot.intake.commands.RetractIntake;
 import frc.robot.shooter.Shooter;
 import frc.robot.shooter.commands.FlywheelController;
@@ -31,25 +32,25 @@ public class FourBallAuto extends SequentialCommandGroup{
         addCommands(
             new ResetOdometry(drive, new Pose2d(new Translation2d(0,0),Rotation2d.fromDegrees(-90))),
             new ParallelDeadlineGroup(
-                new WaitCommand(4.0),
+                new WaitCommand(4.25),
                 new ResetHood(shooter),
                 new SequentialCommandGroup(
-                    new WaitCommand(1.5),
+                    new WaitCommand(1.75),
                     new FlywheelController(shooter, 1800, 78.25)),
                 new SequentialCommandGroup(
-                    new WaitCommand(3.0),
+                    new WaitCommand(3.25),
                     new PullTrigger(shooter)),
                 new TrajectoryFollower(drive, new WeirdAutoPartOne()),
                 new SequentialCommandGroup(
                     new ParallelDeadlineGroup(
-                        new WaitCommand(1.7),
-                        new DeployIntake(intake)),
+                        new WaitCommand(1.95),
+                        new FastIntake(intake)),
                     new RetractIntake(intake))),
             new StopTrigger(shooter),
             new StopShooter(shooter),
             new ParallelDeadlineGroup(
                 new TrajectoryFollower(drive, new FourBallPartTwo()),
-                new DeployIntake(intake)),
+                new FastIntake(intake)),
             new WaitCommand(1.0),
             new ParallelDeadlineGroup( 
                 new WaitCommand(4.25),
