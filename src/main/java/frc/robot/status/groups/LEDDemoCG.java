@@ -19,10 +19,13 @@ public class LEDDemoCG extends SequentialCommandGroup {
         // String pathPrefix = deployDir.getAbsolutePath() + "/images/";
 
         ImageAction ia = new ImageAction("THfade.png").oscillate();
-        addCommands(new ActionCommand(ia));
+        // addCommands(new ActionCommand(ia));
+        // addCommands(new WaitCommand(10));
+
+        addCommands(new ActionCommand(new ImageAction("fade.png",0.02).oscillate().brightness(0.7)));
         addCommands(new WaitCommand(10));
 
-        ia = new ImageAction("noise.png");
+        ia = new ImageAction("noise.png", 0.25);
         addCommands(new ActionCommand(ia));
         addCommands(new WaitCommand(10));
 

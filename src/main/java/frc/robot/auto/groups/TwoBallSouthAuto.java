@@ -7,6 +7,7 @@ import javax.swing.GroupLayout.ParallelGroup;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -28,10 +29,15 @@ import frc.robot.shooter.commands.ResetHood;
 import frc.robot.shooter.commands.SetShooterState;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
+import frc.robot.status.Status;
+import frc.robot.status.actions.ImageAction;
+import frc.robot.status.commands.ActionCommand;
+import frc.robot.status.commands.SetColor;
 
 public class TwoBallSouthAuto extends SequentialCommandGroup{
     public TwoBallSouthAuto(Drivetrain drive, Intake intake, Shooter shooter) {
         addCommands(
+            new ActionCommand(new ImageAction("noisy-pulse.png", 0.25).brightness(0.7)),
             new ResetOdometry(drive, new Pose2d(new Translation2d(0,0),new Rotation2d(2.32))),
             new ParallelDeadlineGroup( // Pick up blue ball
                 new TrajectoryFollower(drive, new TwoBallPartOne()),
@@ -59,7 +65,8 @@ public class TwoBallSouthAuto extends SequentialCommandGroup{
                 new RetractIntake(intake)),
             new StopShooter(shooter),
             new StopTrigger(shooter),
-            new ResetHood(shooter)
+            new ResetHood(shooter),
+            new SetColor(Status.getInstance(), Color.kBlack)
         );
     }    
 }
