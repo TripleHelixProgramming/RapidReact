@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.ControllerPatroller;
 import frc.robot.status.Status;
+import frc.robot.status.actions.ScannerAction;
+import frc.robot.status.commands.ActionCommand;
 import frc.robot.status.commands.SetColor;
 import frc.robot.status.groups.LEDDemoCG;
 
@@ -149,7 +151,8 @@ public class Robot extends TimedRobot {
     // String imagePath = Filesystem.getDeployDirectory().getAbsolutePath() + "/images/" + "pulse.png";
     // new ActionCommand(new ImageAction(imagePath).oscillate()).schedule();
 
-    new LEDDemoCG().schedule();
+    // new LEDDemoCG().schedule();
+    new ActionCommand(new ScannerAction(Color.kDarkOrchid, 255, 1.0, 0.05)).schedule();
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to

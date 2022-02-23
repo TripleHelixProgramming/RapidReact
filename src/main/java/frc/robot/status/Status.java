@@ -52,6 +52,7 @@ public class Status extends SubsystemBase {
 
     // Addressable LED support.
     private volatile AddressableLED addressableLed = null;
+    AddressableLEDBuffer currentBuffer; // AddressableLED is "write only" so keep track of what has been written
 
     // The current LED action
     private Action currentAction = null;
@@ -94,7 +95,12 @@ public class Status extends SubsystemBase {
 
     // This will set/send the buffer to the LEDs.
     public synchronized void setLedData(final AddressableLEDBuffer buffer) {
+        this.currentBuffer = buffer;
         addressableLed.setData(buffer);
+    }
+
+    public synchronized AddressableLEDBuffer getLedData() {
+        return this.currentBuffer;
     }
 
     public void setAction(final Action action) {
@@ -291,19 +297,33 @@ public class Status extends SubsystemBase {
         // See an old commit for this class that had such things.
     }
 
+    public void setColor(final Color color) {
+        setColor(color, 255);
+    }
+
     // Set a color from the predefined wpilib Color
     // Brightness is on a scale of 0-255
     public void setColor(final Color color, final int brightness) {
         Color8Bit intColor = new Color8Bit(color);
-        setColor(intColor.red, intColor.green, intColor.blue, brightness);
+        setColor(intColor.red, intColor.green, intColor.blue, brightness, 100);
+    }
+
+    public void setColor(final Color color, final int brightness, final int percent) {
+        Color8Bit intColor = new Color8Bit(color);
+        setColor(intColor.red, intColor.green, intColor.blue, brightness, percent);
     }
 
     // Set RGB color values.
     // RGB values are 0 (full off) - 255 (full on)
     // Brightness is on a scale of 0-255
-    public void setColor(int red, int green, int blue, final int brightness) {
+    public void setColor(int red, int green, int blue, final int brightness, int percent) {
         this.currentAction = null; // Clear any action that is running.
         final double b = brightness / 255.0;
+
+        if (0 > percent) {percent = 0;}
+        if (100 < percent) {percent = 100;}
+
+        final int lastIndex = (int) (ADDRESSABLE_LED_COUNT * (percent / 100.0));
 
         red = (int) (red * b);
         green = (int) (green * b);
@@ -317,10 +337,14 @@ public class Status extends SubsystemBase {
         // output the buffer.
         final AddressableLEDBuffer buffer = new AddressableLEDBuffer(ADDRESSABLE_LED_COUNT);
         for (var i = 0; i < buffer.getLength(); i++) {
-            buffer.setRGB(i, red, green, blue);
+            if (i > lastIndex) { // This will always set at least one LED to the specified color.
+                buffer.setRGB(i, 0, 0, 0);
+            } else {
+                buffer.setRGB(i, red, green, blue);
+            }
         }
-        addressableLed.setData(buffer);
-        addressableLed.start();
+        setLedData(buffer);
+//        addressableLed.start();
     }
 
     // This is the thread that runs the current action.

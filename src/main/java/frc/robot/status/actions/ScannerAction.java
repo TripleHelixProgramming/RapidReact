@@ -7,6 +7,9 @@
 
 package frc.robot.status.actions;
 
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
+
 public class ScannerAction extends LedAction {
 
     // State
@@ -29,6 +32,12 @@ public class ScannerAction extends LedAction {
         // Run forever, 10ms
         intervalCount = -1;
         intervalTime = 0.010;
+    }
+
+    public ScannerAction(Color color, int brightness, double chaseFactor, double intervalTime) {
+        this(new Color8Bit(color).red, new Color8Bit(color).green, new Color8Bit(color).blue, brightness);
+        this.chaseFactor = chaseFactor;
+        this.intervalTime = intervalTime;
     }
 
     public ScannerAction(int red, int green, int blue, int brightness) {
@@ -59,7 +68,7 @@ public class ScannerAction extends LedAction {
                 buffer.setRGB(i, r, g, b);
             } else {
 
-                int d = 0;
+                int d = 0; // How many pixels we are from the leading pixel
 
                 if (forward) {
                     if ((i < leadingIndex) && (i > leadingIndex - chaseCount)) {
@@ -72,9 +81,11 @@ public class ScannerAction extends LedAction {
                 }
 
                 if (d != 0) {
-                    int cr = (int) (r * (1 - d * chaseFactor));
-                    int cg = (int) (g * (1 - d * chaseFactor));
-                    int cb = (int) (b * (1 - d * chaseFactor));
+                    double fade = 1.0 - ((double)d / (double)chaseCount);
+
+                    int cr = (int) (r * fade);
+                    int cg = (int) (g * fade);
+                    int cb = (int) (b * fade);
 
                     buffer.setRGB(i, cr, cg, cb);
                 } else {

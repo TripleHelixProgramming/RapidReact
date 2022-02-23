@@ -48,6 +48,8 @@ import frc.robot.intake.commands.RetractIntake;
 import frc.robot.shooter.Shooter;
 import frc.robot.shooter.commands.*;
 import frc.robot.status.Status;
+import frc.robot.status.actions.ScannerAction;
+import frc.robot.status.commands.ActionCommand;
 import frc.robot.status.commands.SetColor;
 import frc.robot.vision.Limelight;
 import frc.robot.vision.commands.TurnOffLEDs;
@@ -256,21 +258,38 @@ public class RobotContainer {
       // JoystickButton xBoxL = new JoystickButton(operator, X_BOX_LEFT_STICK_BUTTON);
       // JoystickButton xBoxR = new JoystickButton(operator,
       // X_BOX_RIGHT_STICK_BUTTON);
+
       JoystickButton xBoxA = new JoystickButton(operator, X_BOX_A);
-      xBoxA.whileHeld(new PresetFlywheelController(mShooter,"BUF").alongWith(new TurnOnLEDs(mLimelight))); // baseline, upper goal, front shot
-      xBoxA.whenReleased(new StopShooter(mShooter).alongWith(new TurnOffLEDs(mLimelight)));
+      xBoxA.whileHeld(new PresetFlywheelController(mShooter,"BUF")
+                          .alongWith(new TurnOnLEDs(mLimelight))                
+                          .alongWith(new SetColor(mStatus, Color.kGreen, 200, 50))); // baseline, upper goal, front shot
+      xBoxA.whenReleased(new StopShooter(mShooter)
+                            .alongWith(new TurnOffLEDs(mLimelight))
+                            .alongWith(new ActionCommand(new ScannerAction(Color.kDarkOrchid, 255, 1.0, 0.05))));
 
       JoystickButton xBoxB = new JoystickButton(operator, X_BOX_B);
-      xBoxB.whileHeld(new PresetFlywheelController(mShooter, "BUR").alongWith(new TurnOnLEDs(mLimelight))); // baseline, upper goal, rear shot
-      xBoxB.whenReleased(new StopShooter(mShooter).alongWith(new TurnOnLEDs(mLimelight)));
+      xBoxB.whileHeld(new PresetFlywheelController(mShooter, "BUR")
+                          .alongWith(new TurnOnLEDs(mLimelight))
+                          .alongWith(new SetColor(mStatus, Color.kRed, 200, 50))); // baseline, upper goal, rear shot
+      xBoxB.whenReleased(new StopShooter(mShooter)
+                            .alongWith(new TurnOnLEDs(mLimelight))
+                            .alongWith(new ActionCommand(new ScannerAction(Color.kDarkOrchid, 255, 1.0, 0.05))));
 
       JoystickButton xBoxX = new JoystickButton(operator, X_BOX_X);
-      xBoxX.whileHeld(new PresetFlywheelController(mShooter, "TLR").alongWith(new TurnOnLEDs(mLimelight))); // tarmac, lower goal, rear shot    
-      xBoxX.whenReleased(new StopShooter(mShooter).alongWith(new TurnOffLEDs(mLimelight)));
+      xBoxX.whileHeld(new PresetFlywheelController(mShooter, "TLR")
+                          .alongWith(new TurnOnLEDs(mLimelight))
+                          .alongWith(new SetColor(mStatus, Color.kBlue, 200, 50))); // tarmac, lower goal, rear shot    
+      xBoxX.whenReleased(new StopShooter(mShooter)
+                            .alongWith(new TurnOffLEDs(mLimelight))
+                            .alongWith(new ActionCommand(new ScannerAction(Color.kDarkOrchid, 255, 1.0, 0.05))));
 
       JoystickButton xBoxY = new JoystickButton(operator, X_BOX_Y);
-      xBoxY.whileHeld(new PresetFlywheelController(mShooter, "TUR").alongWith(new TurnOnLEDs(mLimelight))); // tarmac, upper goal, rear shot    
-      xBoxY.whenReleased(new StopShooter(mShooter).alongWith(new TurnOffLEDs(mLimelight)));
+      xBoxY.whileHeld(new PresetFlywheelController(mShooter, "TUR")
+                          .alongWith(new TurnOnLEDs(mLimelight))
+                          .alongWith(new SetColor(mStatus, Color.kYellow, 200, 50))); // tarmac, upper goal, rear shot    
+      xBoxY.whenReleased(new StopShooter(mShooter)
+                            .alongWith(new TurnOffLEDs(mLimelight))
+                            .alongWith(new ActionCommand(new ScannerAction(Color.kDarkOrchid, 255, 1.0, 0.05))));
       
       // JoystickButton xBoxLogoLeft = new JoystickButton(operator, X_BOX_LOGO_LEFT);
 
