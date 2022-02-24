@@ -1,12 +1,13 @@
 package frc.robot.status.actions;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.util.Color;
-import java.awt.image.BufferedImage;
 
 /**
  * Use an image file to set the addressable LEDs
@@ -64,6 +65,17 @@ public class ImageAction extends LedAction {
 
             imageFile = new File( pathPrefix+ pathname);
             image = ImageIO.read(imageFile);
+
+            /**
+             * The below is very frustrating.
+             * 
+             * getScaledInstance() returns an Image. But we read in a BufferedImage.
+             * Converting from Image back to BufferedImage is buggy and causes Java to lock up! - at least on a Mac (and I found reports of it happening on Linux, too)
+             * So no convenient image scaling.
+             */
+            // Scale the image to the height of the LED strip
+            // Image scaledImage = image.getScaledInstance(-1, Status.ADDRESSABLE_LED_COUNT, Image.SCALE_DEFAULT);
+            
             intervalCount = count * image.getWidth();
             curIntCount = intervalCount;
         } catch (IOException e) {
