@@ -39,23 +39,23 @@ public class IdleCommand extends CommandBase {
         **/
         double rawTime = Timer.getMatchTime();
         MatchType mt = DriverStation.getMatchType();
-        double elapsedTime = 0;
+        double timeLeft = 0;
         if (DriverStation.isFMSAttached() || (mt == MatchType.Practice)) {
             // Time will be counting down.
-            elapsedTime = TELEOP_LENGTH - rawTime;
+            timeLeft = rawTime;
         } else {
             // Time will be counting up.
-            elapsedTime = rawTime;
+            timeLeft = TELEOP_LENGTH - rawTime;
         }
 
         Action action;
         Status.getInstance().setAction(new ScannerAction(Color.kDarkOrchid, 255, 1.0, 0.05));
-        new PrintCommand("Match Time = " + String.valueOf(elapsedTime)).schedule();
-        if (105.0 > elapsedTime) {
+        new PrintCommand("Time Left = " + String.valueOf(timeLeft)).schedule();
+        if (30.0 < timeLeft) {
             action = new ScannerAction(Color.kDarkOrchid, 255, 1.0, 0.05);
-        } else if (115.0 > elapsedTime ) {
+        } else if (10.0 < timeLeft ) {
             action = new ImageAction("yellow_stripes.png",0.05);
-        } else {
+        } else { // Last 10 seconds
             action = new ChaseAction(255, 127, 0, 90);
         }
         Status.getInstance().setAction(action);
