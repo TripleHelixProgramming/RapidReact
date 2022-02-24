@@ -38,9 +38,9 @@ public class ChaseAction extends LedAction {
         this.blue = blue;
         this.brightness = brightness;
 
-        // Run forever, 10ms
+        // Run forever, 50ms
         intervalCount = -1;
-        intervalTime = 0.010;
+        intervalTime = 0.050;
     }
 
     protected void updateBuffer() {
