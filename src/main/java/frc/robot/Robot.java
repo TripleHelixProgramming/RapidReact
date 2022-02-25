@@ -17,6 +17,7 @@ import frc.robot.status.actions.ChaseAction;
 import frc.robot.status.actions.ImageAction;
 import frc.robot.status.actions.ScannerAction;
 import frc.robot.status.commands.ActionCommand;
+import frc.robot.status.commands.FillLEDsCommand;
 import frc.robot.status.commands.SetColor;
 import frc.robot.status.groups.LEDDemoCG;
 
@@ -155,9 +156,18 @@ public class Robot extends TimedRobot {
     // new ActionCommand(new ImageAction(imagePath).oscillate()).schedule();
 
     // new LEDDemoCG().schedule();
-    new ActionCommand(new ScannerAction(Color.kDarkOrchid, 255, 1.0, 0.05)).schedule();
-    new WaitCommand(105).andThen(new ActionCommand(new ImageAction("yellow_stripes.png",0.05))).andThen(
-    new WaitCommand(10).andThen(new ActionCommand(new ChaseAction(255, 127, 0, 90)))).schedule();
+    // new ActionCommand(new ImageAction("yellow_stripes.png",0.05))
+    //   .andThen(new WaitCommand(5))
+    //   .andThen(new FillLEDsCommand())
+    //   .andThen(new WaitCommand(5))
+    //   .schedule();
+
+    new ActionCommand(new ScannerAction(Color.kDarkOrchid, 255, 1.0, 0.05))
+        .andThen(new WaitCommand(105))
+        .andThen(new ActionCommand(new ImageAction("yellow_stripes.png",0.05)))
+        .andThen(new WaitCommand(10)
+        .andThen(new ActionCommand(new ChaseAction(255, 127, 0, 90))))
+        .schedule();
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
