@@ -23,6 +23,7 @@ import frc.robot.status.actions.ScannerAction;
 public class IdleCommand extends CommandBase {
 
     private static final double TELEOP_LENGTH = 135.0;
+    private Action scannerAction = new ScannerAction(Color.kDarkOrchid, 255, 1.0, 0.05);
 
     public IdleCommand() {
     }
@@ -39,21 +40,20 @@ public class IdleCommand extends CommandBase {
         **/
         double rawTime = Timer.getMatchTime();
         MatchType mt = DriverStation.getMatchType();
-        double timeLeft = 0;
+        double timeElapsed = 0;
         if (DriverStation.isFMSAttached() || (mt == MatchType.Practice)) {
             // Time will be counting down.
-            timeLeft = rawTime;
+            timeElapsed = TELEOP_LENGTH - rawTime;
         } else {
             // Time will be counting up.
-            timeLeft = TELEOP_LENGTH - rawTime;
+            timeElapsed = rawTime;
         }
 
         Action action;
-        Status.getInstance().setAction(new ScannerAction(Color.kDarkOrchid, 255, 1.0, 0.05));
-        new PrintCommand("Time Left = " + String.valueOf(timeLeft)).schedule();
-        if (30.0 < timeLeft) {
-            action = new ScannerAction(Color.kDarkOrchid, 255, 1.0, 0.05);
-        } else if (10.0 < timeLeft ) {
+//        new PrintCommand("Time Left = " + String.valueOf(timeLeft)).schedule();
+        if (105.0 > timeElapsed) {
+            action = scannerAction;
+        } else if ( 115.0 > timeElapsed ) {
             action = new ImageAction("yellow_stripes.png",0.05);
         } else { // Last 10 seconds
             action = new ChaseAction(255, 127, 0, 90);
