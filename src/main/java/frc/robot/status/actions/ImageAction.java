@@ -6,8 +6,12 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import java.awt.Graphics;
+import java.awt.Image;
+
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.status.Status;
 
 /**
  * Use an image file to set the addressable LEDs
@@ -35,7 +39,8 @@ public class ImageAction extends LedAction {
     public static final int FOREVER = -1; // forever
 
     private File imageFile;
-    private BufferedImage image;
+    private BufferedImage readImage;
+    private BufferedImage scaledImage;
 
     private int currentColumn = 0;
     private boolean oscillate = false;
@@ -64,19 +69,23 @@ public class ImageAction extends LedAction {
             String pathPrefix = deployDir.getAbsolutePath() + "/images/";
 
             imageFile = new File( pathPrefix+ pathname);
-            image = ImageIO.read(imageFile);
+            readImage = ImageIO.read(imageFile);
 
             /**
              * The below is very frustrating.
              * 
              * getScaledInstance() returns an Image. But we read in a BufferedImage.
-             * Converting from Image back to BufferedImage is buggy and causes Java to lock up! - at least on a Mac (and I found reports of it happening on Linux, too)
+             * Converting from Image back to BufferedImage causes the simulator Java to lock up on a Mac.
+             * But it works fine on the Windows simulator.
              * So no convenient image scaling.
              */
             // Scale the image to the height of the LED strip
-            // Image scaledImage = image.getScaledInstance(-1, Status.ADDRESSABLE_LED_COUNT, Image.SCALE_DEFAULT);
+            // Image si = readImage.getScaledInstance(-1, Status.ADDRESSABLE_LED_COUNT, Image.SCALE_DEFAULT);
+            // scaledImage = imageToBufferedImage(si);
+            scaledImage = readImage;
             
-            intervalCount = count * image.getWidth();
+            intervalCount = count * scaledImage.getWidth();
+
             curIntCount = intervalCount;
         } catch (IOException e) {
             e.printStackTrace();
@@ -115,14 +124,14 @@ public class ImageAction extends LedAction {
             // Scale the height of the image to the size of the buffer
             // Do some shenanigans to force float arithmetic
             double percent = (i * 1.0) / (buffer.getLength()-1);
-            int imageY = (int)((1.0 - percent) * (image.getHeight()-1));
+            int imageY = (int)((1.0 - percent) * (scaledImage.getHeight()-1));
 
-            int rgb = image.getRGB(currentColumn, imageY);
+            int rgb = scaledImage.getRGB(currentColumn, imageY);
             Color pixelColor = intToColor(rgb);
             buffer.setLED(i, pixelColor);
         }
 
-        if (currentColumn < (image.getWidth()-1)) {
+        if (currentColumn < (scaledImage.getWidth()-1)) {
             if (goForward) {
                 currentColumn++;
             } else { 
@@ -165,11 +174,19 @@ public class ImageAction extends LedAction {
     }
 
     public BufferedImage getImage() {
-        return image;
+        return readImage;
     }
 
     public void setImage(BufferedImage image) {
-        this.image = image;
+        this.readImage = image;
     }
 
+    public static BufferedImage imageToBufferedImage(Image im) {
+        BufferedImage bi = new BufferedImage
+           (im.getWidth(null),im.getHeight(null),BufferedImage.TYPE_INT_RGB);
+        Graphics bg = bi.getGraphics();
+        bg.drawImage(im, 0, 0, null);
+        bg.dispose();
+        return bi;
+     }    
 }
