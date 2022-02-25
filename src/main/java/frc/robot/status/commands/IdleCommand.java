@@ -53,7 +53,7 @@ public class IdleCommand extends CommandBase {
 //        new PrintCommand("Time Left = " + String.valueOf(timeLeft)).schedule();
         if (105.0 > timeElapsed) {
             action = scannerAction;
-        } else if ( 115.0 > timeElapsed ) {
+        } else if ( 125.0 > timeElapsed ) { // 30 Seconds left
             action = new ImageAction("yellow_stripes.png",0.05);
         } else { // Last 10 seconds
             action = new ChaseAction(255, 127, 0, 90);

@@ -163,9 +163,9 @@ public class Robot extends TimedRobot {
     //   .schedule();
 
     new ActionCommand(new ScannerAction(Color.kDarkOrchid, 255, 1.0, 0.05))
-        .andThen(new WaitCommand(105))
+        .andThen(new WaitCommand(105)) // 30 seconds left
         .andThen(new ActionCommand(new ImageAction("yellow_stripes.png",0.05)))
-        .andThen(new WaitCommand(10)
+        .andThen(new WaitCommand(20) // 10 seconds left
         .andThen(new ActionCommand(new ChaseAction(255, 127, 0, 90))))
         .schedule();
 
