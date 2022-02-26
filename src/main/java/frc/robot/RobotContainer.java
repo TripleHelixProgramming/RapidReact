@@ -163,6 +163,11 @@ public class RobotContainer {
   /**
    * Called by Robot at teleopInit()
    */
+public void resetShooter() {
+  mShooter.stopTrigger();
+  new StopShooter(mShooter).andThen( new ResetHood(mShooter)).schedule();
+}
+
   public void stopShooter() {
     mShooter.stopTrigger();
     new StopShooter(mShooter).schedule();
