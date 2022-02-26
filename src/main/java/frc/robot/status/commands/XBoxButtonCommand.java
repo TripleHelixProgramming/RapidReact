@@ -9,7 +9,7 @@ public class XBoxButtonCommand extends CommandBase{
     private Status status;
     private Color color;
     private int brightness = 200;
-    private int percent = 75;
+    private int percent = 50;
 
     public XBoxButtonCommand(int button) {
         status = Status.getInstance();
