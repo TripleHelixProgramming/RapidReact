@@ -40,14 +40,22 @@ public class FlywheelController extends CommandBase {
     @Override
     public void initialize() {
         shooter.setHoodPosition(hoodAngle);
+        closeToTarget = false;
+        velocity = 0;       
+        lastPosition = shooter.getEncoderPosition();
+        timer.reset();
+        lastTime = 0;
+        // timer.start();
         controller.startPeriodic(0.02); 
-        closeToTarget = false;       
     }
 
     void controller() {
         double time = timer.get();
         double position = shooter.getEncoderPosition();
         double dt = time - lastTime;
+        if (dt < 0.0001) {
+            dt = 0.001;
+        }
         velocity = (position - lastPosition) / (dt) * 60;
 
         flywheelController.setReference(rpm);
@@ -66,12 +74,11 @@ public class FlywheelController extends CommandBase {
     public void execute() {
         double targetDelta = rpm - velocity;
         
-        if ((Math.abs(targetDelta) < 200) && !closeToTarget) {
+        if ((Math.abs(targetDelta) < 20) && !closeToTarget) {
             closeToTarget = true;
             // Only do this if it is a preset shot
-            Status.getInstance().fillLEDs();
             if (this instanceof PresetFlywheelController) {
-
+                Status.getInstance().fillLEDs();
             }
         }
     }
@@ -80,6 +87,7 @@ public class FlywheelController extends CommandBase {
     public void end(boolean interrupted) {
         controller.stop();
         closeToTarget= false;
+        velocity = 0;
     }
 
     @Override
