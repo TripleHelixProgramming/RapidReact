@@ -265,6 +265,7 @@ public class RobotContainer {
       xBoxA.whenPressed( new FlywheelController(mShooter, 1800, 78.25)// new PresetFlywheelController(mShooter,"BUF")
                           .alongWith(new TurnOnLEDs(mLimelight))                
                           .alongWith(new XBoxButtonCommand(X_BOX_A))); // baseline, upper goal, front shot
+                          
       xBoxA.whenReleased(new StopShooter(mShooter)
                             .alongWith(new TurnOffLEDs(mLimelight))
                             .alongWith(new IdleCommand()));
@@ -273,6 +274,7 @@ public class RobotContainer {
       xBoxB.whenHeld(new PresetFlywheelController(mShooter, "BUR")
                           .alongWith(new TurnOnLEDs(mLimelight))
                           .alongWith(new XBoxButtonCommand(X_BOX_B))); // baseline, upper goal, rear shot
+
       xBoxB.whenReleased(new StopShooter(mShooter)
                             .alongWith(new TurnOnLEDs(mLimelight))
                             .alongWith(new IdleCommand()));
@@ -281,6 +283,7 @@ public class RobotContainer {
       xBoxX.whenHeld(new PresetFlywheelController(mShooter, "TLR")
                           .alongWith(new TurnOnLEDs(mLimelight))
                           .alongWith(new XBoxButtonCommand(X_BOX_X))); // tarmac, lower goal, rear shot    
+
       xBoxX.whenReleased(new StopShooter(mShooter)
                             .alongWith(new TurnOffLEDs(mLimelight))
                             .alongWith(new IdleCommand()));
@@ -289,16 +292,11 @@ public class RobotContainer {
       xBoxY.whenHeld(new PresetFlywheelController(mShooter, "TUR")
                           .alongWith(new TurnOnLEDs(mLimelight))
                           .alongWith(new XBoxButtonCommand(X_BOX_Y))); // tarmac, upper goal, rear shot    
+
       xBoxY.whenReleased(new StopShooter(mShooter)
                             .alongWith(new TurnOffLEDs(mLimelight))
                             .alongWith(new IdleCommand()));
       
-      // JoystickButton xBoxLogoLeft = new JoystickButton(operator, X_BOX_LOGO_LEFT);
-
-      // JoystickButton xBoxLogoRight = new JoystickButton(operator, X_BOX_LOGO_RIGHT);
-      // xBoxLogoRight.whenPressed(new PullTrigger(mShooter));
-      // xBoxLogoRight.whenReleased(new StopTrigger(mShooter));
-
       // Climber
       new JoystickButton(operator, X_BOX_LOGO_RIGHT).whenPressed(new DeployClimber(mClimber));
       new JoystickButton(operator, X_BOX_LOGO_LEFT).whenPressed(new RetractClimber(mClimber));

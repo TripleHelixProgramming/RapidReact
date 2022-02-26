@@ -163,13 +163,7 @@ public class Robot extends TimedRobot {
     //   .andThen(new WaitCommand(5))
     //   .schedule();
 
-        new IdleCommand()
-        .andThen(new WaitCommand(105)) // 30 seconds left
-        .andThen(new ActionCommand(new ImageAction("yellow_stripes.png",0.05)))
-        .andThen(new WaitCommand(20) // 10 seconds left
-        .andThen(new ActionCommand(new ImageAction("noise.png",0.05))))
-        //.andThen(new ActionCommand(new ChaseAction(255, 127, 0, 90))))
-        .schedule();
+    new IdleCommand().schedule();
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to

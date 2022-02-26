@@ -26,6 +26,8 @@ public class IdleCommand extends CommandBase {
     private static final double TELEOP_LENGTH = 135.0;
     private Action scannerAction;
     private Status status;
+    private boolean actionSet;
+    private int phase = 0;
 
     public IdleCommand() {
         this.status = Status.getInstance();
@@ -34,15 +36,19 @@ public class IdleCommand extends CommandBase {
 
     @Override
     public void initialize() {
-
+        actionSet = false;
+        phase = 0;
         if (Alliance.Red == DriverStation.getAlliance()) {
-            scannerAction = new ScannerAction(Color.kMaroon, 200, 1.0, 0.05);
+            scannerAction = new ScannerAction(Color.kMaroon, 255, 1.0, 0.05);
         } else if (Alliance.Blue == DriverStation.getAlliance()) {
-            scannerAction = new ScannerAction(Color.kDarkBlue, 200, 1.0, 0.05);
+            scannerAction = new ScannerAction(Color.kDarkBlue, 255, 1.0, 0.05);
         } else {
-            scannerAction = new ScannerAction(Color.kDarkOrchid, 255, 1.0, 0.05);
+            scannerAction = new ScannerAction(Color.kDarkOrchid, 200, 1.0, 0.05);
         }
+    }
 
+    @Override
+    public void execute() {
         /** 
             getMatchTime() is problematic.
             During a real match, it counts DOWN.
@@ -62,15 +68,32 @@ public class IdleCommand extends CommandBase {
             timeElapsed = rawTime;
         }
 
-        Action action;
+        Action action = scannerAction;
 //        new PrintCommand("Time Left = " + String.valueOf(timeLeft)).schedule();
-        if (115.0 > timeElapsed) {
-            action = scannerAction;
-        } else if ( 125.0 > timeElapsed ) { // 30 Seconds left
+        if ( 115.0 < timeElapsed && (0 == phase)) { // 20 Seconds left
             action = new ImageAction("yellow_stripes.png",0.05);
-        } else { // Last 10 seconds
-            action = new ImageAction("noise.png",0.05);
+            phase = 1;
+            actionSet = false;
         }
-        status.setAction(action);
+         
+        if (125.0 < timeElapsed && 1 == phase) { // Last 10 seconds
+            action = new ImageAction("noise.png",0.15);
+            phase = 2;
+            actionSet = false;
+        }
+
+        if (!actionSet) {
+            status.setAction(action);
+            actionSet = true;
+        }
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
     }
 }
