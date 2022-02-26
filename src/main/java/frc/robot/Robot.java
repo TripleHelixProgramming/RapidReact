@@ -146,7 +146,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
 
     Status.getInstance().setTeleopStartTime();
-    new SetColor(Status.getInstance(), Color.kBlack).schedule();
+    new SetColor(Status.getInstance(), Color.kBlack).andThen(new IdleCommand()).schedule();
 
     // new SetColor(Status.getInstance(), Color.kDarkOrchid).schedule();
     // new ActionCommand(new ScannerAction(245, 0, 255, 200)).schedule();
@@ -164,7 +164,7 @@ public class Robot extends TimedRobot {
     //   .andThen(new WaitCommand(5))
     //   .schedule();
 
-    new IdleCommand().schedule();
+    
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to

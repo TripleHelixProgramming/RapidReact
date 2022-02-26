@@ -43,7 +43,7 @@ public class FiveBallAuto extends SequentialCommandGroup {
             new WaitCommand(1.0), // Give shooter time to spin up & hood to move
             new PullTrigger(shooter),
             new WaitCommand(0.5)),
-        new ActionCommand(new ImageAction("THFade.png", 0.02).brightness(0.7)),
+        new ActionCommand(new ImageAction("THfade.png", 0.01).brightness(0.7)),
         new TrajectoryFollower(drive, new FiveBallPartOne()), // Turn to point at center
         new FlywheelController(shooter, 1810, 77.90)),
     new ParallelDeadlineGroup(
