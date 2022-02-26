@@ -37,7 +37,7 @@ import frc.robot.status.commands.SetColor;
 public class FiveBallAuto extends SequentialCommandGroup {
   public FiveBallAuto(Drivetrain drive, Intake intake, Shooter shooter) {
     addCommands(
-      new ActionCommand(new ImageAction("noise.png", 0.1).brightness(0.7)),
+      new ActionCommand(new ImageAction("burst.bmp", 0.02).brightness(0.7)),
       new ResetOdometry(drive, new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(-90.0))),
       new ParallelDeadlineGroup(
         new SequentialCommandGroup(
