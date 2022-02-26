@@ -4,40 +4,53 @@
 
 package frc.robot;
 
-import static com.team2363.utilities.ControllerMap.*;
+import static com.team2363.utilities.ControllerMap.RMZ_A_IN;
+import static com.team2363.utilities.ControllerMap.RMZ_D_IN;
+import static com.team2363.utilities.ControllerMap.RMZ_G_IN;
+import static com.team2363.utilities.ControllerMap.RMZ_H_IN;
+import static com.team2363.utilities.ControllerMap.RM_SB_BACK;
+import static com.team2363.utilities.ControllerMap.RM_SB_FRONT;
+import static com.team2363.utilities.ControllerMap.RM_SC_BACK;
+import static com.team2363.utilities.ControllerMap.RM_SD_FRONT;
+import static com.team2363.utilities.ControllerMap.RM_SE_DOWN;
+import static com.team2363.utilities.ControllerMap.RM_SE_UP;
+import static com.team2363.utilities.ControllerMap.RM_SG_DOWN;
+import static com.team2363.utilities.ControllerMap.RM_SG_UP;
+import static com.team2363.utilities.ControllerMap.RM_SH;
+import static com.team2363.utilities.ControllerMap.X_BOX_A;
+import static com.team2363.utilities.ControllerMap.X_BOX_B;
+import static com.team2363.utilities.ControllerMap.X_BOX_LB;
+import static com.team2363.utilities.ControllerMap.X_BOX_LEFT_STICK_X;
+import static com.team2363.utilities.ControllerMap.X_BOX_LOGO_LEFT;
+import static com.team2363.utilities.ControllerMap.X_BOX_LOGO_RIGHT;
+import static com.team2363.utilities.ControllerMap.X_BOX_RB;
+import static com.team2363.utilities.ControllerMap.X_BOX_RIGHT_STICK_X;
+import static com.team2363.utilities.ControllerMap.X_BOX_RIGHT_STICK_Y;
+import static com.team2363.utilities.ControllerMap.X_BOX_X;
+import static com.team2363.utilities.ControllerMap.X_BOX_Y;
 
-import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 // import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.lib.ControllerPatroller;
 import frc.lib.HelixJoysticks;
 // import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.auto.groups.TwoBallSouthAuto;
 import frc.robot.auto.groups.FiveBallAuto;
 import frc.robot.auto.groups.FourBallAuto;
-import frc.robot.auto.groups.ShootAndDriveForward;
 import frc.robot.auto.groups.TwoBallEastAuto;
+import frc.robot.auto.groups.TwoBallSouthAuto;
 import frc.robot.climber.Climber;
 import frc.robot.climber.commands.DeployClimber;
 import frc.robot.climber.commands.RetractClimber;
-import frc.robot.climber.commands.ToggleClimber;
 import frc.robot.drive.Drivetrain;
-import frc.robot.drive.commands.AbsoluteOrientation;
 import frc.robot.drive.commands.JoystickDrive;
 import frc.robot.drive.commands.ResetEncoders;
-import frc.robot.drive.commands.ResetOdometry;
 import frc.robot.drive.commands.TurnToAngle;
 import frc.robot.drive.commands.ZeroHeading;
 import frc.robot.intake.Intake;
@@ -46,10 +59,15 @@ import frc.robot.intake.commands.EjectIntake;
 import frc.robot.intake.commands.FastIntake;
 import frc.robot.intake.commands.RetractIntake;
 import frc.robot.shooter.Shooter;
-import frc.robot.shooter.commands.*;
+import frc.robot.shooter.commands.EjectTrigger;
+import frc.robot.shooter.commands.FlywheelController;
+import frc.robot.shooter.commands.PresetFlywheelController;
+import frc.robot.shooter.commands.PullTrigger;
+import frc.robot.shooter.commands.ResetHood;
+import frc.robot.shooter.commands.SetShooterState;
+import frc.robot.shooter.commands.StopShooter;
+import frc.robot.shooter.commands.StopTrigger;
 import frc.robot.status.Status;
-import frc.robot.status.actions.ScannerAction;
-import frc.robot.status.commands.ActionCommand;
 import frc.robot.status.commands.IdleCommand;
 import frc.robot.status.commands.SetColor;
 import frc.robot.status.commands.XBoxButtonCommand;
@@ -262,7 +280,7 @@ public class RobotContainer {
       // X_BOX_RIGHT_STICK_BUTTON);
 
       JoystickButton xBoxA = new JoystickButton(operator, X_BOX_A);
-      xBoxA.whenPressed( new FlywheelController(mShooter, 1800, 78.25)// new PresetFlywheelController(mShooter,"BUF")
+      xBoxA.whenPressed( new PresetFlywheelController(mShooter,"BUF")
                           .alongWith(new TurnOnLEDs(mLimelight))                
                           .alongWith(new XBoxButtonCommand(X_BOX_A))); // baseline, upper goal, front shot
                           
