@@ -69,6 +69,8 @@ public class Status extends SubsystemBase {
     private boolean inAuto = false;
     private boolean inTeleOp = false;
 
+    private double teleopStartTime;
+
     private Status() {
 //        super();
 
@@ -249,6 +251,15 @@ public class Status extends SubsystemBase {
             INSTANCE = new Status();
         }
         return INSTANCE;
+    }
+
+    public void setTeleopStartTime() {
+        this.teleopStartTime = Timer.getFPGATimestamp();
+    }
+
+    /** In seconds */
+    public double getTeleopStartTime() {
+        return this.teleopStartTime;
     }
 
     public void resetBoot() {

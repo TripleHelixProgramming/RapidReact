@@ -57,19 +57,11 @@ public class IdleCommand extends CommandBase {
 
             Do some gymnastics to try to generate an elapsed time from getMatchTime().
         **/
-        double rawTime = Timer.getMatchTime();
-        MatchType mt = DriverStation.getMatchType();
         double timeElapsed = 0;
-        if (DriverStation.isFMSAttached() || (mt == MatchType.Practice)) {
-            // Time will be counting down.
-            timeElapsed = TELEOP_LENGTH - rawTime;
-        } else {
-            // Time will be counting up.
-            timeElapsed = rawTime;
-        }
+        timeElapsed = Timer.getFPGATimestamp() - status.getTeleopStartTime();
 
         Action action = scannerAction;
-//        new PrintCommand("Time Left = " + String.valueOf(timeLeft)).schedule();
+        // new PrintCommand("Time Left = " + String.valueOf(timeElapsed)).schedule();
         if ( 115.0 < timeElapsed && (0 == phase)) { // 20 Seconds left
             action = new ImageAction("yellow_stripes.png",0.05);
             phase = 1;

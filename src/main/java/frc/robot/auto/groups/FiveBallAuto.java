@@ -37,13 +37,13 @@ import frc.robot.status.commands.SetColor;
 public class FiveBallAuto extends SequentialCommandGroup {
   public FiveBallAuto(Drivetrain drive, Intake intake, Shooter shooter) {
     addCommands(
-      new ActionCommand(new ImageAction("burst.bmp", 0.02).brightness(0.7)),
       new ResetOdometry(drive, new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(-90.0))),
       new ParallelDeadlineGroup(
         new SequentialCommandGroup(
             new WaitCommand(1.0), // Give shooter time to spin up & hood to move
             new PullTrigger(shooter),
             new WaitCommand(0.5)),
+        new ActionCommand(new ImageAction("THFade.png", 0.02).brightness(0.7)),
         new TrajectoryFollower(drive, new FiveBallPartOne()), // Turn to point at center
         new FlywheelController(shooter, 1810, 77.90)),
     new ParallelDeadlineGroup(
@@ -51,7 +51,7 @@ public class FiveBallAuto extends SequentialCommandGroup {
       new StopTrigger(shooter),
       new FastIntake(intake)),
     new ParallelDeadlineGroup(
-      new WaitCommand(4.60),
+      new WaitCommand(5.10),
       new SequentialCommandGroup(
         new WaitCommand(1.1), 
         new FlywheelController(shooter, 1990, 73.25)),

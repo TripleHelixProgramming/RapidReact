@@ -160,7 +160,11 @@ public class RobotContainer {
     new SetColor(mStatus, Color.kCornsilk).schedule();
   }
 
+  /**
+   * Called by Robot at teleopInit()
+   */
   public void stopShooter() {
+    mShooter.stopTrigger();
     new StopShooter(mShooter).schedule();
   }
   
@@ -318,6 +322,9 @@ public class RobotContainer {
       // Climber
       new JoystickButton(operator, X_BOX_LOGO_RIGHT).whenPressed(new DeployClimber(mClimber));
       new JoystickButton(operator, X_BOX_LOGO_LEFT).whenPressed(new RetractClimber(mClimber));
+
+      new JoystickButton(operator,9).and(new JoystickButton(operator,10))
+      .whenActive(new ResetHood(mShooter));
 
         // .and(new JoystickButton(operator, X_BOX_LOGO_LEFT))
         // .whenActive(new ToggleClimber(mClimber));
