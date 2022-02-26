@@ -114,6 +114,11 @@ public class Status extends SubsystemBase {
         }
     }
 
+    public void fillLEDs() {
+        Color color = currentBuffer.getLED(0);
+        // Set the color of the whole buffer
+        setColor(color);
+    }
     // Things to do when boot starts.
     // Note: these can't be commands since commands require enablement.
     private void scheduleBootActions() {

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import frc.lib.control.DCMotor;
 import frc.lib.control.PIDController;
 import frc.robot.shooter.Shooter;
+import frc.robot.status.Status;
 import frc.robot.status.commands.FillLEDsCommand;
 
 public class FlywheelController extends CommandBase {
@@ -63,15 +64,15 @@ public class FlywheelController extends CommandBase {
 
     @Override
     public void execute() {
-        double percentTarget = rpm - velocity;
+        double targetDelta = rpm - velocity;
         
-        SmartDashboard.putNumber("Percent of Target Velovity", percentTarget);
-        if ((Math.abs(percentTarget) < 200) && !closeToTarget) {
+        if ((Math.abs(targetDelta) < 200) && !closeToTarget) {
             closeToTarget = true;
             // Only do this if it is a preset shot
-//            if (this instanceof PresetFlywheelController) {
-//               new FillLEDsCommand().schedule();
-//            }
+            Status.getInstance().fillLEDs();
+            if (this instanceof PresetFlywheelController) {
+
+            }
         }
     }
 
