@@ -168,20 +168,20 @@ public class RobotContainer {
 
     if (driver.getName().contains(OIConstants.kZorro)) {
 
-      new JoystickButton(driver, RMZ_E_UP).whenPressed(new ZeroHeading(mDrive));
+//      new JoystickButton(driver, RMZ_E_UP).whenPressed(new ZeroHeading(mDrive));
 
       new JoystickButton(driver, RMZ_A_IN).whenHeld(new TurnToAngle(mDrive, mLimelight, joysticks));
       
       new JoystickButton(driver, RMZ_D_IN).whenPressed(new PullTrigger(mShooter));
       new JoystickButton(driver, RMZ_D_IN).whenReleased(new StopTrigger(mShooter));
 
-      new JoystickButton(driver, RMZ_H_IN).whenPressed(new DeployClimber(mClimber));
-      new JoystickButton(driver, RMZ_G_IN).whenReleased(new RetractClimber(mClimber));
+      new JoystickButton(driver, RMZ_H_IN).whenPressed(new ResetHood(mShooter));
+      new JoystickButton(driver, RMZ_G_IN).whenReleased(new ZeroHeading(mDrive));
 
       
       // new JoystickButton(driver, RMZ_E_UP).whenHeld(new AbsoluteOrientation(mDrive, joysticks));
 
-      new JoystickButton(driver, RMZ_F_UP).whenHeld(new DeployIntake(mIntake));
+//      new JoystickButton(driver, RMZ_F_UP).whenHeld(new DeployIntake(mIntake));
       
     } else if (driver.getName().contains(OIConstants.kRadioMaster)) {
       new JoystickButton(driver, RM_SD_FRONT).whenPressed(new ZeroHeading(mDrive));
@@ -262,7 +262,7 @@ public class RobotContainer {
       // X_BOX_RIGHT_STICK_BUTTON);
 
       JoystickButton xBoxA = new JoystickButton(operator, X_BOX_A);
-      xBoxA.whileHeld(new PresetFlywheelController(mShooter,"BUF")
+      xBoxA.whenPressed( new FlywheelController(mShooter, 1800, 78.25)// new PresetFlywheelController(mShooter,"BUF")
                           .alongWith(new TurnOnLEDs(mLimelight))                
                           .alongWith(new XBoxButtonCommand(X_BOX_A))); // baseline, upper goal, front shot
       xBoxA.whenReleased(new StopShooter(mShooter)
@@ -270,7 +270,7 @@ public class RobotContainer {
                             .alongWith(new IdleCommand()));
 
       JoystickButton xBoxB = new JoystickButton(operator, X_BOX_B);
-      xBoxB.whileHeld(new PresetFlywheelController(mShooter, "BUR")
+      xBoxB.whenHeld(new PresetFlywheelController(mShooter, "BUR")
                           .alongWith(new TurnOnLEDs(mLimelight))
                           .alongWith(new XBoxButtonCommand(X_BOX_B))); // baseline, upper goal, rear shot
       xBoxB.whenReleased(new StopShooter(mShooter)
@@ -278,7 +278,7 @@ public class RobotContainer {
                             .alongWith(new IdleCommand()));
 
       JoystickButton xBoxX = new JoystickButton(operator, X_BOX_X);
-      xBoxX.whileHeld(new PresetFlywheelController(mShooter, "TLR")
+      xBoxX.whenHeld(new PresetFlywheelController(mShooter, "TLR")
                           .alongWith(new TurnOnLEDs(mLimelight))
                           .alongWith(new XBoxButtonCommand(X_BOX_X))); // tarmac, lower goal, rear shot    
       xBoxX.whenReleased(new StopShooter(mShooter)
@@ -286,7 +286,7 @@ public class RobotContainer {
                             .alongWith(new IdleCommand()));
 
       JoystickButton xBoxY = new JoystickButton(operator, X_BOX_Y);
-      xBoxY.whileHeld(new PresetFlywheelController(mShooter, "TUR")
+      xBoxY.whenHeld(new PresetFlywheelController(mShooter, "TUR")
                           .alongWith(new TurnOnLEDs(mLimelight))
                           .alongWith(new XBoxButtonCommand(X_BOX_Y))); // tarmac, upper goal, rear shot    
       xBoxY.whenReleased(new StopShooter(mShooter)

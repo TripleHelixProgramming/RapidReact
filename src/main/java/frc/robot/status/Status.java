@@ -317,7 +317,10 @@ public class Status extends SubsystemBase {
     // RGB values are 0 (full off) - 255 (full on)
     // Brightness is on a scale of 0-255
     public void setColor(int red, int green, int blue, final int brightness, int percent) {
-        this.currentAction = null; // Clear any action that is running.
+        synchronized (actionLock) {
+            this.currentAction = null; // Clear any action that is running.
+        }
+        
         final double b = brightness / 255.0;
 
         if (0 > percent) {percent = 0;}

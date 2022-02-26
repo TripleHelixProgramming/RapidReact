@@ -2,6 +2,7 @@ package frc.robot.status.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -23,13 +24,25 @@ import frc.robot.status.actions.ScannerAction;
 public class IdleCommand extends CommandBase {
 
     private static final double TELEOP_LENGTH = 135.0;
-    private Action scannerAction = new ScannerAction(Color.kDarkOrchid, 255, 1.0, 0.05);
+    private Action scannerAction;
+    private Status status;
 
     public IdleCommand() {
+        this.status = Status.getInstance();
+        addRequirements(status);
     }
 
     @Override
     public void initialize() {
+
+        if (Alliance.Red == DriverStation.getAlliance()) {
+            scannerAction = new ScannerAction(Color.kMaroon, 200, 1.0, 0.05);
+        } else if (Alliance.Blue == DriverStation.getAlliance()) {
+            scannerAction = new ScannerAction(Color.kDarkBlue, 200, 1.0, 0.05);
+        } else {
+            scannerAction = new ScannerAction(Color.kDarkOrchid, 255, 1.0, 0.05);
+        }
+
         /** 
             getMatchTime() is problematic.
             During a real match, it counts DOWN.
@@ -51,13 +64,13 @@ public class IdleCommand extends CommandBase {
 
         Action action;
 //        new PrintCommand("Time Left = " + String.valueOf(timeLeft)).schedule();
-        if (105.0 > timeElapsed) {
+        if (115.0 > timeElapsed) {
             action = scannerAction;
         } else if ( 125.0 > timeElapsed ) { // 30 Seconds left
             action = new ImageAction("yellow_stripes.png",0.05);
         } else { // Last 10 seconds
-            action = new ChaseAction(255, 127, 0, 90);
+            action = new ImageAction("noise.png",0.05);
         }
-        Status.getInstance().setAction(action);
+        status.setAction(action);
     }
 }

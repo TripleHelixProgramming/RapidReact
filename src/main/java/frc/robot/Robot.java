@@ -18,6 +18,7 @@ import frc.robot.status.actions.ImageAction;
 import frc.robot.status.actions.ScannerAction;
 import frc.robot.status.commands.ActionCommand;
 import frc.robot.status.commands.FillLEDsCommand;
+import frc.robot.status.commands.IdleCommand;
 import frc.robot.status.commands.SetColor;
 import frc.robot.status.groups.LEDDemoCG;
 
@@ -50,17 +51,17 @@ public class Robot extends TimedRobot {
 
     // Set preferences related to preset shots. Set hood angle and shooter wheel velocity for each shot.
     // See the Robot Worksheet "Secondary Drive Interface" sheet for more details.
-    Preferences.initInt("TLR.Velocity", 800);
-    Preferences.initDouble("TLR.Angle", 105.0);
+    Preferences.initDouble("TLR.Velocity", 1650.0);
+    Preferences.initDouble("TLR.Angle", 101.5);
 
-    Preferences.initInt("TUR.Velocity", 1550);
+    Preferences.initDouble("TUR.Velocity", 1550);
     Preferences.initDouble("TUR.Angle", 92.0);
 
-    Preferences.initInt("BUF.Velocity", 1625);
-    Preferences.initDouble("BUF.Angle", 65.0);
+    Preferences.initDouble("BUF.Velocity", 1800.0);
+    Preferences.initDouble("BUF.Angle", 78.25);
     
-    Preferences.initInt("BUR.Velocity", 1700);
-    Preferences.initDouble("BUR.Angle", 100.0);
+    Preferences.initDouble("BUR.Velocity", 1980.0);
+    Preferences.initDouble("BUR.Angle", 73.25);
 
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
@@ -162,11 +163,12 @@ public class Robot extends TimedRobot {
     //   .andThen(new WaitCommand(5))
     //   .schedule();
 
-    new ActionCommand(new ScannerAction(Color.kDarkOrchid, 255, 1.0, 0.05))
+        new IdleCommand()
         .andThen(new WaitCommand(105)) // 30 seconds left
         .andThen(new ActionCommand(new ImageAction("yellow_stripes.png",0.05)))
         .andThen(new WaitCommand(20) // 10 seconds left
-        .andThen(new ActionCommand(new ChaseAction(255, 127, 0, 90))))
+        .andThen(new ActionCommand(new ImageAction("noise.png",0.05))))
+        //.andThen(new ActionCommand(new ChaseAction(255, 127, 0, 90))))
         .schedule();
 
     // This makes sure that the autonomous stops running when

@@ -13,7 +13,8 @@ public class XBoxButtonCommand extends CommandBase{
 
     public XBoxButtonCommand(int button) {
         status = Status.getInstance();
-
+        addRequirements(status);
+        
         switch (button) {
             case X_BOX_A:
                 this.color = Color.kGreen;

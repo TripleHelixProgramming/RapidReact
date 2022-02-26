@@ -25,7 +25,6 @@ public class ActionCommand extends CommandBase {
 
         // This will set our action to run on the subsystem.
         // This action will run in the dedicated thread to output the rainbow pattern.
-        action.reset();
         status.setAction(action);
     }
 

@@ -26,10 +26,11 @@ public class SetColor extends CommandBase{
      */
     public SetColor(Status status, Color color, int brightness, int percent) {
         this.status = status;
+        addRequirements(status);
+
         this.color = color;
         this.brightness = brightness;
         this.percent = percent;
-        addRequirements(status);
     }
 
 
