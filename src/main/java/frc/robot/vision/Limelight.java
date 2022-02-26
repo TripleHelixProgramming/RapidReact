@@ -34,11 +34,11 @@ public class Limelight extends SubsystemBase {
   }
 
   public void turnOffLEDs() {
-    getDefault().getTable("limelight").getEntry("ledMode").setDouble(1.0);
+    getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
   }
 
   public void turnOnLEDs() {
-    getDefault().getTable("limelight").getEntry("ledMode").setDouble(3.0);
+    getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
   }
 
   public static class VisionState {

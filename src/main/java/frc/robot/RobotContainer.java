@@ -303,7 +303,7 @@ public void resetShooter() {
                           .alongWith(new XBoxButtonCommand(X_BOX_B))); // baseline, upper goal, rear shot
 
       xBoxB.whenReleased(new StopShooter(mShooter)
-                            .alongWith(new TurnOnLEDs(mLimelight))
+                            .alongWith(new TurnOffLEDs(mLimelight))
                             .alongWith(new IdleCommand()));
 
       JoystickButton xBoxX = new JoystickButton(operator, X_BOX_X);
