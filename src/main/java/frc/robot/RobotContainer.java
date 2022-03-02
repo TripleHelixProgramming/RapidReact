@@ -327,7 +327,7 @@ public void resetShooter() {
 
       JoystickButton xBoxX = new JoystickButton(operator, X_BOX_X);
       xBoxX.whenHeld(new PresetFlywheelController(mShooter, "TLR")
-                          .alongWith(new TurnOnLEDs(mLimelight))
+                          // .alongWith(new TurnOnLEDs(mLimelight))
                           .alongWith(new XBoxButtonCommand(X_BOX_X))); // tarmac, lower goal, rear shot    
 
       xBoxX.whenReleased(new StopShooter(mShooter)
@@ -336,7 +336,7 @@ public void resetShooter() {
 
       JoystickButton xBoxY = new JoystickButton(operator, X_BOX_Y);
       xBoxY.whenHeld(new PresetFlywheelController(mShooter, "TUR")
-                          .alongWith(new TurnOnLEDs(mLimelight))
+                          // .alongWith(new TurnOnLEDs(mLimelight))
                           .alongWith(new XBoxButtonCommand(X_BOX_Y))); // tarmac, upper goal, rear shot    
 
       xBoxY.whenReleased(new StopShooter(mShooter)
