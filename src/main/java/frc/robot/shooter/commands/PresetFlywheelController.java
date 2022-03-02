@@ -32,6 +32,10 @@ public class PresetFlywheelController extends FlywheelController {
                 this.rpm = Preferences.getInt("TUR.Velocity", 1625);
                 this.hoodAngle = Preferences.getDouble("TUR.Angle", 65.0); // tarmac, upper goal, rear shot    
                 break;
+            case "BLP":
+                this.rpm = Preferences.getInt("BLP.Velocity", 500);
+                this.hoodAngle = Preferences.getDouble("BLP.Angle", 60.0); // tarmac, upper goal, rear shot    
+                break;
             default:
                 this.rpm = 500;
                 this.hoodAngle = 80.0;

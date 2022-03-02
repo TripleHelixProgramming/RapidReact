@@ -31,6 +31,7 @@ import static com.team2363.utilities.ControllerMap.X_BOX_Y;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -349,6 +350,13 @@ public void resetShooter() {
 
       new JoystickButton(operator,9).and(new JoystickButton(operator,10))
       .whenActive(new ResetHood(mShooter));
+
+      new Button() {
+        @Override
+        public boolean get() {
+          return (operator.getPOV() == 0);
+        }
+      }.whenPressed(new PresetFlywheelController(mShooter, "BLP"));
 
         // .and(new JoystickButton(operator, X_BOX_LOGO_LEFT))
         // .whenActive(new ToggleClimber(mClimber));
