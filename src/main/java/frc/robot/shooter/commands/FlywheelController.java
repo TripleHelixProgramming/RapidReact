@@ -14,7 +14,6 @@ import frc.robot.status.commands.FillLEDsCommand;
 
 public class FlywheelController extends CommandBase {
 
-    private final double kTolerance = 0.8;
     Shooter shooter;
     double lastPosition, lastTime, hoodAngle;
     double rpm;
@@ -23,8 +22,8 @@ public class FlywheelController extends CommandBase {
     private DCMotor flywheel = new DCMotor(0.002081897, 0, 0.317466);
     private PIDController flywheelController = new PIDController(0.02, 0, 0);
     // private PIDController flywheelController = new PIDController(0.05, 0, 0);
-    private boolean closeToTarget = false;
-    private double velocity = 0;
+    boolean closeToTarget = false;
+    double velocity = 0;
 
     public FlywheelController(Shooter shooter, double rpm, double hoodAngle) {
         this.shooter = shooter;
@@ -68,19 +67,6 @@ public class FlywheelController extends CommandBase {
         
         lastPosition = position;
         lastTime = time;        
-    }
-
-    @Override
-    public void execute() {
-        double targetDelta = rpm - velocity;
-        
-        if ((Math.abs(targetDelta) < 20) && !closeToTarget) {
-            closeToTarget = true;
-            // Only do this if it is a preset shot
-            if (this instanceof PresetFlywheelController) {
-                Status.getInstance().fillLEDs();
-            }
-        }
     }
 
     @Override

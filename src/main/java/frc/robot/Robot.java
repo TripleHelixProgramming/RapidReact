@@ -64,6 +64,9 @@ public class Robot extends TimedRobot {
     Preferences.initDouble("BUR.Velocity", 1980.0);
     Preferences.initDouble("BUR.Angle", 73.25);
 
+    Preferences.initDouble("BLP.Velocity", 500.0);
+    Preferences.initDouble("BLP.Angle", 60.0);
+
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
     // autonomous chooser on the dashboard.
