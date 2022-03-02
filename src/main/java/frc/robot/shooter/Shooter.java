@@ -112,6 +112,10 @@ public class Shooter extends SubsystemBase {
     setHoodPosition(ShooterConstants.kHoodMinAngle);
   }
 
+  public void resetHoodEncoder() {
+    hoodEncoder.setPosition(ShooterConstants.kHoodMinAngle);
+  }
+
   public boolean checkHoodCurrentLimit() {
     if ( ShooterConstants.kHoodStopCurrentLimit < hoodMotor.getOutputCurrent()) {
       highCurrentCount++;

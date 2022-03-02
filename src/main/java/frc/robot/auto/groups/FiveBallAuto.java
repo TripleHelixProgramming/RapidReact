@@ -26,6 +26,7 @@ import frc.robot.intake.commands.RetractIntake;
 import frc.robot.shooter.Shooter;
 import frc.robot.shooter.commands.FlywheelController;
 import frc.robot.shooter.commands.PullTrigger;
+import frc.robot.shooter.commands.ResetEncoder;
 import frc.robot.shooter.commands.ResetHood;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
@@ -38,12 +39,13 @@ public class FiveBallAuto extends SequentialCommandGroup {
   public FiveBallAuto(Drivetrain drive, Intake intake, Shooter shooter) {
     addCommands(
       new ResetOdometry(drive, new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(-90.0))),
+      new ResetEncoder(shooter),
       new ParallelDeadlineGroup(
         new SequentialCommandGroup(
             new WaitCommand(1.0), // Give shooter time to spin up & hood to move
             new PullTrigger(shooter),
             new WaitCommand(0.5)),
-        new ActionCommand(new ImageAction("THfade.png", 0.01).brightness(0.7)),
+        // new ActionCommand(new ImageAction("THfade.png", 0.01).brightness(0.7)),
         new TrajectoryFollower(drive, new FiveBallPartOne()), // Turn to point at center
         new FlywheelController(shooter, 1810, 77.90)),
     new ParallelDeadlineGroup(

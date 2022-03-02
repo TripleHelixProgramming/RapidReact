@@ -23,6 +23,7 @@ import frc.robot.intake.commands.RetractIntake;
 import frc.robot.shooter.Shooter;
 import frc.robot.shooter.commands.FlywheelController;
 import frc.robot.shooter.commands.PullTrigger;
+import frc.robot.shooter.commands.ResetEncoder;
 import frc.robot.shooter.commands.ResetHood;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
@@ -35,11 +36,12 @@ public class FourBallAuto extends SequentialCommandGroup{
 
     public FourBallAuto(Drivetrain drive, Intake intake, Shooter shooter) {
         addCommands(
-            new ActionCommand(new ImageAction("fade.png",0.02).oscillate().brightness(0.7)),
+            // new ActionCommand(new ImageAction("fade.png",0.02).oscillate().brightness(0.7)),
             new ResetOdometry(drive, new Pose2d(new Translation2d(0,0),Rotation2d.fromDegrees(-90))),
+            new ResetEncoder(shooter),
             new ParallelDeadlineGroup(
                 new WaitCommand(4.25),
-                new ResetHood(shooter),
+                // new ResetHood(shooter),
                 new SequentialCommandGroup(
                     new WaitCommand(1.75),
                     new FlywheelController(shooter, 1800, 78.25)),

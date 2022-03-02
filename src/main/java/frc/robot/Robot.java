@@ -21,6 +21,7 @@ import frc.robot.status.commands.FillLEDsCommand;
 import frc.robot.status.commands.IdleCommand;
 import frc.robot.status.commands.SetColor;
 import frc.robot.status.groups.LEDDemoCG;
+import frc.robot.vision.commands.TurnOffLEDs;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -112,6 +113,9 @@ public class Robot extends TimedRobot {
         mRobotContainer.configureButtonBindings();
       }
     }
+
+    mRobotContainer.disableLights();
+    mRobotContainer.displaySwitch();
   }
 
   /**

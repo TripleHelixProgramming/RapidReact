@@ -92,6 +92,11 @@ public class RobotContainer {
   private final Status mStatus = Status.getInstance();
   private final Climber mClimber = new Climber();
 
+  private final DigitalInput fiveBallAuto = new DigitalInput(3);
+  private final DigitalInput twoBallSouthAuto = new DigitalInput(1);
+  private final DigitalInput twoBallEastAuto = new DigitalInput(2);
+  private final DigitalInput fourBallAuto = new DigitalInput(4);
+
   /*
    * private final Indexer mIndexer = new Indexer();
    * private final PowerDistribution mPDP = new PowerDistribution(
@@ -132,11 +137,6 @@ public class RobotContainer {
     // return new TrajectoryFollower(mDrive, new CollectSecondBall());
     Command autoCommand = null;
 
-    DigitalInput fiveBallAuto = new DigitalInput(0);
-    DigitalInput twoBallSouthAuto = new DigitalInput(1);
-    DigitalInput twoBallEastAuto = new DigitalInput(2);
-    DigitalInput fourBallAuto = new DigitalInput(4);
-
     try {
       if(!fiveBallAuto.get()){
         autoCommand = new FiveBallAuto(mDrive, mIntake, mShooter);
@@ -154,6 +154,25 @@ public class RobotContainer {
       fourBallAuto.close();
     }
     return autoCommand;
+  }
+
+  public void displaySwitch() {
+    // try {
+    //   if(!fiveBallAuto.get()){
+    //     SmartDashboard.putNumber("DIO", 3);
+    //   } else if (!twoBallSouthAuto.get()) {
+    //     SmartDashboard.putNumber("DIO", 1);
+    //   } else if (!twoBallEastAuto.get()) {
+    //     SmartDashboard.putNumber("DIO", 2);
+    //   } else if (!fourBallAuto.get()) {
+    //     SmartDashboard.putNumber("DIO", 4);
+    //   } else {
+    //     SmartDashboard.putNumber("DIO", -1);
+    //   }
+    // } catch (Exception e) {
+
+    // }
+    
   }
 
   public void setLEDs() {
@@ -303,12 +322,12 @@ public void resetShooter() {
                           .alongWith(new XBoxButtonCommand(X_BOX_B))); // baseline, upper goal, rear shot
 
       xBoxB.whenReleased(new StopShooter(mShooter)
-                            .alongWith(new TurnOnLEDs(mLimelight))
+                            .alongWith(new TurnOffLEDs(mLimelight))
                             .alongWith(new IdleCommand()));
 
       JoystickButton xBoxX = new JoystickButton(operator, X_BOX_X);
       xBoxX.whenHeld(new PresetFlywheelController(mShooter, "TLR")
-                          .alongWith(new TurnOnLEDs(mLimelight))
+                          // .alongWith(new TurnOnLEDs(mLimelight))
                           .alongWith(new XBoxButtonCommand(X_BOX_X))); // tarmac, lower goal, rear shot    
 
       xBoxX.whenReleased(new StopShooter(mShooter)
@@ -317,7 +336,7 @@ public void resetShooter() {
 
       JoystickButton xBoxY = new JoystickButton(operator, X_BOX_Y);
       xBoxY.whenHeld(new PresetFlywheelController(mShooter, "TUR")
-                          .alongWith(new TurnOnLEDs(mLimelight))
+                          // .alongWith(new TurnOnLEDs(mLimelight))
                           .alongWith(new XBoxButtonCommand(X_BOX_Y))); // tarmac, upper goal, rear shot    
 
       xBoxY.whenReleased(new StopShooter(mShooter)
