@@ -356,7 +356,9 @@ public void resetShooter() {
         public boolean get() {
           return (operator.getPOV() == 0);
         }
-      }.whenPressed(new PresetFlywheelController(mShooter, "BLP"));
+      }.whenPressed(new PresetFlywheelController(mShooter, "BLP")
+        .alongWith(new PullTrigger(mShooter)))
+        .whenReleased(new StopShooter(mShooter).alongWith(new StopTrigger(mShooter)));
 
         // .and(new JoystickButton(operator, X_BOX_LOGO_LEFT))
         // .whenActive(new ToggleClimber(mClimber));
