@@ -4,10 +4,13 @@
 
 package frc.robot;
 
+import static com.team2363.utilities.ControllerMap.*;
+
 import static com.team2363.utilities.ControllerMap.RMZ_A_IN;
 import static com.team2363.utilities.ControllerMap.RMZ_D_IN;
 import static com.team2363.utilities.ControllerMap.RMZ_G_IN;
 import static com.team2363.utilities.ControllerMap.RMZ_H_IN;
+import static com.team2363.utilities.ControllerMap.RMZ_F_UP;
 import static com.team2363.utilities.ControllerMap.RM_SB_BACK;
 import static com.team2363.utilities.ControllerMap.RM_SB_FRONT;
 import static com.team2363.utilities.ControllerMap.RM_SC_BACK;
@@ -50,7 +53,9 @@ import frc.robot.climber.Climber;
 import frc.robot.climber.commands.DeployClimber;
 import frc.robot.climber.commands.RetractClimber;
 import frc.robot.drive.Drivetrain;
+import frc.robot.drive.commands.AbsoluteOrientation;
 import frc.robot.drive.commands.JoystickDrive;
+import frc.robot.drive.commands.RelativeOrientation;
 import frc.robot.drive.commands.ResetEncoders;
 import frc.robot.drive.commands.TurnToAngle;
 import frc.robot.drive.commands.ZeroHeading;
@@ -226,7 +231,8 @@ public void resetShooter() {
       new JoystickButton(driver, RMZ_G_IN).whenReleased(new ZeroHeading(mDrive));
 
       
-      // new JoystickButton(driver, RMZ_E_UP).whenHeld(new AbsoluteOrientation(mDrive, joysticks));
+      new JoystickButton(driver, RMZ_F_UP).whenHeld(new AbsoluteOrientation(mDrive, joysticks));
+//      new JoystickButton(driver, RMZ_F_DOWN).whenHeld(new RelativeOrientation(mDrive, joysticks));
 
 //      new JoystickButton(driver, RMZ_F_UP).whenHeld(new DeployIntake(mIntake));
       
