@@ -28,6 +28,8 @@ public class IdleCommand extends CommandBase {
     private Status status;
     private boolean actionSet;
     private int phase = 0;
+    private Action twentySecondsAction = new ImageAction("yellow_stripes.png",0.05);
+    private Action tenSecondsAction = new ImageAction("noise.png",0.15);
 
     public IdleCommand() {
         this.status = Status.getInstance();
@@ -63,13 +65,13 @@ public class IdleCommand extends CommandBase {
         Action action = scannerAction;
         // new PrintCommand("Time Left = " + String.valueOf(timeElapsed)).schedule();
         if ( 115.0 < timeElapsed && (0 == phase)) { // 20 Seconds left
-            action = new ImageAction("yellow_stripes.png",0.05);
+            action = twentySecondsAction;
             phase = 1;
             actionSet = false;
         }
          
         if (125.0 < timeElapsed && 1 == phase) { // Last 10 seconds
-            action = new ImageAction("noise.png",0.15);
+            action = tenSecondsAction;
             phase = 2;
             actionSet = false;
         }
