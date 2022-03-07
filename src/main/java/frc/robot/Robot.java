@@ -39,7 +39,6 @@ public class Robot extends TimedRobot {
 
   private static final int NUM_LOOPS = 40;
   private int delay = NUM_LOOPS;
-  private IdleCommand idleCommand = new IdleCommand();
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -154,7 +153,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
 
     Status.getInstance().setTeleopStartTime();
-    new SetColor(Status.getInstance(), Color.kBlack).andThen(idleCommand).schedule();
+    new SetColor(Status.getInstance(), Color.kBlack).andThen(new IdleCommand()).schedule();
 
     // new SetColor(Status.getInstance(), Color.kDarkOrchid).schedule();
     // new ActionCommand(new ScannerAction(245, 0, 255, 200)).schedule();
