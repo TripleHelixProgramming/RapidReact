@@ -73,6 +73,7 @@ import frc.robot.shooter.commands.ResetHood;
 import frc.robot.shooter.commands.SetShooterState;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
+import frc.robot.shooter.commands.VisionShooter;
 import frc.robot.status.Status;
 import frc.robot.status.commands.IdleCommand;
 import frc.robot.status.commands.SetColor;
@@ -333,13 +334,17 @@ public void resetShooter() {
                             .alongWith(new IdleCommand()));
 
       JoystickButton xBoxX = new JoystickButton(operator, X_BOX_X);
-      xBoxX.whenHeld(new PresetFlywheelController(mShooter, "TLR")
-                          // .alongWith(new TurnOnLEDs(mLimelight))
-                          .alongWith(new XBoxButtonCommand(X_BOX_X))); // tarmac, lower goal, rear shot    
+      // xBoxX.whenHeld(new PresetFlywheelController(mShooter, "TLR")
+      //                     // .alongWith(new TurnOnLEDs(mLimelight))
+      //                     .alongWith(new XBoxButtonCommand(X_BOX_X))); // tarmac, lower goal, rear shot    
 
-      xBoxX.whenReleased(new StopShooter(mShooter)
-                            .alongWith(new TurnOffLEDs(mLimelight))
-                            .alongWith(new IdleCommand()));
+      // xBoxX.whenReleased(new StopShooter(mShooter)
+      //                       .alongWith(new TurnOffLEDs(mLimelight))
+      //                       .alongWith(new IdleCommand()));
+
+      xBoxX.whenHeld(new VisionShooter(mShooter, mLimelight));
+
+      xBoxX.whenReleased(new StopShooter(mShooter));
 
       JoystickButton xBoxY = new JoystickButton(operator, X_BOX_Y);
       xBoxY.whenHeld(new PresetFlywheelController(mShooter, "TUR")
