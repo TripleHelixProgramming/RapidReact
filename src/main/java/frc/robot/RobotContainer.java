@@ -155,10 +155,12 @@ public class RobotContainer {
         autoCommand = new FourBallAuto(mDrive, mIntake, mShooter);
       }
     } finally {
+      /*
       fiveBallAuto.close();
       twoBallSouthAuto.close();
       twoBallEastAuto.close();
       fourBallAuto.close();
+      */
     }
     return autoCommand;
   }

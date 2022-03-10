@@ -70,6 +70,19 @@ public class ImageAction extends LedAction {
 
             imageFile = new File( pathPrefix+ pathname);
             readImage = ImageIO.read(imageFile);
+            scaledImage = readImage;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Problem opening image. Check the path.\nImage path = " + pathname);
+        }
+        intervalCount = count * scaledImage.getWidth();
+
+        curIntCount = intervalCount;
+
+    }
+
+    public ImageAction(final BufferedImage readImage, final double interval, final int count) {
 
             /**
              * The below is very frustrating.
@@ -84,13 +97,11 @@ public class ImageAction extends LedAction {
             // scaledImage = imageToBufferedImage(si);
             scaledImage = readImage;
             
+            intervalTime = interval;
+
             intervalCount = count * scaledImage.getWidth();
 
             curIntCount = intervalCount;
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Problem opening image. Check the path.\nImage path = " + pathname);
-        }
     }
 
     public void reset() {
@@ -98,7 +109,7 @@ public class ImageAction extends LedAction {
         this.currentColumn = 0;
     }
 
-    public ImageAction brightness(double brightness) {
+    public ImageAction brightness(final double brightness) {
         setBrightness(brightness);
         return this;
     }
@@ -114,7 +125,7 @@ public class ImageAction extends LedAction {
         return this;
     }
 
-    public void setOscillate(boolean b) {
+    public void setOscillate(final boolean b) {
         oscillate = b;
     }
 

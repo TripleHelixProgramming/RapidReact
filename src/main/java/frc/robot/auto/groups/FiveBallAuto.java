@@ -16,6 +16,7 @@ import frc.paths.FiveBallPartOne;
 import frc.paths.FiveBallPartThree;
 import frc.paths.FiveBallPartTwo;
 import frc.paths.Spinnnn;
+import frc.robot.Robot;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.ResetOdometry;
 import frc.robot.drive.commands.TrajectoryFollower;
@@ -45,7 +46,7 @@ public class FiveBallAuto extends SequentialCommandGroup {
             new WaitCommand(0.8), // Give shooter time to spin up & hood to move
             new PullTrigger(shooter),
             new WaitCommand(0.5)),
-        // new ActionCommand(new ImageAction("THfade.png", 0.01).brightness(0.7)),
+        new ActionCommand(new ImageAction(Robot.fiveBallAutoImage, 0.02, ImageAction.FOREVER).brightness(0.7).oscillate()),
         new TrajectoryFollower(drive, new FiveBallPartOne()), // Turn to point at center
         new FlywheelController(shooter, 1810, 77.90)),
     new ParallelDeadlineGroup(
