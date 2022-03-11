@@ -19,8 +19,8 @@ public class FlywheelController extends CommandBase {
     double rpm;
     private Timer timer = new Timer();
     Notifier controller = new Notifier(this::controller);
-    private DCMotor flywheel = new DCMotor(0.002081897, 0, 0.317466);
-    private PIDController flywheelController = new PIDController(0.02, 0, 0);
+    private DCMotor flywheel = new DCMotor(0.002081897, 0, 0.37);
+    private PIDController flywheelController = new PIDController(0.0175, 0, 0);
     // private PIDController flywheelController = new PIDController(0.05, 0, 0);
     boolean closeToTarget = false;
     double velocity = 0;
@@ -62,6 +62,8 @@ public class FlywheelController extends CommandBase {
 
         double voltage = flywheel.solveFeedforward(rpm, 0) + flywheelController.calculate(velocity, dt);
         // double voltage = flywheel.solveFeedforward(rpm, 0);
+
+        voltage = Math.min(voltage, 11.5);
 
         shooter.setShooterVoltage(voltage);
         

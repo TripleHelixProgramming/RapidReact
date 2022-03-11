@@ -17,8 +17,8 @@ public class VisionShooter extends CommandBase {
     double rpm;
     private Timer timer = new Timer();
     Notifier controller = new Notifier(this::controller);
-    private DCMotor flywheel = new DCMotor(0.002081897, 0, 0.317466);
-    private PIDController flywheelController = new PIDController(0.02, 0, 0);
+    private DCMotor flywheel = new DCMotor(0.002081897, 0, 0.302);
+    private PIDController flywheelController = new PIDController(0.0175, 0, 0);
     boolean closeToTarget = false;
     double velocity = 0;
 
@@ -53,9 +53,9 @@ public class VisionShooter extends CommandBase {
         }
         velocity = (position - lastPosition) / (dt) * 60;
 
-        double distancePercent = (limelight.getState().distance - 1.7) / (2.9 - 1.7);
-        double rpm = distancePercent * (180) + 1800;
-        double hoodAngle = distancePercent * -5 + 78.25;
+        double distance = limelight.getState().distance;
+        double rpm = Shooter.lookupVelocity(distance);
+        double hoodAngle = Shooter.lookupHoodAngle(distance);
 
         shooter.setHoodPosition(hoodAngle);
         flywheelController.setReference(rpm);

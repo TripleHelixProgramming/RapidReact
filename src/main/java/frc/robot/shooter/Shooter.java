@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.util.InterpolationTable;
 import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.ShooterConstants;
 
@@ -24,6 +25,12 @@ public class Shooter extends SubsystemBase {
 
   public static boolean UP = true;
   public static boolean DOWN = false;
+
+  public static final InterpolationTable INTERPOLATION_TABLE = new InterpolationTable(new double[][]{
+    {1.7, 1800, 78.25},
+    {2.4, 1875, 73.25},
+    {2.95, 1980, 73.25}
+  });
 
   private boolean hoodDirection;
   int highCurrentCount = 0;
@@ -73,6 +80,8 @@ public class Shooter extends SubsystemBase {
 
     hoodEncoder = hoodMotor.getEncoder();
     masterEncoder = shooterLeader.getEncoder();
+
+    shooterLeader.setOpenLoopRampRate(0.1);
 
     hoodEncoder.setPositionConversionFactor(ShooterConstants.kHoodGearingRatio);
 
@@ -173,7 +182,8 @@ public class Shooter extends SubsystemBase {
 
   public void setHoodPosition(double degrees) {
     // degrees = Math.min(Math.max(degrees, ShooterConstants.kHoodMinAngle), ShooterConstants.kHoodMaxAngle);
-    hoodController.setReference(degrees, ControlType.kPosition, 0, 0.0, ArbFFUnits.kPercentOut);
+    double reference = Math.max(60, Math.min(100, degrees));
+    hoodController.setReference(reference, ControlType.kPosition, 0, 0.0, ArbFFUnits.kPercentOut);
   }
 
   public void setShooterVelocity(double velocity) {
@@ -233,5 +243,22 @@ public class Shooter extends SubsystemBase {
     } else {
       triggerMotor.stopMotor();
     }
+  }
+
+  public static class ShooterState {
+    public final double hoodAngle;
+    public final double velocity;
+    public ShooterState(double hoodAngle, double velocity) {
+      this.hoodAngle = hoodAngle;
+      this.velocity = velocity;
+    }
+  }
+
+  public static double lookupVelocity(double distance) {
+    return INTERPOLATION_TABLE.sample(distance)[0];
+  }
+
+  public static double lookupHoodAngle(double distance) {
+    return INTERPOLATION_TABLE.sample(distance)[1];
   }
 }
