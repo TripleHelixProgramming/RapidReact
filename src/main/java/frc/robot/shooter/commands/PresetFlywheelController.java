@@ -2,6 +2,7 @@ package frc.robot.shooter.commands;
 
 import edu.wpi.first.wpilibj.Preferences;
 import frc.robot.shooter.Shooter;
+import frc.robot.status.Status;
 import frc.robot.vision.Limelight;
 
 public class PresetFlywheelController extends FlywheelController {
@@ -32,6 +33,10 @@ public class PresetFlywheelController extends FlywheelController {
                 this.rpm = Preferences.getInt("TUR.Velocity", 1625);
                 this.hoodAngle = Preferences.getDouble("TUR.Angle", 65.0); // tarmac, upper goal, rear shot    
                 break;
+            case "BLP":
+                this.rpm = Preferences.getInt("BLP.Velocity", 500);
+                this.hoodAngle = Preferences.getDouble("BLP.Angle", 60.0); // tarmac, upper goal, rear shot    
+                break;
             default:
                 this.rpm = 500;
                 this.hoodAngle = 80.0;
@@ -39,6 +44,18 @@ public class PresetFlywheelController extends FlywheelController {
         }
         shooter.setHoodPosition(this.hoodAngle);
         controller.startPeriodic(0.02);        
+    }
+
+    @Override
+    public void execute() {
+        double targetDelta = rpm - velocity;
+        
+        if ((Math.abs(targetDelta) < 20) && !closeToTarget) {
+            closeToTarget = true;
+            if (!"BLP".equals(preset)) {
+                Status.getInstance().fillLEDs();
+            }
+        }
     }
 
 }

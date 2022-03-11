@@ -4,6 +4,13 @@
 
 package frc.robot;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.util.Color;
@@ -40,6 +47,12 @@ public class Robot extends TimedRobot {
   private static final int NUM_LOOPS = 40;
   private int delay = NUM_LOOPS;
 
+  public static BufferedImage fiveBallAutoImage;
+  public static BufferedImage fourBallAutoImage;
+  
+  public static BufferedImage twentySecondImage;
+  public static BufferedImage tenSecondImage;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any
@@ -64,9 +77,31 @@ public class Robot extends TimedRobot {
     Preferences.initDouble("BUR.Velocity", 1980.0);
     Preferences.initDouble("BUR.Angle", 73.25);
 
+    Preferences.initDouble("BLP.Velocity", 500.0);
+    Preferences.initDouble("BLP.Angle", 60.0);
+
+    String pathname = "None";
+    try {
+      File deployDir = Filesystem.getDeployDirectory();
+      String pathPrefix = deployDir.getAbsolutePath() + "/images/";
+
+      pathname = "THfade.png";
+      Robot.fiveBallAutoImage = ImageIO.read(new File( pathPrefix+ pathname));
+      pathname = "yellow_stripes.png";
+      Robot.twentySecondImage = ImageIO.read(new File( pathPrefix+ pathname));
+      pathname = "noise.png";
+      Robot.tenSecondImage = ImageIO.read(new File( pathPrefix+ pathname));
+      pathname = "fade.png";
+      Robot.fourBallAutoImage = ImageIO.read(new File( pathPrefix+ pathname));
+
+  } catch (IOException e) {
+      e.printStackTrace();
+      System.out.println("Problem opening image. Check the path.\nImage path = " + pathname);
+  }
+
+
     // Instantiate our RobotContainer. This will perform all our button bindings,
-    // and put our
-    // autonomous chooser on the dashboard.
+    // and put our autonomous chooser on the dashboard.
     mRobotContainer = new RobotContainer();
   }
 
@@ -91,6 +126,7 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    mRobotContainer.enableLights();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -114,7 +150,7 @@ public class Robot extends TimedRobot {
       }
     }
 
-    mRobotContainer.disableLights();
+    mRobotContainer.enableLights();
     mRobotContainer.displaySwitch();
   }
 

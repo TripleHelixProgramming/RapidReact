@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation.MatchType;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import frc.robot.Robot;
 import frc.robot.status.Status;
 import frc.robot.status.actions.Action;
 import frc.robot.status.actions.ChaseAction;
@@ -28,6 +29,8 @@ public class IdleCommand extends CommandBase {
     private Status status;
     private boolean actionSet;
     private int phase = 0;
+    private Action twentySecondsAction = new ImageAction(Robot.twentySecondImage,0.05, ImageAction.FOREVER);
+    private Action tenSecondsAction = new ImageAction(Robot.tenSecondImage, 0.15, ImageAction.FOREVER);
 
     public IdleCommand() {
         this.status = Status.getInstance();
@@ -63,13 +66,13 @@ public class IdleCommand extends CommandBase {
         Action action = scannerAction;
         // new PrintCommand("Time Left = " + String.valueOf(timeElapsed)).schedule();
         if ( 115.0 < timeElapsed && (0 == phase)) { // 20 Seconds left
-            action = new ImageAction("yellow_stripes.png",0.05);
+            action = twentySecondsAction;
             phase = 1;
             actionSet = false;
         }
          
         if (125.0 < timeElapsed && 1 == phase) { // Last 10 seconds
-            action = new ImageAction("noise.png",0.15);
+            action = tenSecondsAction;
             phase = 2;
             actionSet = false;
         }

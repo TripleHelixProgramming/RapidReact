@@ -4,10 +4,13 @@
 
 package frc.robot;
 
+import static com.team2363.utilities.ControllerMap.*;
+
 import static com.team2363.utilities.ControllerMap.RMZ_A_IN;
 import static com.team2363.utilities.ControllerMap.RMZ_D_IN;
 import static com.team2363.utilities.ControllerMap.RMZ_G_IN;
 import static com.team2363.utilities.ControllerMap.RMZ_H_IN;
+import static com.team2363.utilities.ControllerMap.RMZ_F_UP;
 import static com.team2363.utilities.ControllerMap.RM_SB_BACK;
 import static com.team2363.utilities.ControllerMap.RM_SB_FRONT;
 import static com.team2363.utilities.ControllerMap.RM_SC_BACK;
@@ -31,6 +34,7 @@ import static com.team2363.utilities.ControllerMap.X_BOX_Y;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -49,7 +53,9 @@ import frc.robot.climber.Climber;
 import frc.robot.climber.commands.DeployClimber;
 import frc.robot.climber.commands.RetractClimber;
 import frc.robot.drive.Drivetrain;
+import frc.robot.drive.commands.AbsoluteOrientation;
 import frc.robot.drive.commands.JoystickDrive;
+import frc.robot.drive.commands.RelativeOrientation;
 import frc.robot.drive.commands.ResetEncoders;
 import frc.robot.drive.commands.TurnToAngle;
 import frc.robot.drive.commands.ZeroHeading;
@@ -67,6 +73,7 @@ import frc.robot.shooter.commands.ResetHood;
 import frc.robot.shooter.commands.SetShooterState;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
+import frc.robot.shooter.commands.VisionShooter;
 import frc.robot.status.Status;
 import frc.robot.status.commands.IdleCommand;
 import frc.robot.status.commands.SetColor;
@@ -148,10 +155,12 @@ public class RobotContainer {
         autoCommand = new FourBallAuto(mDrive, mIntake, mShooter);
       }
     } finally {
+      /*
       fiveBallAuto.close();
       twoBallSouthAuto.close();
       twoBallEastAuto.close();
       fourBallAuto.close();
+      */
     }
     return autoCommand;
   }
@@ -225,7 +234,8 @@ public void resetShooter() {
       new JoystickButton(driver, RMZ_G_IN).whenReleased(new ZeroHeading(mDrive));
 
       
-      // new JoystickButton(driver, RMZ_E_UP).whenHeld(new AbsoluteOrientation(mDrive, joysticks));
+      new JoystickButton(driver, RMZ_F_UP).whenHeld(new AbsoluteOrientation(mDrive, joysticks));
+//      new JoystickButton(driver, RMZ_F_DOWN).whenHeld(new RelativeOrientation(mDrive, joysticks));
 
 //      new JoystickButton(driver, RMZ_F_UP).whenHeld(new DeployIntake(mIntake));
       
@@ -326,13 +336,17 @@ public void resetShooter() {
                             .alongWith(new IdleCommand()));
 
       JoystickButton xBoxX = new JoystickButton(operator, X_BOX_X);
-      xBoxX.whenHeld(new PresetFlywheelController(mShooter, "TLR")
-                          // .alongWith(new TurnOnLEDs(mLimelight))
-                          .alongWith(new XBoxButtonCommand(X_BOX_X))); // tarmac, lower goal, rear shot    
+      // xBoxX.whenHeld(new PresetFlywheelController(mShooter, "TLR")
+      //                     // .alongWith(new TurnOnLEDs(mLimelight))
+      //                     .alongWith(new XBoxButtonCommand(X_BOX_X))); // tarmac, lower goal, rear shot    
 
-      xBoxX.whenReleased(new StopShooter(mShooter)
-                            .alongWith(new TurnOffLEDs(mLimelight))
-                            .alongWith(new IdleCommand()));
+      // xBoxX.whenReleased(new StopShooter(mShooter)
+      //                       .alongWith(new TurnOffLEDs(mLimelight))
+      //                       .alongWith(new IdleCommand()));
+
+      xBoxX.whenHeld(new VisionShooter(mShooter, mLimelight));
+
+      xBoxX.whenReleased(new StopShooter(mShooter));
 
       JoystickButton xBoxY = new JoystickButton(operator, X_BOX_Y);
       xBoxY.whenHeld(new PresetFlywheelController(mShooter, "TUR")
@@ -349,6 +363,15 @@ public void resetShooter() {
 
       new JoystickButton(operator,9).and(new JoystickButton(operator,10))
       .whenActive(new ResetHood(mShooter));
+
+      new Button() {
+        @Override
+        public boolean get() {
+          return (operator.getPOV() == 0);
+        }
+      }.whenPressed(new PresetFlywheelController(mShooter, "BLP")
+        .alongWith(new PullTrigger(mShooter)))
+        .whenReleased(new StopShooter(mShooter).alongWith(new StopTrigger(mShooter)));
 
         // .and(new JoystickButton(operator, X_BOX_LOGO_LEFT))
         // .whenActive(new ToggleClimber(mClimber));

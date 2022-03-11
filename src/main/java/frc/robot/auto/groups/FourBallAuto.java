@@ -13,6 +13,7 @@ import frc.paths.FourBallPartTwo;
 import frc.paths.GoHome;
 import frc.paths.OnePointEightMetersForward;
 import frc.paths.WeirdAutoPartOne;
+import frc.robot.Robot;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.ResetOdometry;
 import frc.robot.drive.commands.TrajectoryFollower;
@@ -36,7 +37,7 @@ public class FourBallAuto extends SequentialCommandGroup{
 
     public FourBallAuto(Drivetrain drive, Intake intake, Shooter shooter) {
         addCommands(
-            // new ActionCommand(new ImageAction("fade.png",0.02).oscillate().brightness(0.7)),
+            new ActionCommand(new ImageAction(Robot.fourBallAutoImage,0.02, ImageAction.FOREVER).oscillate().brightness(0.7)),
             new ResetOdometry(drive, new Pose2d(new Translation2d(0,0),Rotation2d.fromDegrees(-90))),
             new ResetEncoder(shooter),
             new ParallelDeadlineGroup(
