@@ -38,7 +38,7 @@ import frc.robot.status.commands.SetColor;
 public class FiveBallAuto extends SequentialCommandGroup {
   public FiveBallAuto(Drivetrain drive, Intake intake, Shooter shooter) {
     addCommands(
-      new ResetOdometry(drive, new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(-90.0))),
+      new ResetOdometry(drive, new Pose2d(new Translation2d(-0.7, 0), Rotation2d.fromDegrees(-90.0))),
       new ResetEncoder(shooter),
       new ParallelDeadlineGroup(
         new SequentialCommandGroup(
@@ -46,7 +46,6 @@ public class FiveBallAuto extends SequentialCommandGroup {
             new PullTrigger(shooter),
             new WaitCommand(0.5)),
         // new ActionCommand(new ImageAction("THfade.png", 0.01).brightness(0.7)),
-        new TrajectoryFollower(drive, new FiveBallPartOne()), // Turn to point at center
         new FlywheelController(shooter, 1810, 77.90)),
     new ParallelDeadlineGroup(
       new StopShooter(shooter),
@@ -65,27 +64,27 @@ public class FiveBallAuto extends SequentialCommandGroup {
         new WaitCommand(4.0),
         new RetractIntake(intake))),
     new StopShooter(shooter),
-    new StopTrigger(shooter),
-    new ParallelDeadlineGroup(
-      new TrajectoryFollower(drive, new FiveBallPartThree()),
-      new FastIntake(intake)),
-    new WaitCommand(0.9), // Pick up balls 4 & 5
-    new ParallelDeadlineGroup(
-      new WaitCommand(4.5),
-      new SequentialCommandGroup(
-        new WaitCommand(1.75),
-        new FlywheelController(shooter, 1795, 77.60)),
-      new SequentialCommandGroup(
-        new WaitCommand(2.9),
-        new PullTrigger(shooter)),
-      new SequentialCommandGroup(
-        new WaitCommand(1.5),
-        new RetractIntake(intake)),
-      new TrajectoryFollower(drive, new FiveBallPartFour())),
-    new StopShooter(shooter),
-    new StopTrigger(shooter),
-    new ResetHood(shooter),
-    new SetColor(Status.getInstance(), Color.kBlack)
+    new StopTrigger(shooter)
+    // new ParallelDeadlineGroup(
+    //   new TrajectoryFollower(drive, new FiveBallPartThree()),
+    //   new FastIntake(intake)),
+    // new WaitCommand(0.9), // Pick up balls 4 & 5
+    // new ParallelDeadlineGroup(
+    //   new WaitCommand(4.5),
+    //   new SequentialCommandGroup(
+    //     new WaitCommand(1.75),
+    //     new FlywheelController(shooter, 1795, 77.60)),
+    //   new SequentialCommandGroup(
+    //     new WaitCommand(2.9),
+    //     new PullTrigger(shooter)),
+    //   new SequentialCommandGroup(
+    //     new WaitCommand(1.5),
+    //     new RetractIntake(intake)),
+    //   new TrajectoryFollower(drive, new FiveBallPartFour())),
+    // new StopShooter(shooter),
+    // new StopTrigger(shooter),
+    // new ResetHood(shooter),
+    // new SetColor(Status.getInstance(), Color.kBlack)
     );
   }
 }

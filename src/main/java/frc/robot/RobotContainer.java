@@ -55,6 +55,7 @@ import frc.robot.climber.commands.RetractClimber;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.AbsoluteOrientation;
 import frc.robot.drive.commands.JoystickDrive;
+import frc.robot.drive.commands.MotionProfileTurn;
 import frc.robot.drive.commands.RelativeOrientation;
 import frc.robot.drive.commands.ResetEncoders;
 import frc.robot.drive.commands.TurnToAngle;
@@ -342,9 +343,10 @@ public void resetShooter() {
       //                       .alongWith(new TurnOffLEDs(mLimelight))
       //                       .alongWith(new IdleCommand()));
 
-      xBoxX.whenHeld(new VisionShooter(mShooter, mLimelight));
+      // xBoxX.whenHeld(new VisionShooter(mShooter, mLimelight));
+      xBoxX.whenHeld(new MotionProfileTurn(mDrive, Math.PI/2));
 
-      xBoxX.whenReleased(new StopShooter(mShooter));
+      // xBoxX.whenReleased(new StopShooter(mShooter));
 
       JoystickButton xBoxY = new JoystickButton(operator, X_BOX_Y);
       xBoxY.whenHeld(new PresetFlywheelController(mShooter, "TUR")
