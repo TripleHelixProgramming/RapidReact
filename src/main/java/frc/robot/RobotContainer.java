@@ -115,6 +115,8 @@ public class RobotContainer {
   private HelixJoysticks joysticks;
   private HelixJoysticks op_joysticks;
 
+  private boolean limelightEnabled; // Whether the Limelight LEDs have been turned on.
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -206,11 +208,17 @@ public void resetShooter() {
   }
 
   public void enableLights() {
-    mLimelight.turnOnLEDs();
+    if (!limelightEnabled) {
+      mLimelight.turnOnLEDs();
+      limelightEnabled = true;
+    }
   }
 
   public void disableLights() {
-    mLimelight.turnOffLEDs();
+    if (limelightEnabled) {
+      mLimelight.turnOffLEDs();
+      limelightEnabled = false;
+    }
   }
 
   public void configureButtonBindings() {
