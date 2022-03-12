@@ -12,7 +12,7 @@ def main():
         # Mass/moi
         46.7,5.6,
         # Max velocity/force
-        90, 1.5,
+        80, 2,
         # 73, 1,
         # 50, 1,
         # Wheel radius
@@ -85,12 +85,12 @@ def main():
     #                 [0,0.00000001,-1.85]],
     #                 "FiveBallPartOne")
 
-    generator.generate([
-                    [-0.7,0,-math.pi/2],
-                    [-0.2,0.9,-math.pi/2+0.15],
-                    [1.85,-0.5,-math.pi+0.6]
-                    ],
-                    "FiveBallPartTwo")
+    # generator.generate([
+    #                 [-0.7,0,-math.pi/2],
+    #                 [-0.2,0.9,-math.pi/2+0.15],
+    #                 [1.85,-0.5,-math.pi+0.6]
+    #                 ],
+    #                 "FiveBallPartTwo")
 
     # generator.generate([
     #                 [1.85,-0.5,-math.pi+0.6],
@@ -103,5 +103,32 @@ def main():
     #                 [0.10,-0.375,-math.pi+1.25]
     #                 ],
     #                 "FiveBallPartFour")
+
+    generator.generate([
+                    [-0,0,-2.35],
+                    [1.1,0.3,-2.55],
+                    ],
+                    "NewAutoPartOne")
+    
+    generator.generate([
+                    [1,0.3,-2.55],
+                    [5.2,0.7,-2.275],
+                    [5.4,0.9,-2.275],
+                    [5.05,0.5,-2.275]
+                    ],
+                    "NewAutoPartTwo")
+
+    # generator.generate([
+    #                 [5.05,0.5,-2.275],
+    #                 [-1.3,0.775,-math.pi/2-0.2]
+    #                 ],
+    #                 "NewAutoPartThree")
+    
+    # generator.generate([
+    #                 [-1.3,0.775,-math.pi/2-0.2],
+    #                 [-1.2,1.7,-math.pi/2-0.14],
+    #                 [-1.3,0.775,-math.pi/2-0.2]
+    #                 ],
+    #                 "NewAutoPartFour")
 
 main()

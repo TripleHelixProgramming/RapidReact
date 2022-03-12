@@ -28,10 +28,11 @@ class swerve_drive:
         for k in range(N):
             modules = self.solve_module_positions(k, theta)
 
+            max_v = self.omega_max * self.wheel_radius
             for module in modules:
                 m_vx = vx[k] + module[0] * omega[k]
                 m_vy = vy[k] + module[1] * omega[k]
-                solver.subject_to(m_vx * m_vx + m_vy * m_vy < self.omega_max * self.omega_max)
+                solver.subject_to(m_vx * m_vx + m_vy * m_vy < max_v * max_v)
 
             Fx = solver.variable(4)
             Fy = solver.variable(4)

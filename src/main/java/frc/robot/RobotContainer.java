@@ -47,6 +47,7 @@ import frc.lib.HelixJoysticks;
 import frc.robot.Constants.OIConstants;
 import frc.robot.auto.groups.FiveBallAuto;
 import frc.robot.auto.groups.FourBallAuto;
+import frc.robot.auto.groups.NewAuto;
 import frc.robot.auto.groups.TwoBallEastAuto;
 import frc.robot.auto.groups.TwoBallSouthAuto;
 import frc.robot.climber.Climber;
@@ -161,7 +162,8 @@ public class RobotContainer {
       twoBallEastAuto.close();
       fourBallAuto.close();
     }
-    return autoCommand;
+    // return autoCommand;
+    return new NewAuto(mDrive, mShooter, mIntake);
   }
 
   public void displaySwitch() {
