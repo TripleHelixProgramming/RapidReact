@@ -29,21 +29,21 @@ public class JoystickDrive extends Drive {
     @Override
     public double getX() {
         double xRaw = m_controller.getX();
-        SmartDashboard.putNumber("JoystickX",  xyJoyMap.calculateMappedVal(xRaw));
+//        SmartDashboard.putNumber("JoystickX",  xyJoyMap.calculateMappedVal(xRaw));
         return xyJoyMap.calculateMappedVal(xRaw);
     }
 
     @Override
     public double getY() {
         double yRaw = m_controller.getY();
-        SmartDashboard.putNumber("JoystickY",  xyJoyMap.calculateMappedVal(yRaw));
+//        SmartDashboard.putNumber("JoystickY",  xyJoyMap.calculateMappedVal(yRaw));
         return xyJoyMap.calculateMappedVal(yRaw);
     }
 
     @Override
     public double getTheta() {
         double thetaRaw = m_controller.getRotation();
-        SmartDashboard.putNumber("JoystickTheta",  xyJoyMap.calculateMappedVal(thetaRaw));
+//        SmartDashboard.putNumber("JoystickTheta",  xyJoyMap.calculateMappedVal(thetaRaw));
         return thetaJoyMap.calculateMappedVal(thetaRaw);
     }
 

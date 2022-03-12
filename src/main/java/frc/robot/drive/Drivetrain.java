@@ -105,7 +105,7 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     // Update the odometry in the periodic block
     updateOdometry();
-    map.addPose(m_odometry.getPoseMeters(), Timer.getFPGATimestamp());
+    // map.addPose(m_odometry.getPoseMeters(), Timer.getFPGATimestamp());
     
     SmartDashboard.putNumber("Heading", getHeading().getDegrees());
     
@@ -114,17 +114,16 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("currentAngle", getPose().getRotation().getRadians());
     SmartDashboard.putNumber("targetPoseAngle", m_targetPose.getRotation().getRadians());
 
-    SmartDashboard.putNumber("Distance 0", modules[0].getDriveDistanceMeters());
-    SmartDashboard.putNumber("Distance 1", modules[1].getDriveDistanceMeters());
-    SmartDashboard.putNumber("Distance 2", modules[2].getDriveDistanceMeters());
-    SmartDashboard.putNumber("Distance 3", modules[3].getDriveDistanceMeters());
+    // SmartDashboard.putNumber("Distance 0", modules[0].getDriveDistanceMeters());
+    // SmartDashboard.putNumber("Distance 1", modules[1].getDriveDistanceMeters());
+    // SmartDashboard.putNumber("Distance 2", modules[2].getDriveDistanceMeters());
+    // SmartDashboard.putNumber("Distance 3", modules[3].getDriveDistanceMeters());
 
-    SmartDashboard.putNumber("Angle 0", modules[0].getTurnCANcoderAngle());
-    SmartDashboard.putNumber("Angle 1", modules[1].getTurnCANcoderAngle());
-    SmartDashboard.putNumber("Angle 2", modules[2].getTurnCANcoderAngle());
-    SmartDashboard.putNumber("Angle 3", modules[3].getTurnCANcoderAngle());
+    // SmartDashboard.putNumber("Angle 0", modules[0].getTurnCANcoderAngle());
+    // SmartDashboard.putNumber("Angle 1", modules[1].getTurnCANcoderAngle());
+    // SmartDashboard.putNumber("Angle 2", modules[2].getTurnCANcoderAngle());
+    // SmartDashboard.putNumber("Angle 3", modules[3].getTurnCANcoderAngle());
 
-    SmartDashboard.putNumber("Drive heading", getHeading().getDegrees());
   }
 
   public void updateOdometry() {
