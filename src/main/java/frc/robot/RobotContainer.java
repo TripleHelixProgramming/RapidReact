@@ -43,6 +43,7 @@ import frc.lib.HelixJoysticks;
 import frc.robot.Constants.OIConstants;
 import frc.robot.auto.groups.FiveBallAuto;
 import frc.robot.auto.groups.FourBallAuto;
+import frc.robot.auto.groups.NewAuto;
 import frc.robot.auto.groups.TwoBallEastAuto;
 import frc.robot.auto.groups.TwoBallSouthAuto;
 import frc.robot.climber.Climber;
@@ -51,6 +52,7 @@ import frc.robot.climber.commands.RetractClimber;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.AbsoluteOrientation;
 import frc.robot.drive.commands.JoystickDrive;
+import frc.robot.drive.commands.MotionProfileTurn;
 import frc.robot.drive.commands.RelativeOrientation;
 import frc.robot.drive.commands.ResetEncoders;
 import frc.robot.drive.commands.TurnToAngle;
@@ -160,7 +162,8 @@ public class RobotContainer {
       fourBallAuto.close();
       */
     }
-    return autoCommand;
+    // return autoCommand;
+    return new NewAuto(mDrive, mShooter, mIntake);
   }
 
   public void displaySwitch() {
@@ -348,9 +351,10 @@ public void resetShooter() {
       //                       .alongWith(new TurnOffLEDs(mLimelight))
       //                       .alongWith(new IdleCommand()));
 
-      xBoxX.whenHeld(new VisionShooter(mShooter, mLimelight));
+      // xBoxX.whenHeld(new VisionShooter(mShooter, mLimelight));
+      xBoxX.whenHeld(new MotionProfileTurn(mDrive, Math.PI/2));
 
-      xBoxX.whenReleased(new StopShooter(mShooter));
+      // xBoxX.whenReleased(new StopShooter(mShooter));
 
       JoystickButton xBoxY = new JoystickButton(operator, X_BOX_Y);
       xBoxY.whenHeld(new PresetFlywheelController(mShooter, "TUR")
