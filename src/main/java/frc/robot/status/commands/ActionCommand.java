@@ -1,4 +1,3 @@
-
 package frc.robot.status.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
