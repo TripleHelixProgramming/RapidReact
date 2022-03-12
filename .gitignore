@@ -104,6 +104,7 @@ Temporary Items
 .apdisk
 
 ### VisualStudioCode ###
+.vscode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -167,3 +168,4 @@ build/
 simgui-ds.json
 simgui.json
 networktables.ini
+.SysId
