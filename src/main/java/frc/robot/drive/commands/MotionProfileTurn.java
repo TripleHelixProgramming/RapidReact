@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.drive.Drivetrain;
 
@@ -21,27 +22,35 @@ public class MotionProfileTurn extends CommandBase {
     this.drive = drive;
     this.offset = offset;
     addRequirements(drive);
-    controller = new ProfiledPIDController(0.0, 0.0, 0.0, new TrapezoidProfile.Constraints(10, 10));
-    controller.enableContinuousInput(-Math.PI, Math.PI);
   }
 
   @Override
   public void initialize() {
-    target = offset + drive.getPose().getRotation().getRadians();
+    // target = offset + drive.getPose().getRotation().getRadians();
+    SmartDashboard.putString("Turning", "Enabled");
+    target = 0;
+    controller = new ProfiledPIDController(0.35, 0.0, 0.0, new TrapezoidProfile.Constraints(10, 10), 0.02);
+    controller.enableContinuousInput(-Math.PI, Math.PI);
   }
 
   @Override
   public void execute() {
     double theta = drive.getPose().getRotation().getRadians();
-    double feedback = controller.calculate(theta, 0);
+    double feedback = controller.calculate(theta, 1);
     double feedforward = controller.getSetpoint().velocity;
+    SmartDashboard.putNumber("Theta Angle", theta);
+    SmartDashboard.putNumber("Turning Feedforward", feedforward);
     drive.drive(new ChassisSpeeds(0, 0, feedforward), false);
+    target++;
+    SmartDashboard.putNumber("Loops", target);
+    // drive.drive(new ChassisSpeeds(0, 0, 1), false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     drive.brake();
+    SmartDashboard.putString("Turning", "Disabled");
   }
 
   // Returns true when the command should end.
