@@ -43,7 +43,7 @@ import frc.lib.HelixJoysticks;
 import frc.robot.Constants.OIConstants;
 import frc.robot.auto.groups.FiveBallAuto;
 import frc.robot.auto.groups.FourBallAuto;
-import frc.robot.auto.groups.NewAuto;
+import frc.robot.auto.groups.NewFiveBallAuto;
 import frc.robot.auto.groups.TwoBallEastAuto;
 import frc.robot.auto.groups.TwoBallSouthAuto;
 import frc.robot.climber.Climber;
@@ -163,7 +163,7 @@ public class RobotContainer {
       */
     }
     // return autoCommand;
-    return new NewAuto(mDrive, mShooter, mIntake);
+    return new NewFiveBallAuto(mDrive, mShooter, mIntake);
   }
 
   public void displaySwitch() {
@@ -238,8 +238,8 @@ public void resetShooter() {
       new JoystickButton(driver, RMZ_D_IN).whenPressed(new PullTrigger(mShooter));
       new JoystickButton(driver, RMZ_D_IN).whenReleased(new StopTrigger(mShooter));
 
-      new JoystickButton(driver, RMZ_H_IN).whenPressed(new ResetHood(mShooter));
-      new JoystickButton(driver, RMZ_G_IN).whenReleased(new ZeroHeading(mDrive));
+//      new JoystickButton(driver, RMZ_H_IN).whenPressed(new ResetHood(mShooter));
+      new JoystickButton(driver, RMZ_G_IN).and(new JoystickButton(driver, RMZ_H_IN).whenPressed(new ZeroHeading(mDrive)));
 
       
       new JoystickButton(driver, RMZ_F_UP).whenHeld(new AbsoluteOrientation(mDrive, joysticks));
