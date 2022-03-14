@@ -64,7 +64,7 @@ public class VisionShooter extends CommandBase {
         double voltage = flywheel.solveFeedforward(rpm, 0) + flywheelController.calculate(velocity, dt);
         // double voltage = flywheel.solveFeedforward(rpm, 0);
 
-        shooter.setShooterVoltage(voltage);
+        shooter.setShooterVoltage(Math.min(voltage, 11.5));
         
         lastPosition = position;
         lastTime = time;        

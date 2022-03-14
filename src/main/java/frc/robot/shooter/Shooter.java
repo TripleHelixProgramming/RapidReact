@@ -28,9 +28,13 @@ public class Shooter extends SubsystemBase {
     {2.95, 1980, 73.25}
   });
 
+  private static double erosion = 0.98;
+
   private boolean hoodDirection;
   int highCurrentCount = 0;
   int lowCurrentCount = 0;
+
+  
 
   private double targetVelocity = 0.0; // Target velocity of the shooter.
   private boolean triggerPull = false;
@@ -251,7 +255,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public static double lookupVelocity(double distance) {
-    return INTERPOLATION_TABLE.sample(distance)[0];
+    return INTERPOLATION_TABLE.sample(distance)[0] * erosion;
   }
 
   public static double lookupHoodAngle(double distance) {

@@ -101,7 +101,7 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     // Update the odometry in the periodic block
     updateOdometry();
-    // map.addPose(m_odometry.getPoseMeters(), Timer.getFPGATimestamp());
+    map.addPose(m_odometry.getPoseMeters(), Timer.getFPGATimestamp());
     
     SmartDashboard.putNumber("Heading", getHeading().getDegrees());
     

@@ -232,7 +232,8 @@ public void resetShooter() {
 
 //      new JoystickButton(driver, RMZ_E_UP).whenPressed(new ZeroHeading(mDrive));
 
-      new JoystickButton(driver, RMZ_A_IN).whenHeld(new TurnToAngle(mDrive, mLimelight, joysticks));
+      new JoystickButton(driver, RMZ_A_IN).whenHeld(new TurnToAngle(mDrive, mLimelight, joysticks)
+                                                      .alongWith(new TurnOnLEDs(mLimelight)));
       
       new JoystickButton(driver, RMZ_D_IN).whenPressed(new PullTrigger(mShooter));
       new JoystickButton(driver, RMZ_D_IN).whenReleased(new StopTrigger(mShooter));
@@ -351,10 +352,14 @@ public void resetShooter() {
       //                       .alongWith(new TurnOffLEDs(mLimelight))
       //                       .alongWith(new IdleCommand()));
 
-      // xBoxX.whenHeld(new VisionShooter(mShooter, mLimelight));
+      // xBoxX.whenHeld(new VisionShooter(mShooter, mLimelight)
+                          // .alongWith(new TurnOnLEDs(mLimelight))
+                          // .alongWith(new XBoxButtonCommand(X_BOX_X)));
       xBoxX.whenHeld(new MotionProfileTurn(mDrive, Math.PI/2));
 
-      // xBoxX.whenReleased(new StopShooter(mShooter));
+      xBoxX.whenReleased(new StopShooter(mShooter)
+                          .alongWith(new TurnOffLEDs(mLimelight))
+                          .alongWith(new IdleCommand()));
 
       JoystickButton xBoxY = new JoystickButton(operator, X_BOX_Y);
       xBoxY.whenHeld(new PresetFlywheelController(mShooter, "TUR")

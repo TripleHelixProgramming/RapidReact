@@ -14,6 +14,7 @@ import frc.paths.NewAutoPartFour;
 import frc.paths.NewAutoPartOne;
 import frc.paths.NewAutoPartThree;
 import frc.paths.NewAutoPartTwo;
+import frc.robot.Robot;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.ResetOdometry;
 import frc.robot.drive.commands.TrajectoryFollower;
@@ -26,6 +27,8 @@ import frc.robot.shooter.commands.PullTrigger;
 import frc.robot.shooter.commands.ResetEncoder;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
+import frc.robot.status.actions.ImageAction;
+import frc.robot.status.commands.ActionCommand;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -38,6 +41,7 @@ public class NewAuto extends SequentialCommandGroup {
       new ResetEncoder(shooter),
       new ParallelDeadlineGroup(
         new WaitCommand(2.9), 
+        new ActionCommand(new ImageAction(Robot.fiveBallAutoImage, 0.02, ImageAction.FOREVER).brightness(0.7).oscillate()),
         new TrajectoryFollower(drive, new NewAutoPartOne()),
         new FastIntake(intake),
         new SequentialCommandGroup(
@@ -52,21 +56,21 @@ public class NewAuto extends SequentialCommandGroup {
       ),
       new WaitCommand(0.35),
       new ParallelDeadlineGroup(
-        new WaitCommand(4.2),
+        new WaitCommand(3.9),
         new TrajectoryFollower(drive, new NewAutoPartThree()),
         new SequentialCommandGroup(
           new WaitCommand(1.25),
           new FlywheelController(shooter, 1795, 76.0)
         ),
         new SequentialCommandGroup(
-          new WaitCommand(3.2),
+          new WaitCommand(2.9),
           new PullTrigger(shooter)
         ),
         new RetractIntake(intake)),
       new ParallelDeadlineGroup(
         new WaitCommand(3.0),
         new TrajectoryFollower(drive, new NewAutoPartFour()),
-        new FlywheelController(shooter, 1795, 76.0),
+        new FlywheelController(shooter, 1785, 75.5),
         new SequentialCommandGroup(
           new StopTrigger(shooter),
           new WaitCommand(1.25),
