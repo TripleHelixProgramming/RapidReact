@@ -236,7 +236,9 @@ public void resetShooter() {
                                                       .alongWith(new TurnOnLEDs(mLimelight)));
       
       new JoystickButton(driver, RMZ_D_IN).whenPressed(new PullTrigger(mShooter));
+                                                     
       new JoystickButton(driver, RMZ_D_IN).whenReleased(new StopTrigger(mShooter));
+                                                        
 
 //      new JoystickButton(driver, RMZ_H_IN).whenPressed(new ResetHood(mShooter));
       new JoystickButton(driver, RMZ_G_IN).and(new JoystickButton(driver, RMZ_H_IN).whenPressed(new ZeroHeading(mDrive)));
@@ -352,10 +354,10 @@ public void resetShooter() {
       //                       .alongWith(new TurnOffLEDs(mLimelight))
       //                       .alongWith(new IdleCommand()));
 
-      // xBoxX.whenHeld(new VisionShooter(mShooter, mLimelight)
-                          // .alongWith(new TurnOnLEDs(mLimelight))
-                          // .alongWith(new XBoxButtonCommand(X_BOX_X)));
-      xBoxX.whenHeld(new MotionProfileTurn(mDrive, Math.PI/2));
+      xBoxX.whenHeld(new VisionShooter(mShooter, mLimelight)
+                          .alongWith(new TurnOnLEDs(mLimelight))
+                          .alongWith(new XBoxButtonCommand(X_BOX_X)));
+      // xBoxX.whenHeld(new MotionProfileTurn(mDrive, Math.PI/2));
 
       xBoxX.whenReleased(new StopShooter(mShooter)
                           .alongWith(new TurnOffLEDs(mLimelight))
@@ -388,8 +390,20 @@ public void resetShooter() {
 
         // .and(new JoystickButton(operator, X_BOX_LOGO_LEFT))
         // .whenActive(new ToggleClimber(mClimber));
-    }
 
+        new Button() {
+          @Override
+          public boolean get() {
+            return (operator.getPOV() == 180);
+          }
+        }.whenPressed(new PresetFlywheelController(mShooter, "SAF").alongWith(new XBoxButtonCommand(-1)))
+          .whenReleased(new StopShooter(mShooter).alongWith(new IdleCommand()));
+  
+          // .and(new JoystickButton(operator, X_BOX_LOGO_LEFT))
+          // .whenActive(new ToggleClimber(mClimber));
+  
+    }
+    
   }
 }
 

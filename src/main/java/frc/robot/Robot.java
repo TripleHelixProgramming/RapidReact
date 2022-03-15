@@ -76,6 +76,9 @@ public class Robot extends TimedRobot {
     Preferences.initDouble("BLP.Velocity", 500.0);
     Preferences.initDouble("BLP.Angle", 60.0);
 
+    Preferences.initDouble("SAF.Velocity", 2100.0);
+    Preferences.initDouble("SAF.Angle", 75.0);
+
     String pathname = "None";
     try {
       File deployDir = Filesystem.getDeployDirectory();

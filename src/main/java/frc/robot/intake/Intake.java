@@ -52,6 +52,11 @@ public class Intake extends SubsystemBase {
     motor.set(ControlMode.PercentOutput, 0);
   }
 
+  // Push a ball into the trigger
+  // public void rollerPush() {
+  //   motor.set(ControlMode.PercentOutput, 0.30);
+  // }
+
   // Status of the intake arm's extended state.
   public boolean isExtended() {
     // return solenoid.get() == Value.kForward;

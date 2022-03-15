@@ -35,7 +35,11 @@ public class PresetFlywheelController extends FlywheelController {
                 break;
             case "BLP":
                 this.rpm = Preferences.getInt("BLP.Velocity", 500);
-                this.hoodAngle = Preferences.getDouble("BLP.Angle", 60.0); // tarmac, upper goal, rear shot    
+                this.hoodAngle = Preferences.getDouble("BLP.Angle", 60.0); // Bloop shot    
+                break;
+            case "SAF":
+                this.rpm = Preferences.getInt("SAF.Velocity", 500);
+                this.hoodAngle = Preferences.getDouble("SAF.Angle", 60.0); // safe loading zone shot    
                 break;
             default:
                 this.rpm = 500;
