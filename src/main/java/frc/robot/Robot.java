@@ -175,6 +175,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+    mRobotContainer.enableLights();
   }
 
   /** This function is called periodically during autonomous. */

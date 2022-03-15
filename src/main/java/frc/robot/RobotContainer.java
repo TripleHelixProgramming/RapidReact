@@ -123,7 +123,7 @@ public class RobotContainer {
     configureButtonBindings();
     mDrive.setDefaultCommand(new JoystickDrive(mDrive, joysticks));
     // mDrive.setDefaultCommand(new TestDrive(mDrive));
-    mIntake.setDefaultCommand(new RetractIntake(mIntake));
+    mIntake.setDefaultCommand(new RetractIntake(mIntake)); // UNDO THIS
     // mShooter.setDefaultCommand(new StopShooter(mShooter));
     // mShooter.setDefaultCommand(new FlywheelController(mShooter, 0));
 //    mClimber.setDefaultCommand(new RetractClimber(mClimber));
@@ -146,7 +146,8 @@ public class RobotContainer {
 
     try {
       if(!fiveBallAuto.get()){
-        autoCommand = new FiveBallAuto(mDrive, mIntake, mShooter);
+        autoCommand = new NewFiveBallAuto(mDrive, mShooter, mIntake, mLimelight, joysticks);
+        // autoCommand = new FiveBallAuto(mDrive, mIntake, mShooter);
       } else if (!twoBallSouthAuto.get()) {
         autoCommand = new TwoBallSouthAuto(mDrive, mIntake, mShooter);
       } else if (!twoBallEastAuto.get()) {
@@ -163,7 +164,7 @@ public class RobotContainer {
       */
     }
     // return autoCommand;
-    return new NewFiveBallAuto(mDrive, mShooter, mIntake);
+    return autoCommand;
   }
 
   public void displaySwitch() {
@@ -359,9 +360,9 @@ public void resetShooter() {
                           .alongWith(new XBoxButtonCommand(X_BOX_X)));
       // xBoxX.whenHeld(new MotionProfileTurn(mDrive, Math.PI/2));
 
-      xBoxX.whenReleased(new StopShooter(mShooter)
-                          .alongWith(new TurnOffLEDs(mLimelight))
-                          .alongWith(new IdleCommand()));
+      // xBoxX.whenReleased(new StopShooter(mShooter)
+                          // .alongWith(new TurnOffLEDs(mLimelight))
+                          // .alongWith(new IdleCommand()));
 
       JoystickButton xBoxY = new JoystickButton(operator, X_BOX_Y);
       xBoxY.whenHeld(new PresetFlywheelController(mShooter, "TUR")
