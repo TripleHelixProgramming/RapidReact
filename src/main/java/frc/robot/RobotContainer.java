@@ -360,9 +360,9 @@ public void resetShooter() {
                           .alongWith(new XBoxButtonCommand(X_BOX_X)));
       // xBoxX.whenHeld(new MotionProfileTurn(mDrive, Math.PI/2));
 
-      // xBoxX.whenReleased(new StopShooter(mShooter)
-                          // .alongWith(new TurnOffLEDs(mLimelight))
-                          // .alongWith(new IdleCommand()));
+      xBoxX.whenReleased(new StopShooter(mShooter)
+                          .alongWith(new TurnOffLEDs(mLimelight))
+                          .alongWith(new IdleCommand()));
 
       JoystickButton xBoxY = new JoystickButton(operator, X_BOX_Y);
       xBoxY.whenHeld(new PresetFlywheelController(mShooter, "TUR")
