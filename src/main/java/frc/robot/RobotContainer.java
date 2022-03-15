@@ -163,7 +163,8 @@ public class RobotContainer {
       */
     }
     // return autoCommand;
-    return new NewAuto(mDrive, mShooter, mIntake);
+    return new NewAuto(mDrive, mShooter, mIntake, mLimelight, joysticks
+    );
   }
 
   public void displaySwitch() {

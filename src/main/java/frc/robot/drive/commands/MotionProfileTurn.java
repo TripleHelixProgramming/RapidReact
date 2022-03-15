@@ -16,6 +16,9 @@ public class MotionProfileTurn extends CommandBase {
   Drivetrain drive;
   double offset;
   double target;
+  double velocity;
+  double dt;
+  double maxAcceleration, maxVelocity;
   ProfiledPIDController controller;
 
   public MotionProfileTurn(Drivetrain drive, double offset) {
@@ -28,22 +31,42 @@ public class MotionProfileTurn extends CommandBase {
   public void initialize() {
     // target = offset + drive.getPose().getRotation().getRadians();
     SmartDashboard.putString("Turning", "Enabled");
-    target = 0;
-    controller = new ProfiledPIDController(0.35, 0.0, 0.0, new TrapezoidProfile.Constraints(10, 10), 0.02);
-    controller.enableContinuousInput(-Math.PI, Math.PI);
+    controller = new ProfiledPIDController(0.35, 0.0, 0.0, new TrapezoidProfile.Constraints(1, 1), 0.02);
+    // controller.enableContinuousInput(-Math.PI, Math.PI);
+    velocity = 0;
+    maxAcceleration = 0.5;
+    maxVelocity = 1;
+    dt = 0.02;
   }
 
   @Override
   public void execute() {
     double theta = drive.getPose().getRotation().getRadians();
-    double feedback = controller.calculate(theta, 1);
-    double feedforward = controller.getSetpoint().velocity;
-    SmartDashboard.putNumber("Theta Angle", theta);
-    SmartDashboard.putNumber("Turning Feedforward", feedforward);
+    double error = shortAngle(0, theta);
+    double feedback = controller.calculate(0, shortAngle(0, theta));
+    double feedforward = solveVelocity(maxVelocity, maxAcceleration, error, dt);
+    SmartDashboard.putNumber("Error", error);
+    SmartDashboard.putNumber("Velocity", feedforward);
     drive.drive(new ChassisSpeeds(0, 0, feedforward), false);
-    target++;
-    SmartDashboard.putNumber("Loops", target);
-    // drive.drive(new ChassisSpeeds(0, 0, 1), false);
+  }
+
+  public double solveVelocity(double maxVelocity, double maxAcceleration, double error, double dt) {
+    double accel = 0;
+    if (Math.sqrt(2*maxAcceleration*Math.abs(error)) > Math.abs(velocity)) {
+      accel = -maxAcceleration * Math.signum(error);
+    } else {
+      accel = maxAcceleration * Math.signum(error);
+    }
+    SmartDashboard.putNumber("Accel", accel);
+    velocity = Math.min(maxVelocity, Math.max(-maxVelocity, velocity + accel * dt));
+    // velocity += accel * dt;
+    return velocity;
+  }
+
+  public double shortAngle(double targetAngle, double currentAngle) {
+    double diff = (targetAngle - currentAngle + Math.PI) % (2* Math.PI) - Math.PI;
+    diff = diff < -Math.PI ? diff + 2 * Math.PI : diff;
+    return diff;
   }
 
   // Called once the command ends or is interrupted.
