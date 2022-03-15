@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.control.DCMotor;
 import frc.lib.control.PIDController;
 import frc.robot.shooter.Shooter;
+import frc.robot.status.Status;
 import frc.robot.vision.Limelight;
 
 public class VisionShooter extends CommandBase {
@@ -68,6 +69,16 @@ public class VisionShooter extends CommandBase {
         
         lastPosition = position;
         lastTime = time;        
+    }
+
+    @Override
+    public void execute() {
+        double targetDelta = rpm - velocity;
+        
+        if ((Math.abs(targetDelta) < 20) && !closeToTarget) {
+            closeToTarget = true;
+            Status.getInstance().fillLEDs();
+        }
     }
 
     @Override
