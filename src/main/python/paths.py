@@ -104,32 +104,53 @@ def main():
     #                 ],
     #                 "FiveBallPartFour")
 
-    generator.generate([
-                    [-0,0,-2.35],
-                    [1.1,0.3,-2.55],
-                    [0.95,0.15,-2.55],
-                    ],
-                    "NewAutoPartOne")
+    # generator.generate([
+    #                 [-0,0,-2.35],
+    #                 [1.1,0.3,-2.55],
+    #                 [0.95,0.15,-2.55],
+    #                 ],
+    #                 "NewAutoPartOne")
     
-    generator.generate([
-                    [0.95,0.15,-2.55],
-                    [5.2,0.7,-2.275],
-                    [5.4,0.9,-2.275],
-                    [5.05,0.5,-2.275]
-                    ],
-                    "NewAutoPartTwo")
+    # generator.generate([
+    #                 [0.95,0.15,-2.55],
+    #                 [5.0,0.5,-2.275],
+    #                 [5.2,0.75,-2.275],
+    #                 [4.85,0.4,-2.275]
+    #                 ],
+    #                 "NewAutoPartTwo")
 
     # generator.generate([
-    #                 [5.05,0.5,-2.275],
+    #                 [4.85,0.4,-2.275],
     #                 [-1.3,0.775,-math.pi/2-0.2]
     #                 ],
     #                 "NewAutoPartThree")
     
+    generator.generate([
+                    [-1.3,0.775,-math.pi/2-0.2],
+                    [-1.2,1.7,-math.pi/2-0.14],
+                    [-1.3,0.9,-math.pi/2-0.2]
+                    ],
+                    "NewAutoPartFour")
+
     # generator.generate([
-    #                 [-1.3,0.775,-math.pi/2-0.2],
-    #                 [-1.2,1.7,-math.pi/2-0.14],
-    #                 [-1.3,0.775,-math.pi/2-0.2]
+    #                 [-0,0,-2.35],
+    #                 [1.1,0.3,-2.55],
+    #                 [0.95,0.15,-2.55],
     #                 ],
-    #                 "NewAutoPartFour")
+    #                 "NewFourPartOne")
+    
+    # generator.generate([
+    #                 [0.95,0.15,-2.55],
+    #                 [5.0,0.5,-2.275],
+    #                 [5.2,0.75,-2.275],
+    #                 [4.85,0.4,-2.275]
+    #                 ],
+    #                 "NewFourPartTwo")
+
+    # generator.generate([
+    #                 [4.85,0.4,-2.275],
+    #                 [0.2,0.2,-2.35]
+    #                 ],
+    #                 "NewFourPartThree")    
 
 main()

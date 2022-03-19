@@ -2,7 +2,7 @@ package frc.paths;
 
 import frc.lib.control.SwerveTrajectory;
 
-public class NewAutoPartTwo extends Path {
+public class NewFourPartTwo extends Path {
    private final static double[][] points = {
        {0,0.95,0.15,-2.55,-0.0,0.0,0.0},
        {0.0191,0.95,0.15,-2.55,0.0642,-0.0037,0.005},

@@ -44,6 +44,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.auto.groups.FiveBallAuto;
 import frc.robot.auto.groups.FourBallAuto;
 import frc.robot.auto.groups.NewFiveBallAuto;
+import frc.robot.auto.groups.NewFourBallAuto;
 import frc.robot.auto.groups.TwoBallEastAuto;
 import frc.robot.auto.groups.TwoBallSouthAuto;
 import frc.robot.climber.Climber;
@@ -97,6 +98,7 @@ public class RobotContainer {
   private final Status mStatus = Status.getInstance();
   private final Climber mClimber = new Climber();
 
+  private final DigitalInput newFourBallAuto = new DigitalInput(0);
   private final DigitalInput fiveBallAuto = new DigitalInput(3);
   private final DigitalInput twoBallSouthAuto = new DigitalInput(1);
   private final DigitalInput twoBallEastAuto = new DigitalInput(2);
@@ -154,6 +156,8 @@ public class RobotContainer {
         autoCommand = new TwoBallEastAuto(mDrive, mIntake, mShooter);
       } else if (!fourBallAuto.get()) {
         autoCommand = new FourBallAuto(mDrive, mIntake, mShooter);
+      } else if (!newFourBallAuto.get()) {
+        autoCommand = new NewFourBallAuto(mDrive, mShooter, mIntake, mLimelight, joysticks);
       }
     } finally {
       /*
@@ -210,15 +214,15 @@ public void resetShooter() {
   public void enableLights() {
     if (!limelightEnabled) {
       mLimelight.turnOnLEDs();
-      limelightEnabled = true;
     }
+    limelightEnabled = true;
   }
 
   public void disableLights() {
     if (limelightEnabled) {
       mLimelight.turnOffLEDs();
-      limelightEnabled = false;
     }
+    limelightEnabled = false;
   }
 
   public void configureButtonBindings() {
@@ -389,16 +393,25 @@ public void resetShooter() {
         .alongWith(new PullTrigger(mShooter)))
         .whenReleased(new StopShooter(mShooter).alongWith(new StopTrigger(mShooter)));
 
+      new Button() {
+        @Override
+        public boolean get() {
+          return (operator.getPOV() == 180);
+        }
+      }.whenPressed(new PresetFlywheelController(mShooter, "BLP")
+        .alongWith(new PullTrigger(mShooter)))
+        .whenReleased(new StopShooter(mShooter).alongWith(new StopTrigger(mShooter)));
+
         // .and(new JoystickButton(operator, X_BOX_LOGO_LEFT))
         // .whenActive(new ToggleClimber(mClimber));
 
-        new Button() {
-          @Override
-          public boolean get() {
-            return (operator.getPOV() == 180);
-          }
-        }.whenPressed(new PresetFlywheelController(mShooter, "SAF").alongWith(new XBoxButtonCommand(-1)))
-          .whenReleased(new StopShooter(mShooter).alongWith(new IdleCommand()));
+        // new Button() {
+        //   @Override
+        //   public boolean get() {
+        //     return (operator.getPOV() == 180);
+        //   }
+        // }.whenPressed(new PresetFlywheelController(mShooter, "SAF").alongWith(new XBoxButtonCommand(-1)))
+        //   .whenReleased(new StopShooter(mShooter).alongWith(new IdleCommand()));
   
           // .and(new JoystickButton(operator, X_BOX_LOGO_LEFT))
           // .whenActive(new ToggleClimber(mClimber));
