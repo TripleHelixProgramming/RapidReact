@@ -99,7 +99,7 @@ public class RobotContainer {
   private final Status mStatus = Status.getInstance();
   private final Climber mClimber = new Climber();
 
-  private int mDISwitch = -1;
+  private int mDISwitch = -2;
   private final DigitalInput switchZero = new DigitalInput(0);
   private final DigitalInput twoBallSouthAuto = new DigitalInput(1);
   private final DigitalInput twoBallEastAuto = new DigitalInput(2);
