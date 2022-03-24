@@ -1,3 +1,7 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot;
 
 import static com.team2363.utilities.ControllerMap.*;
@@ -43,7 +47,6 @@ import frc.lib.HelixJoysticks;
 import frc.robot.Constants.OIConstants;
 import frc.robot.auto.groups.FiveBallAuto;
 import frc.robot.auto.groups.FourBallAuto;
-import frc.robot.auto.groups.NewFiveBallAuto;
 import frc.robot.auto.groups.TwoBallEastAuto;
 import frc.robot.auto.groups.TwoBallSouthAuto;
 import frc.robot.climber.Climber;
@@ -52,7 +55,6 @@ import frc.robot.climber.commands.RetractClimber;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.AbsoluteOrientation;
 import frc.robot.drive.commands.JoystickDrive;
-import frc.robot.drive.commands.MotionProfileTurn;
 import frc.robot.drive.commands.RelativeOrientation;
 import frc.robot.drive.commands.ResetEncoders;
 import frc.robot.drive.commands.TurnToAngle;
@@ -71,8 +73,8 @@ import frc.robot.shooter.commands.ResetHood;
 import frc.robot.shooter.commands.SetShooterState;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
-import frc.robot.shooter.commands.VisionShooter;
 import frc.robot.status.Status;
+import frc.robot.status.commands.DISwitchStatus;
 import frc.robot.status.commands.IdleCommand;
 import frc.robot.status.commands.SetColor;
 import frc.robot.status.commands.XBoxButtonCommand;
@@ -97,6 +99,7 @@ public class RobotContainer {
   private final Status mStatus = Status.getInstance();
   private final Climber mClimber = new Climber();
 
+  private int mDISwitch = -1;
   private final DigitalInput fiveBallAuto = new DigitalInput(3);
   private final DigitalInput twoBallSouthAuto = new DigitalInput(1);
   private final DigitalInput twoBallEastAuto = new DigitalInput(2);
@@ -113,8 +116,6 @@ public class RobotContainer {
   private HelixJoysticks joysticks;
   private HelixJoysticks op_joysticks;
 
-  private boolean limelightEnabled; // Whether the Limelight LEDs have been turned on.
-
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -123,7 +124,7 @@ public class RobotContainer {
     configureButtonBindings();
     mDrive.setDefaultCommand(new JoystickDrive(mDrive, joysticks));
     // mDrive.setDefaultCommand(new TestDrive(mDrive));
-    mIntake.setDefaultCommand(new RetractIntake(mIntake)); // UNDO THIS
+    mIntake.setDefaultCommand(new RetractIntake(mIntake));
     // mShooter.setDefaultCommand(new StopShooter(mShooter));
     // mShooter.setDefaultCommand(new FlywheelController(mShooter, 0));
 //    mClimber.setDefaultCommand(new RetractClimber(mClimber));
@@ -146,8 +147,7 @@ public class RobotContainer {
 
     try {
       if(!fiveBallAuto.get()){
-        autoCommand = new NewFiveBallAuto(mDrive, mShooter, mIntake, mLimelight, joysticks);
-        // autoCommand = new FiveBallAuto(mDrive, mIntake, mShooter);
+        autoCommand = new FiveBallAuto(mDrive, mIntake, mShooter);
       } else if (!twoBallSouthAuto.get()) {
         autoCommand = new TwoBallSouthAuto(mDrive, mIntake, mShooter);
       } else if (!twoBallEastAuto.get()) {
@@ -156,34 +156,37 @@ public class RobotContainer {
         autoCommand = new FourBallAuto(mDrive, mIntake, mShooter);
       }
     } finally {
-      /*
-      fiveBallAuto.close();
-      twoBallSouthAuto.close();
-      twoBallEastAuto.close();
-      fourBallAuto.close();
-      */
+      // Don't close these. It prevents anything else from reading them.
+      // fiveBallAuto.close();
+      // twoBallSouthAuto.close();
+      // twoBallEastAuto.close();
+      // fourBallAuto.close();
     }
-    // return autoCommand;
     return autoCommand;
   }
 
   public void displaySwitch() {
-    // try {
-    //   if(!fiveBallAuto.get()){
-    //     SmartDashboard.putNumber("DIO", 3);
-    //   } else if (!twoBallSouthAuto.get()) {
-    //     SmartDashboard.putNumber("DIO", 1);
-    //   } else if (!twoBallEastAuto.get()) {
-    //     SmartDashboard.putNumber("DIO", 2);
-    //   } else if (!fourBallAuto.get()) {
-    //     SmartDashboard.putNumber("DIO", 4);
-    //   } else {
-    //     SmartDashboard.putNumber("DIO", -1);
-    //   }
-    // } catch (Exception e) {
+    int cur_switch = -1;
+    try {
+      if(!fiveBallAuto.get()){
+        cur_switch = fiveBallAuto.getChannel();
+      } else if (!twoBallSouthAuto.get()) {
+        cur_switch = twoBallSouthAuto.getChannel();
+      } else if (!twoBallEastAuto.get()) {
+        cur_switch = twoBallEastAuto.getChannel();
+      } else if (!fourBallAuto.get()) {
+        cur_switch = fourBallAuto.getChannel();
+      } else {
+        cur_switch = -1;
+      }
+    } catch (Exception e) {
 
-    // }
-    
+    }
+    if (cur_switch != this.mDISwitch) { // The switch position changed.
+      mDISwitch = cur_switch;
+      SmartDashboard.putNumber("DIO", mDISwitch); 
+      new DISwitchStatus(mDISwitch).schedule();
+    }
   }
 
   public void setLEDs() {
@@ -208,17 +211,11 @@ public void resetShooter() {
   }
 
   public void enableLights() {
-    if (!limelightEnabled) {
-      mLimelight.turnOnLEDs();
-      limelightEnabled = true;
-    }
+    mLimelight.turnOnLEDs();
   }
 
   public void disableLights() {
-    if (limelightEnabled) {
-      mLimelight.turnOffLEDs();
-      limelightEnabled = false;
-    }
+    mLimelight.turnOffLEDs();
   }
 
   public void configureButtonBindings() {
@@ -233,16 +230,13 @@ public void resetShooter() {
 
 //      new JoystickButton(driver, RMZ_E_UP).whenPressed(new ZeroHeading(mDrive));
 
-      new JoystickButton(driver, RMZ_A_IN).whenHeld(new TurnToAngle(mDrive, mLimelight, joysticks)
-                                                      .alongWith(new TurnOnLEDs(mLimelight)));
+      new JoystickButton(driver, RMZ_A_IN).whenHeld(new TurnToAngle(mDrive, mLimelight, joysticks));
       
       new JoystickButton(driver, RMZ_D_IN).whenPressed(new PullTrigger(mShooter));
-                                                     
       new JoystickButton(driver, RMZ_D_IN).whenReleased(new StopTrigger(mShooter));
-                                                        
 
-//      new JoystickButton(driver, RMZ_H_IN).whenPressed(new ResetHood(mShooter));
-      new JoystickButton(driver, RMZ_G_IN).and(new JoystickButton(driver, RMZ_H_IN).whenPressed(new ZeroHeading(mDrive)));
+      new JoystickButton(driver, RMZ_H_IN).whenPressed(new ResetHood(mShooter));
+      new JoystickButton(driver, RMZ_G_IN).whenReleased(new ZeroHeading(mDrive));
 
       
       new JoystickButton(driver, RMZ_F_UP).whenHeld(new AbsoluteOrientation(mDrive, joysticks));
@@ -347,22 +341,13 @@ public void resetShooter() {
                             .alongWith(new IdleCommand()));
 
       JoystickButton xBoxX = new JoystickButton(operator, X_BOX_X);
-      // xBoxX.whenHeld(new PresetFlywheelController(mShooter, "TLR")
-      //                     // .alongWith(new TurnOnLEDs(mLimelight))
-      //                     .alongWith(new XBoxButtonCommand(X_BOX_X))); // tarmac, lower goal, rear shot    
-
-      // xBoxX.whenReleased(new StopShooter(mShooter)
-      //                       .alongWith(new TurnOffLEDs(mLimelight))
-      //                       .alongWith(new IdleCommand()));
-
-      xBoxX.whenHeld(new VisionShooter(mShooter, mLimelight)
-                          .alongWith(new TurnOnLEDs(mLimelight))
-                          .alongWith(new XBoxButtonCommand(X_BOX_X)));
-      // xBoxX.whenHeld(new MotionProfileTurn(mDrive, Math.PI/2));
+      xBoxX.whenHeld(new PresetFlywheelController(mShooter, "TLR")
+                          // .alongWith(new TurnOnLEDs(mLimelight))
+                          .alongWith(new XBoxButtonCommand(X_BOX_X))); // tarmac, lower goal, rear shot    
 
       xBoxX.whenReleased(new StopShooter(mShooter)
-                          .alongWith(new TurnOffLEDs(mLimelight))
-                          .alongWith(new IdleCommand()));
+                            .alongWith(new TurnOffLEDs(mLimelight))
+                            .alongWith(new IdleCommand()));
 
       JoystickButton xBoxY = new JoystickButton(operator, X_BOX_Y);
       xBoxY.whenHeld(new PresetFlywheelController(mShooter, "TUR")
@@ -391,20 +376,8 @@ public void resetShooter() {
 
         // .and(new JoystickButton(operator, X_BOX_LOGO_LEFT))
         // .whenActive(new ToggleClimber(mClimber));
-
-        new Button() {
-          @Override
-          public boolean get() {
-            return (operator.getPOV() == 180);
-          }
-        }.whenPressed(new PresetFlywheelController(mShooter, "SAF").alongWith(new XBoxButtonCommand(-1)))
-          .whenReleased(new StopShooter(mShooter).alongWith(new IdleCommand()));
-  
-          // .and(new JoystickButton(operator, X_BOX_LOGO_LEFT))
-          // .whenActive(new ToggleClimber(mClimber));
-  
     }
-    
+
   }
 }
 
