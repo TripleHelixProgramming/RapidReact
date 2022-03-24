@@ -100,9 +100,10 @@ public class RobotContainer {
   private final Climber mClimber = new Climber();
 
   private int mDISwitch = -1;
-  private final DigitalInput fiveBallAuto = new DigitalInput(3);
+  private final DigitalInput switchZero = new DigitalInput(0);
   private final DigitalInput twoBallSouthAuto = new DigitalInput(1);
   private final DigitalInput twoBallEastAuto = new DigitalInput(2);
+  private final DigitalInput fiveBallAuto = new DigitalInput(3);
   private final DigitalInput fourBallAuto = new DigitalInput(4);
 
   /*
@@ -176,21 +177,21 @@ public class RobotContainer {
         cur_switch = twoBallEastAuto.getChannel();
       } else if (!fourBallAuto.get()) {
         cur_switch = fourBallAuto.getChannel();
+      } else if (!switchZero.get()) {
+        cur_switch = switchZero.getChannel();      
       } else {
         cur_switch = -1;
       }
     } catch (Exception e) {
 
     }
-    if (cur_switch != this.mDISwitch) { // The switch position changed.
+
+    // The switch position changed.
+    if (cur_switch != this.mDISwitch) { 
       mDISwitch = cur_switch;
       SmartDashboard.putNumber("DIO", mDISwitch); 
       new DISwitchStatus(mDISwitch).schedule();
     }
-  }
-
-  public void setLEDs() {
-    new SetColor(mStatus, Color.kCornsilk).schedule();
   }
 
   /**
