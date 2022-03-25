@@ -74,7 +74,7 @@ import frc.robot.shooter.commands.SetShooterState;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
 import frc.robot.status.Status;
-import frc.robot.status.commands.DISwitchStatus;
+import frc.robot.status.commands.DIOSwitchStatus;
 import frc.robot.status.commands.IdleCommand;
 import frc.robot.status.commands.SetColor;
 import frc.robot.status.commands.XBoxButtonCommand;
@@ -99,7 +99,7 @@ public class RobotContainer {
   private final Status mStatus = Status.getInstance();
   private final Climber mClimber = new Climber();
 
-  private int mDISwitch = -2;
+  private int mDIOSwitch = -2;
   private final DigitalInput switchZero = new DigitalInput(0);
   private final DigitalInput twoBallSouthAuto = new DigitalInput(1);
   private final DigitalInput twoBallEastAuto = new DigitalInput(2);
@@ -187,10 +187,10 @@ public class RobotContainer {
     }
 
     // The switch position changed.
-    if (cur_switch != this.mDISwitch) { 
-      mDISwitch = cur_switch;
-      SmartDashboard.putNumber("DIO", mDISwitch); 
-      new DISwitchStatus(mDISwitch).schedule();
+    if (cur_switch != this.mDIOSwitch) { 
+      mDIOSwitch = cur_switch;
+      SmartDashboard.putNumber("DIO", mDIOSwitch); 
+      new DIOSwitchStatus(mDIOSwitch).schedule();
     }
   }
 
