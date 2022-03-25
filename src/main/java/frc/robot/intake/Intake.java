@@ -15,17 +15,26 @@ public class Intake extends SubsystemBase {
                                         ElectricalConstants.kPneumaticHub,
                                         ElectricalConstants.kIntakeDeployPort, 
                                         ElectricalConstants.kIntakeRetractPort);
-  private TalonSRX motor = new TalonSRX(ElectricalConstants.kIntakeRollerPort);
+  private TalonSRX bottomMotor = new TalonSRX(ElectricalConstants.kIntakeBottomPort);
+  private TalonSRX topMotor = new TalonSRX(ElectricalConstants.kIntakeTopPort);
 
   public Intake() {
-    motor.configFactoryDefault();
-    motor.setNeutralMode(NeutralMode.Brake);
-    motor.enableVoltageCompensation(true);
-    motor.configVoltageCompSaturation(12);
-    motor.configPeakCurrentDuration(100,0);
-    motor.configPeakCurrentLimit(60,0);
-    motor.configContinuousCurrentLimit(40);
-    motor.enableCurrentLimit(true);   
+    bottomMotor.configFactoryDefault();
+    bottomMotor.setNeutralMode(NeutralMode.Brake);
+    bottomMotor.enableVoltageCompensation(true);
+    bottomMotor.configVoltageCompSaturation(12);
+    bottomMotor.configPeakCurrentDuration(100,0);
+    bottomMotor.configPeakCurrentLimit(60,0);
+    bottomMotor.configContinuousCurrentLimit(40);
+    bottomMotor.enableCurrentLimit(true);   
+    topMotor.configFactoryDefault();
+    topMotor.setNeutralMode(NeutralMode.Brake);
+    topMotor.enableVoltageCompensation(true);
+    topMotor.configVoltageCompSaturation(12);
+    topMotor.configPeakCurrentDuration(100,0);
+    topMotor.configPeakCurrentLimit(60,0);
+    topMotor.configContinuousCurrentLimit(40);
+    topMotor.enableCurrentLimit(true);   
   }
 
   public void deploy() {
@@ -37,19 +46,22 @@ public class Intake extends SubsystemBase {
   }
 
   public void fastRollerIn() {
-    motor.set(ControlMode.PercentOutput, 0.95);
+    bottomMotor.set(ControlMode.PercentOutput, 0.95);
+    topMotor.set(ControlMode.PercentOutput, 0.3);
   }
 
-  public void rollerIn() {
-    motor.set(ControlMode.PercentOutput, IntakeConstants.kRollerSpeed);
-  }
+  // public void rollerIn() {
+  //   motor.set(ControlMode.PercentOutput, IntakeConstants.kRollerSpeed);
+  // }
 
   public void rollerOut() {
-    motor.set(ControlMode.PercentOutput, IntakeConstants.kRollerEjectSpeed);
+    bottomMotor.set(ControlMode.PercentOutput, IntakeConstants.kRollerEjectSpeed);
+    topMotor.set(ControlMode.PercentOutput, IntakeConstants.kRollerEjectSpeed);
   }
 
   public void rollerStop() {
-    motor.set(ControlMode.PercentOutput, 0);
+    bottomMotor.set(ControlMode.PercentOutput, 0);
+    topMotor.set(ControlMode.PercentOutput, 0);
   }
 
   // Push a ball into the trigger

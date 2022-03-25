@@ -127,7 +127,7 @@ def main():
     
     generator.generate([
                     [-1.3,0.775,-math.pi/2-0.2],
-                    [-1.2,1.7,-math.pi/2-0.14],
+                    [-1.1,1.7,-math.pi/2-0.14],
                     [-1.3,0.9,-math.pi/2-0.2]
                     ],
                     "NewAutoPartFour")

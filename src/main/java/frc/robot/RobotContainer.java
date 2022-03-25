@@ -98,7 +98,7 @@ public class RobotContainer {
   private final Status mStatus = Status.getInstance();
   private final Climber mClimber = new Climber();
 
-  private final DigitalInput newFourBallAuto = new DigitalInput(0);
+  private final DigitalInput newFourBallAuto = new DigitalInput(5);
   private final DigitalInput fiveBallAuto = new DigitalInput(3);
   private final DigitalInput twoBallSouthAuto = new DigitalInput(1);
   private final DigitalInput twoBallEastAuto = new DigitalInput(2);
@@ -154,10 +154,12 @@ public class RobotContainer {
         autoCommand = new TwoBallSouthAuto(mDrive, mIntake, mShooter);
       } else if (!twoBallEastAuto.get()) {
         autoCommand = new TwoBallEastAuto(mDrive, mIntake, mShooter);
+      // } else if (!fourBallAuto.get()) {
+      //   autoCommand = new FourBallAuto(mDrive, mIntake, mShooter);
       } else if (!fourBallAuto.get()) {
-        autoCommand = new FourBallAuto(mDrive, mIntake, mShooter);
-      } else if (!newFourBallAuto.get()) {
         autoCommand = new NewFourBallAuto(mDrive, mShooter, mIntake, mLimelight, joysticks);
+      } else {
+        autoCommand = new NewFiveBallAuto(mDrive, mShooter, mIntake, mLimelight, joysticks);
       }
     } finally {
       /*
@@ -172,21 +174,23 @@ public class RobotContainer {
   }
 
   public void displaySwitch() {
-    // try {
-    //   if(!fiveBallAuto.get()){
-    //     SmartDashboard.putNumber("DIO", 3);
-    //   } else if (!twoBallSouthAuto.get()) {
-    //     SmartDashboard.putNumber("DIO", 1);
-    //   } else if (!twoBallEastAuto.get()) {
-    //     SmartDashboard.putNumber("DIO", 2);
-    //   } else if (!fourBallAuto.get()) {
-    //     SmartDashboard.putNumber("DIO", 4);
-    //   } else {
-    //     SmartDashboard.putNumber("DIO", -1);
-    //   }
-    // } catch (Exception e) {
+    try {
+      if(!fiveBallAuto.get()){
+        SmartDashboard.putNumber("DIO", 3);
+      } else if (!twoBallSouthAuto.get()) {
+        SmartDashboard.putNumber("DIO", 1);
+      } else if (!twoBallEastAuto.get()) {
+        SmartDashboard.putNumber("DIO", 2);
+      } else if (!fourBallAuto.get()) {
+        SmartDashboard.putNumber("DIO", 4);
+      } else if (!newFourBallAuto.get()) {
+        SmartDashboard.putNumber("DIO", 5);
+      } else {
+        SmartDashboard.putNumber("DIO", -1);
+      }
+    } catch (Exception e) {
 
-    // }
+    }
     
   }
 

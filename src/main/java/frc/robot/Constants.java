@@ -42,7 +42,8 @@ public final class Constants {
 
     public static final int kIntakeRetractPort = 1; // Pneumatic Control Module Port, not CAN ID
     public static final int kIntakeDeployPort = 0;  // Pneumatic Control Module Port, not CAN ID
-    public static final int kIntakeRollerPort = 21;
+    public static final int kIntakeBottomPort = 21;
+    public static final int kIntakeTopPort = 22;
 
     public static final int kTriggerPort = 14;
 

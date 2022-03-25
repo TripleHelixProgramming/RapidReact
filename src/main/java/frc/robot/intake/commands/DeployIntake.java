@@ -16,7 +16,7 @@ public class DeployIntake extends CommandBase {
   public void initialize() {
     intake.deploy();
     Timer.delay(0.2);
-    intake.rollerIn();
+    // intake.rollerIn();
   }
 
   @Override

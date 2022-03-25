@@ -28,7 +28,7 @@ public class Shooter extends SubsystemBase {
     {2.95, 1980, 73.25}
   });
 
-  private static double erosion = 0.98;
+  private static double erosion = 0.985;
 
   private boolean hoodDirection;
   int highCurrentCount = 0;

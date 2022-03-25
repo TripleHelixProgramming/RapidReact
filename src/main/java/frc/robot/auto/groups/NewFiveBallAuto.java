@@ -69,7 +69,7 @@ public class NewFiveBallAuto extends SequentialCommandGroup {
           new TurnToAngle(drive, limelight, joysticks)
         ),
         new SequentialCommandGroup(
-          new WaitCommand(3.2),
+          new WaitCommand(3.1),
           new PullTrigger(shooter)
         ),
         new SequentialCommandGroup(
@@ -80,7 +80,7 @@ public class NewFiveBallAuto extends SequentialCommandGroup {
       new ParallelDeadlineGroup(
         new WaitCommand(3.0),
         new TrajectoryFollower(drive, new NewAutoPartFour()),
-        new FlywheelController(shooter, 1790, 75.5),
+        new FlywheelController(shooter, 1775, 75.5),
         new SequentialCommandGroup(
           new StopTrigger(shooter),
           new WaitCommand(1.25),
