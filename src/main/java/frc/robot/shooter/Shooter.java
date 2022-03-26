@@ -22,10 +22,17 @@ public class Shooter extends SubsystemBase {
   public static boolean UP = true;
   public static boolean DOWN = false;
 
+  // public static final InterpolationTable INTERPOLATION_TABLE = new InterpolationTable(new double[][]{
+  //   {1.7, 1800, 78.25},
+  //   {2.4, 1875, 73.25},
+  //   {2.95, 1980, 73.25}
+  // });
+
   public static final InterpolationTable INTERPOLATION_TABLE = new InterpolationTable(new double[][]{
-    {1.7, 1800, 78.25},
-    {2.4, 1875, 73.25},
-    {2.95, 1980, 73.25}
+    {1.8, 1710, 83},
+    {3.05, 1880, 73.25},
+    {3.7, 1990, 70.75},
+    {4.39, 2060, 68.25}
   });
 
   private static double erosion = 0.985;

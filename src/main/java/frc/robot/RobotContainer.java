@@ -363,7 +363,6 @@ public void resetShooter() {
                     .alongWith(new TurnOnLEDs(mLimelight))
                     .alongWith(new XBoxButtonCommand(X_BOX_X)));
 
-
       xBoxX.whenReleased(new StopShooter(mShooter)
                             .alongWith(new TurnOffLEDs(mLimelight))
                             .alongWith(new IdleCommand()));

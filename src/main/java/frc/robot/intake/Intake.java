@@ -56,7 +56,7 @@ public class Intake extends SubsystemBase {
     if (!isExtended()) {
       if (pushCargo) {
         if (!topRollerRunning) {
-          topRollerIn();
+          topRollerShoot();
           topRollerRunning = true;
         }
       } else if (topRollerRunning) {
@@ -93,7 +93,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void topRollerShoot() {
-
+    topMotor.set(ControlMode.PercentOutput, -0.5);
   }
 
   public void bottomRollerStop() {
