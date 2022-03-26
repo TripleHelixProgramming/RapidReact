@@ -11,13 +11,12 @@ public class StopTrigger extends CommandBase {
   public StopTrigger(Shooter shooter, Intake intake) {
     this.shooter = shooter;
     this.intake = intake;
-    addRequirements(intake);
   }
 
   @Override
   public void initialize() {
     shooter.stopTrigger();
-    intake.topRollerStop();
+    intake.setPushCargo(false);
   }
 
   @Override

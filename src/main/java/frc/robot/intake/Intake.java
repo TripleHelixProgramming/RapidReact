@@ -53,14 +53,16 @@ public class Intake extends SubsystemBase {
    * Only run it for pushing the cargo in if the intake is in.
    */
   public void periodic() {
-    if (pushCargo) {
-      if (!isExtended() && !topRollerRunning) {
+    if (!isExtended()) {
+      if (pushCargo) {
+        if (!topRollerRunning) {
           topRollerIn();
           topRollerRunning = true;
+        }
+      } else if (topRollerRunning) {
+        topRollerStop();
+        topRollerRunning = false;
       }
-    } else if (topRollerRunning) {
-      topRollerStop();
-      topRollerRunning = false;
     }
   }
   

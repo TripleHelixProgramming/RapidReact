@@ -11,13 +11,12 @@ public class PullTrigger extends CommandBase {
   public PullTrigger(Shooter shooter, Intake intake) {
     this.shooter = shooter;
     this.intake = intake;
-    addRequirements(intake);
   }
 
   @Override
   public void initialize() {
     shooter.startTrigger();
-    intake.topRollerIn();
+    intake.setPushCargo(true);
   }
   
   @Override
