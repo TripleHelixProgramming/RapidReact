@@ -49,12 +49,12 @@ public class NewFiveBallAuto extends SequentialCommandGroup {
         new FastIntake(intake),
         new SequentialCommandGroup(
           new WaitCommand(1.25),
-          new PullTrigger(shooter)
+          new PullTrigger(shooter, intake)
         ),
         new FlywheelController(shooter, 1980, 72)),
       new ParallelDeadlineGroup(
         new TrajectoryFollower(drive, new NewAutoPartTwo()),
-        new StopTrigger(shooter),
+        new StopTrigger(shooter, intake),
         new StopShooter(shooter)
       ),
       new WaitCommand(0.35),
@@ -70,7 +70,7 @@ public class NewFiveBallAuto extends SequentialCommandGroup {
         ),
         new SequentialCommandGroup(
           new WaitCommand(3.1),
-          new PullTrigger(shooter)
+          new PullTrigger(shooter, intake)
         ),
         new SequentialCommandGroup(
           new WaitCommand(0.75),
@@ -82,15 +82,15 @@ public class NewFiveBallAuto extends SequentialCommandGroup {
         new TrajectoryFollower(drive, new NewAutoPartFour()),
         new FlywheelController(shooter, 1775, 75.5),
         new SequentialCommandGroup(
-          new StopTrigger(shooter),
+          new StopTrigger(shooter, intake),
           new WaitCommand(1.25),
-          new PullTrigger(shooter)
+          new PullTrigger(shooter, intake)
         ),
         new FastIntake(intake)
       ),
       new ParallelDeadlineGroup(
         new WaitCommand(1.0),
-        new StopTrigger(shooter),
+        new StopTrigger(shooter, intake),
         new StopShooter(shooter),
         new RetractIntake(intake))
     );

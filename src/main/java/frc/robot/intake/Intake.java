@@ -46,8 +46,8 @@ public class Intake extends SubsystemBase {
   }
 
   public void fastRollerIn() {
-    bottomMotor.set(ControlMode.PercentOutput, 0.95);
-    topMotor.set(ControlMode.PercentOutput, 0.3);
+    bottomMotor.set(ControlMode.PercentOutput, -0.85);
+    topMotor.set(ControlMode.PercentOutput, -0.4);
   }
 
   // public void rollerIn() {
@@ -59,8 +59,19 @@ public class Intake extends SubsystemBase {
     topMotor.set(ControlMode.PercentOutput, IntakeConstants.kRollerEjectSpeed);
   }
 
-  public void rollerStop() {
+  public void topRollerIn() {
+    topMotor.set(ControlMode.PercentOutput, -0.6);
+  }
+
+  public void topRollerShoot() {
+
+  }
+
+  public void bottomRollerStop() {
     bottomMotor.set(ControlMode.PercentOutput, 0);
+  }
+
+  public void topRollerStop() {
     topMotor.set(ControlMode.PercentOutput, 0);
   }
 

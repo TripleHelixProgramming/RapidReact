@@ -244,9 +244,9 @@ public void resetShooter() {
       new JoystickButton(driver, RMZ_A_IN).whenHeld(new TurnToAngle(mDrive, mLimelight, joysticks)
                                                       .alongWith(new TurnOnLEDs(mLimelight)));
       
-      new JoystickButton(driver, RMZ_D_IN).whenPressed(new PullTrigger(mShooter));
+      new JoystickButton(driver, RMZ_D_IN).whenPressed(new PullTrigger(mShooter, mIntake));
                                                      
-      new JoystickButton(driver, RMZ_D_IN).whenReleased(new StopTrigger(mShooter));
+      new JoystickButton(driver, RMZ_D_IN).whenReleased(new StopTrigger(mShooter, mIntake));
                                                         
 
 //      new JoystickButton(driver, RMZ_H_IN).whenPressed(new ResetHood(mShooter));
@@ -272,7 +272,7 @@ public void resetShooter() {
       new JoystickButton(driver, RM_SE_DOWN).whenPressed(new EjectTrigger(mShooter));
 
       new JoystickButton(driver, RM_SE_DOWN).whenReleased(new RetractIntake(mIntake));
-      new JoystickButton(driver, RM_SE_DOWN).whenReleased(new StopTrigger(mShooter));
+      new JoystickButton(driver, RM_SE_DOWN).whenReleased(new StopTrigger(mShooter, mIntake));
 
       // Enable Hood adjustment
       // new JoystickButton(driver, RM_SB_FRONT).whenHeld(new MoveHoodButton(mShooter,
@@ -281,8 +281,8 @@ public void resetShooter() {
       // Shooter.DOWN));
 
       // Trigger
-      new JoystickButton(driver, RM_SH).whenPressed(new PullTrigger(mShooter));
-      new JoystickButton(driver, RM_SH).whenReleased(new StopTrigger(mShooter));
+      new JoystickButton(driver, RM_SH).whenPressed(new PullTrigger(mShooter, mIntake));
+      new JoystickButton(driver, RM_SH).whenReleased(new StopTrigger(mShooter, mIntake));
 
       // Shoot
       // Backward layup
@@ -394,8 +394,8 @@ public void resetShooter() {
           return (operator.getPOV() == 0);
         }
       }.whenPressed(new PresetFlywheelController(mShooter, "BLP")
-        .alongWith(new PullTrigger(mShooter)))
-        .whenReleased(new StopShooter(mShooter).alongWith(new StopTrigger(mShooter)));
+        .alongWith(new PullTrigger(mShooter, mIntake)))
+        .whenReleased(new StopShooter(mShooter).alongWith(new StopTrigger(mShooter, mIntake)));
 
       new Button() {
         @Override
@@ -403,8 +403,8 @@ public void resetShooter() {
           return (operator.getPOV() == 180);
         }
       }.whenPressed(new PresetFlywheelController(mShooter, "BLP")
-        .alongWith(new PullTrigger(mShooter)))
-        .whenReleased(new StopShooter(mShooter).alongWith(new StopTrigger(mShooter)));
+        .alongWith(new PullTrigger(mShooter, mIntake)))
+        .whenReleased(new StopShooter(mShooter).alongWith(new StopTrigger(mShooter, mIntake)));
 
         // .and(new JoystickButton(operator, X_BOX_LOGO_LEFT))
         // .whenActive(new ToggleClimber(mClimber));

@@ -52,12 +52,12 @@ public class NewFourBallAuto extends SequentialCommandGroup {
         new FastIntake(intake),
         new SequentialCommandGroup(
           new WaitCommand(1.25),
-          new PullTrigger(shooter)
+          new PullTrigger(shooter, intake)
         ),
         new FlywheelController(shooter, 1980, 72)),
       new ParallelDeadlineGroup(
         new TrajectoryFollower(drive, new NewFourPartTwo()),
-        new StopTrigger(shooter),
+        new StopTrigger(shooter, intake),
         new StopShooter(shooter)
       ),
       new WaitCommand(0.6),
@@ -73,7 +73,7 @@ public class NewFourBallAuto extends SequentialCommandGroup {
         ),
         new SequentialCommandGroup(
           new WaitCommand(3.6),
-          new PullTrigger(shooter)
+          new PullTrigger(shooter, intake)
         ),
         new SequentialCommandGroup(
           new WaitCommand(0.75),

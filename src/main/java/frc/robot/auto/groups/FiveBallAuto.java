@@ -40,14 +40,14 @@ public class FiveBallAuto extends SequentialCommandGroup {
       new ParallelDeadlineGroup(
         new SequentialCommandGroup(
             new WaitCommand(0.8), // Give shooter time to spin up & hood to move
-            new PullTrigger(shooter),
+            new PullTrigger(shooter, intake),
             new WaitCommand(0.5)),
         new ActionCommand(new ImageAction(Robot.fiveBallAutoImage, 0.02, ImageAction.FOREVER).brightness(0.7).oscillate()),
         new TrajectoryFollower(drive, new FiveBallPartOne()), // Turn to point at center
         new FlywheelController(shooter, 1810, 77.90)),
     new ParallelDeadlineGroup(
       new StopShooter(shooter),
-      new StopTrigger(shooter),
+      new StopTrigger(shooter, intake),
       new FastIntake(intake)),
     new ParallelDeadlineGroup(
       new WaitCommand(5.0),
@@ -57,12 +57,12 @@ public class FiveBallAuto extends SequentialCommandGroup {
       new TrajectoryFollower(drive, new FiveBallPartTwo()),
       new SequentialCommandGroup(
         new WaitCommand(3.25),
-        new PullTrigger(shooter)),
+        new PullTrigger(shooter, intake)),
       new SequentialCommandGroup(
         new WaitCommand(4.0),
         new RetractIntake(intake))),
     new StopShooter(shooter),
-    new StopTrigger(shooter)
+    new StopTrigger(shooter, intake)
     // new ParallelDeadlineGroup(
     //   new TrajectoryFollower(drive, new FiveBallPartThree()),
     //   new FastIntake(intake)),

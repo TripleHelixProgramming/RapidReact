@@ -38,11 +38,11 @@ public class TwoBallEastAuto extends SequentialCommandGroup{
             new ParallelDeadlineGroup( // Shoot two balls
                 new SequentialCommandGroup(
                     new WaitCommand(2), // Give shooter time to spin up & hood to move
-                    new PullTrigger(shooter),
+                    new PullTrigger(shooter, intake),
                     new WaitCommand(2)),
                 new FlywheelController(shooter, 1800, 78.25),
                 new RetractIntake(intake)),
-            new StopTrigger(shooter),
+            new StopTrigger(shooter, intake),
             new StopShooter(shooter),
             new ParallelDeadlineGroup( // Pick up red ball
                 new TrajectoryFollower(drive, new WeirdAutoPartTwo()),
@@ -51,12 +51,12 @@ public class TwoBallEastAuto extends SequentialCommandGroup{
             new ParallelDeadlineGroup( // Toss red ball away
                 new SequentialCommandGroup(
                     new WaitCommand(1),
-                    new PullTrigger(shooter),
+                    new PullTrigger(shooter, intake),
                     new WaitCommand(1)), 
                 new FlywheelController(shooter, 1000, 65),
                 new RetractIntake(intake)),
             new StopShooter(shooter),
-            new StopTrigger(shooter),
+            new StopTrigger(shooter, intake),
             new ResetHood(shooter),
             new SetColor(Status.getInstance(), Color.kBlack)
         );
