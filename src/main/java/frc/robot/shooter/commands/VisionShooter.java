@@ -3,6 +3,7 @@ package frc.robot.shooter.commands;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.control.DCMotor;
 import frc.lib.control.PIDController;
@@ -79,6 +80,9 @@ public class VisionShooter extends CommandBase {
         if ((Math.abs(targetDelta) < 20) && !closeToTarget) {
             closeToTarget = true;
             Status.getInstance().fillLEDs();
+        } else {
+            Color cur_color = Status.getInstance().getLedData().getLED(0);
+            Status.getInstance().setColor(cur_color, 255, 50);
         }
     }
 
