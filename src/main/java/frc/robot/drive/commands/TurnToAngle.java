@@ -28,7 +28,7 @@ public class TurnToAngle extends CommandBase {
     thetaController = new PIDController(0.16, 0, 0.0);
     thetaController.setContinous(true);
     thetaController.setInputRange(360);
-    // limelight.turnOnLEDs();
+    limelight.turnOnLEDs();
     // sawTarget = limelight.hasTarget();
   }
 

@@ -43,6 +43,7 @@ public class VisionShooter extends CommandBase {
         lastTime = 0;
         // timer.start();
         controller.startPeriodic(0.02); 
+        limelight.turnOnLEDs();
     }
 
     void controller() {
