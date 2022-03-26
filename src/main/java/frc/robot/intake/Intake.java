@@ -18,6 +18,9 @@ public class Intake extends SubsystemBase {
   private TalonSRX bottomMotor = new TalonSRX(ElectricalConstants.kIntakeBottomPort);
   private TalonSRX topMotor = new TalonSRX(ElectricalConstants.kIntakeTopPort);
 
+  private boolean pushCargo = false;
+  private boolean topRollerRunning = false;
+
   public Intake() {
     bottomMotor.configFactoryDefault();
     bottomMotor.setNeutralMode(NeutralMode.Brake);
@@ -37,6 +40,30 @@ public class Intake extends SubsystemBase {
     topMotor.enableCurrentLimit(true);   
   }
 
+  public boolean isPushCargo() {
+    return pushCargo;
+  }
+
+  public void setPushCargo(boolean pushCargo) {
+    this.pushCargo = pushCargo;
+  }
+
+  /**
+   * Decide what to do with the intake top roller.
+   * Only run it for pushing the cargo in if the intake is in.
+   */
+  public void periodic() {
+    if (pushCargo) {
+      if (!isExtended() && !topRollerRunning) {
+          topRollerIn();
+          topRollerRunning = true;
+      }
+    } else if (topRollerRunning) {
+      topRollerStop();
+      topRollerRunning = false;
+    }
+  }
+  
   public void deploy() {
     solenoid.set(Value.kForward);
   }

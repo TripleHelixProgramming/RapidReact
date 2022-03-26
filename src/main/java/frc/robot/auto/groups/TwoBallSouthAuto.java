@@ -20,7 +20,7 @@ import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.ResetOdometry;
 import frc.robot.drive.commands.TrajectoryFollower;
 import frc.robot.intake.Intake;
-import frc.robot.intake.commands.DeployIntake;
+import frc.robot.intake.commands.FastIntake;
 import frc.robot.intake.commands.RetractIntake;
 import frc.robot.shooter.Shooter;
 import frc.robot.shooter.commands.FlywheelController;
@@ -42,7 +42,7 @@ public class TwoBallSouthAuto extends SequentialCommandGroup{
             new ParallelDeadlineGroup( // Pick up blue ball
                 new TrajectoryFollower(drive, new TwoBallPartOne()),
                 new ResetHood(shooter),
-                new DeployIntake(intake)),
+                new FastIntake(intake)),
             new ParallelDeadlineGroup( // Shoot the balls
                 new SequentialCommandGroup(
                     new WaitCommand(1.5), // Give shooter time to spin up & hood to move
@@ -54,7 +54,7 @@ public class TwoBallSouthAuto extends SequentialCommandGroup{
             new StopShooter(shooter),
             new ParallelDeadlineGroup( // Pick up red ball
                 new WaitCommand(4.0),
-                new DeployIntake(intake),
+                new FastIntake(intake),
                 new TrajectoryFollower(drive, new TwoBallPartTwo())),
             new ParallelDeadlineGroup( // Toss red ball away
                 new SequentialCommandGroup(

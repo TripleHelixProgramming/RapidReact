@@ -62,7 +62,6 @@ import frc.robot.drive.commands.ResetEncoders;
 import frc.robot.drive.commands.TurnToAngle;
 import frc.robot.drive.commands.ZeroHeading;
 import frc.robot.intake.Intake;
-import frc.robot.intake.commands.DeployIntake;
 import frc.robot.intake.commands.EjectIntake;
 import frc.robot.intake.commands.FastIntake;
 import frc.robot.intake.commands.RetractIntake;
@@ -268,7 +267,7 @@ public void resetShooter() {
       // operator commands to it, too
 
       // Intake Control
-      new JoystickButton(driver, RM_SE_UP).whenPressed(new DeployIntake(mIntake));
+      new JoystickButton(driver, RM_SE_UP).whenPressed(new FastIntake(mIntake));
       new JoystickButton(driver, RM_SE_UP).whenReleased(new RetractIntake(mIntake));
 
       new JoystickButton(driver, RM_SE_DOWN).whenPressed(new EjectIntake(mIntake));

@@ -6,6 +6,8 @@ import frc.robot.intake.Intake;
 
 public class RetractIntake extends CommandBase {
   private Intake intake;
+  private double startRetractTime;
+  private boolean topStopped = false;
 
   public RetractIntake(Intake intake) {
     this.intake = intake;
@@ -16,9 +18,17 @@ public class RetractIntake extends CommandBase {
   public void initialize() {
     intake.retract();
     intake.bottomRollerStop();
-    Timer.delay(1);
-    intake.topRollerStop();
-    
+    topStopped = false;
+    startRetractTime = Timer.getFPGATimestamp();    
+  }
+
+  @Override
+  public void execute() {
+    double timeElapsed = Timer.getFPGATimestamp() - startRetractTime;
+    if (!topStopped && (timeElapsed >= 0.75)) {
+      intake.topRollerStop();
+      topStopped = true;
+    }
   }
 
   @Override
