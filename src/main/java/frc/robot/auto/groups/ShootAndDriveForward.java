@@ -29,12 +29,12 @@ public class ShootAndDriveForward extends SequentialCommandGroup{
             new ParallelDeadlineGroup(
                 new SequentialCommandGroup(
                     new WaitCommand(1.0), // Give shooter time to spin up & hood to move
-                    new PullTrigger(shooter),
+                    new PullTrigger(shooter, intake),
                     new WaitCommand(1.25)
                 ),
                 new FlywheelController(shooter, 1700, 79)
             ),
-            new StopTrigger(shooter),
+            new StopTrigger(shooter, intake),
             new StopShooter(shooter), // Stop shooter & reset hood.
             new TrajectoryFollower(drive, new OnePointEightMetersForward()),
             new TrajectoryFollower(drive, new OnePointEightMetersForward()),

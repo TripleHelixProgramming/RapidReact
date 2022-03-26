@@ -47,6 +47,8 @@ import frc.lib.HelixJoysticks;
 import frc.robot.Constants.OIConstants;
 import frc.robot.auto.groups.FiveBallAuto;
 import frc.robot.auto.groups.FourBallAuto;
+import frc.robot.auto.groups.NewFiveBallAuto;
+import frc.robot.auto.groups.NewFourBallAuto;
 import frc.robot.auto.groups.TwoBallEastAuto;
 import frc.robot.auto.groups.TwoBallSouthAuto;
 import frc.robot.climber.Climber;
@@ -100,11 +102,11 @@ public class RobotContainer {
   private final Climber mClimber = new Climber();
 
   private int mDIOSwitch = -2;
-  private final DigitalInput switchZero = new DigitalInput(0);
-  private final DigitalInput twoBallSouthAuto = new DigitalInput(1);
-  private final DigitalInput twoBallEastAuto = new DigitalInput(2);
-  private final DigitalInput fiveBallAuto = new DigitalInput(3);
-  private final DigitalInput fourBallAuto = new DigitalInput(4);
+  private final DigitalInput zeroSwitch = new DigitalInput(0);
+  private final DigitalInput twoBallSouthSwitch = new DigitalInput(1);
+  private final DigitalInput twoBallEastSwitch = new DigitalInput(2);
+  private final DigitalInput fiveBallSwitch = new DigitalInput(3);
+  private final DigitalInput fourBallSwitch = new DigitalInput(4);
 
   /*
    * private final Indexer mIndexer = new Indexer();
@@ -116,6 +118,8 @@ public class RobotContainer {
   private Joystick operator;
   private HelixJoysticks joysticks;
   private HelixJoysticks op_joysticks;
+
+  private boolean limelightEnabled = false;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -147,14 +151,18 @@ public class RobotContainer {
     Command autoCommand = null;
 
     try {
-      if(!fiveBallAuto.get()){
-        autoCommand = new FiveBallAuto(mDrive, mIntake, mShooter);
-      } else if (!twoBallSouthAuto.get()) {
+      if(!fiveBallSwitch.get()){
+        autoCommand = new NewFiveBallAuto(mDrive, mShooter, mIntake, mLimelight, joysticks);
+      } else if (!twoBallSouthSwitch.get()) {
         autoCommand = new TwoBallSouthAuto(mDrive, mIntake, mShooter);
-      } else if (!twoBallEastAuto.get()) {
+      } else if (!twoBallEastSwitch.get()) {
         autoCommand = new TwoBallEastAuto(mDrive, mIntake, mShooter);
-      } else if (!fourBallAuto.get()) {
-        autoCommand = new FourBallAuto(mDrive, mIntake, mShooter);
+      // } else if (!fourBallAuto.get()) {
+      //   autoCommand = new FourBallAuto(mDrive, mIntake, mShooter);
+      } else if (!fourBallSwitch.get()) {
+        autoCommand = new NewFourBallAuto(mDrive, mShooter, mIntake, mLimelight, joysticks);
+      } else {
+        autoCommand = new NewFiveBallAuto(mDrive, mShooter, mIntake, mLimelight, joysticks);
       }
     } finally {
       // Don't close these. It prevents anything else from reading them.
@@ -169,16 +177,16 @@ public class RobotContainer {
   public void displaySwitch() {
     int cur_switch = -1;
     try {
-      if(!fiveBallAuto.get()){
-        cur_switch = fiveBallAuto.getChannel();
-      } else if (!twoBallSouthAuto.get()) {
-        cur_switch = twoBallSouthAuto.getChannel();
-      } else if (!twoBallEastAuto.get()) {
-        cur_switch = twoBallEastAuto.getChannel();
-      } else if (!fourBallAuto.get()) {
-        cur_switch = fourBallAuto.getChannel();
-      } else if (!switchZero.get()) {
-        cur_switch = switchZero.getChannel();      
+      if(!fiveBallSwitch.get()){
+        cur_switch = fiveBallSwitch.getChannel();
+      } else if (!twoBallSouthSwitch.get()) {
+        cur_switch = twoBallSouthSwitch.getChannel();
+      } else if (!twoBallEastSwitch.get()) {
+        cur_switch = twoBallEastSwitch.getChannel();
+      } else if (!fourBallSwitch.get()) {
+        cur_switch = fourBallSwitch.getChannel();
+      } else if (!zeroSwitch.get()) {
+        cur_switch = zeroSwitch.getChannel();      
       } else {
         cur_switch = -1;
       }
@@ -212,11 +220,17 @@ public void resetShooter() {
   }
 
   public void enableLights() {
-    mLimelight.turnOnLEDs();
+    if (!limelightEnabled) {
+      mLimelight.turnOnLEDs();
+    }
+    limelightEnabled = true;
   }
 
   public void disableLights() {
-    mLimelight.turnOffLEDs();
+    if (limelightEnabled) {
+      mLimelight.turnOffLEDs();
+    }
+    limelightEnabled = false;
   }
 
   public void configureButtonBindings() {
@@ -233,8 +247,10 @@ public void resetShooter() {
 
       new JoystickButton(driver, RMZ_A_IN).whenHeld(new TurnToAngle(mDrive, mLimelight, joysticks));
       
-      new JoystickButton(driver, RMZ_D_IN).whenPressed(new PullTrigger(mShooter));
-      new JoystickButton(driver, RMZ_D_IN).whenReleased(new StopTrigger(mShooter));
+      new JoystickButton(driver, RMZ_D_IN).whenPressed(new PullTrigger(mShooter, mIntake));
+                                                     
+      new JoystickButton(driver, RMZ_D_IN).whenReleased(new StopTrigger(mShooter, mIntake));
+                                                        
 
       new JoystickButton(driver, RMZ_H_IN).whenPressed(new ResetHood(mShooter));
       new JoystickButton(driver, RMZ_G_IN).whenReleased(new ZeroHeading(mDrive));
@@ -259,7 +275,7 @@ public void resetShooter() {
       new JoystickButton(driver, RM_SE_DOWN).whenPressed(new EjectTrigger(mShooter));
 
       new JoystickButton(driver, RM_SE_DOWN).whenReleased(new RetractIntake(mIntake));
-      new JoystickButton(driver, RM_SE_DOWN).whenReleased(new StopTrigger(mShooter));
+      new JoystickButton(driver, RM_SE_DOWN).whenReleased(new StopTrigger(mShooter, mIntake));
 
       // Enable Hood adjustment
       // new JoystickButton(driver, RM_SB_FRONT).whenHeld(new MoveHoodButton(mShooter,
@@ -268,8 +284,8 @@ public void resetShooter() {
       // Shooter.DOWN));
 
       // Trigger
-      new JoystickButton(driver, RM_SH).whenPressed(new PullTrigger(mShooter));
-      new JoystickButton(driver, RM_SH).whenReleased(new StopTrigger(mShooter));
+      new JoystickButton(driver, RM_SH).whenPressed(new PullTrigger(mShooter, mIntake));
+      new JoystickButton(driver, RM_SH).whenReleased(new StopTrigger(mShooter, mIntake));
 
       // Shoot
       // Backward layup
@@ -372,11 +388,32 @@ public void resetShooter() {
           return (operator.getPOV() == 0);
         }
       }.whenPressed(new PresetFlywheelController(mShooter, "BLP")
-        .alongWith(new PullTrigger(mShooter)))
-        .whenReleased(new StopShooter(mShooter).alongWith(new StopTrigger(mShooter)));
+        .alongWith(new PullTrigger(mShooter, mIntake)))
+        .whenReleased(new StopShooter(mShooter).alongWith(new StopTrigger(mShooter, mIntake)));
+
+      new Button() {
+        @Override
+        public boolean get() {
+          return (operator.getPOV() == 180);
+        }
+      }.whenPressed(new PresetFlywheelController(mShooter, "BLP")
+        .alongWith(new PullTrigger(mShooter, mIntake)))
+        .whenReleased(new StopShooter(mShooter).alongWith(new StopTrigger(mShooter, mIntake)));
 
         // .and(new JoystickButton(operator, X_BOX_LOGO_LEFT))
         // .whenActive(new ToggleClimber(mClimber));
+
+        // new Button() {
+        //   @Override
+        //   public boolean get() {
+        //     return (operator.getPOV() == 180);
+        //   }
+        // }.whenPressed(new PresetFlywheelController(mShooter, "SAF").alongWith(new XBoxButtonCommand(-1)))
+        //   .whenReleased(new StopShooter(mShooter).alongWith(new IdleCommand()));
+  
+          // .and(new JoystickButton(operator, X_BOX_LOGO_LEFT))
+          // .whenActive(new ToggleClimber(mClimber));
+  
     }
 
   }

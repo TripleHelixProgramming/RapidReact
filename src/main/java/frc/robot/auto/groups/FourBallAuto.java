@@ -48,14 +48,14 @@ public class FourBallAuto extends SequentialCommandGroup{
                     new FlywheelController(shooter, 1800, 78.25)),
                 new SequentialCommandGroup(
                     new WaitCommand(3.25),
-                    new PullTrigger(shooter)),
+                    new PullTrigger(shooter, intake)),
                 new TrajectoryFollower(drive, new WeirdAutoPartOne()),
                 new SequentialCommandGroup(
                     new ParallelDeadlineGroup(
                         new WaitCommand(1.95),
                         new FastIntake(intake)),
                     new RetractIntake(intake))),
-            new StopTrigger(shooter),
+            new StopTrigger(shooter, intake),
             new StopShooter(shooter),
             new ParallelDeadlineGroup(
                 new TrajectoryFollower(drive, new FourBallPartTwo()),
@@ -71,10 +71,10 @@ public class FourBallAuto extends SequentialCommandGroup{
                     new RetractIntake(intake)),
                 new SequentialCommandGroup(
                     new WaitCommand(3.2),
-                    new PullTrigger(shooter)),
+                    new PullTrigger(shooter, intake)),
                 new TrajectoryFollower(drive, new FourBallPartThree())),
             new StopShooter(shooter),
-            new StopTrigger(shooter),
+            new StopTrigger(shooter, intake),
             new ResetHood(shooter),
             new SetColor(Status.getInstance(), Color.kBlack)
             );

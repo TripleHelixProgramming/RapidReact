@@ -169,3 +169,5 @@ simgui-ds.json
 simgui.json
 networktables.ini
 .SysId
+
+.pyc
