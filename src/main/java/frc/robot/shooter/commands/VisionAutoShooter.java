@@ -20,6 +20,7 @@ public class VisionAutoShooter extends VisionShooter {
     public VisionAutoShooter(Shooter shooter, Limelight limelight, Drivetrain drivetrain, Intake intake) {
         super(shooter, limelight);
         this.drivetrain = drivetrain;
+        this.intake = intake;
     }
 
 
@@ -29,7 +30,7 @@ public class VisionAutoShooter extends VisionShooter {
         double targetDelta = Math.abs(rpm - velocity);
 
         // Stopped?
-        boolean stopped = true;
+        boolean stopped = drivetrain.getTranlationalVelocity() < 0.1;
 
         // Have target & aimed
         boolean onTarget = limelight.hasTarget() && (limelight.getState().xOffset < 5.0);
