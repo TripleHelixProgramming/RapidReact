@@ -44,15 +44,22 @@ def main():
 
     # generator.generate([
     #             [0,0,2.32],
-    #             [1.2,0,2.62],
-    #             [0,0,2.32]],
+    #             [1.2,-0.15,2.62],
+    #             [0.35,-0.35,2.32]],
     #             "TwoBallPartOne")
 
     # generator.generate([
-    #             [0,0,2.32],
+    #             [0.35,-0.35,2.32],
     #             [1.8,-1.52,0],
     #             [0.9,-1.52,0]],
     #             "TwoBallPartTwo")
+
+    generator.generate([
+                [0.35,-0.35,2.32],
+                [0.5,-1.2,math.pi/2],
+                [0.5,2,math.pi],
+                [2,2.4,math.pi]],
+                "SuperRude")
     
     # generator.generate([
     #                 [0,0,-1.95],
@@ -125,12 +132,12 @@ def main():
     #                 ],
     #                 "NewAutoPartThree")
     
-    generator.generate([
-                    [-1.3,0.775,-math.pi/2-0.2],
-                    [-1.1,1.7,-math.pi/2-0.14],
-                    [-1.3,0.9,-math.pi/2-0.2]
-                    ],
-                    "NewAutoPartFour")
+    # generator.generate([
+    #                 [-1.3,0.775,-math.pi/2-0.2],
+    #                 [-1.1,1.7,-math.pi/2-0.14],
+    #                 [-1.3,0.9,-math.pi/2-0.2]
+    #                 ],
+    #                 "NewAutoPartFour")
 
     # generator.generate([
     #                 [-0,0,-2.35],

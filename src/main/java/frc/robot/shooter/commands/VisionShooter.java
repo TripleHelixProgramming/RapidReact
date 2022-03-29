@@ -20,7 +20,7 @@ public class VisionShooter extends CommandBase {
     private Timer timer = new Timer();
     Notifier controller = new Notifier(this::controller);
     private DCMotor flywheel = new DCMotor(0.002081897, 0, 0.302);
-    private PIDController flywheelController = new PIDController(0.0175, 0, 0);
+    private PIDController flywheelController = new PIDController(0.015, 0, 0);
     boolean closeToTarget = false;
     double velocity = 0;
 

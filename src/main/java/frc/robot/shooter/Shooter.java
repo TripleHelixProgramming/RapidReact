@@ -29,13 +29,16 @@ public class Shooter extends SubsystemBase {
   // });
 
   public static final InterpolationTable INTERPOLATION_TABLE = new InterpolationTable(new double[][]{
+    // {1.8, 1710, 83},
+    // {3.05, 1880, 73.25},
+    // {3.7, 1990, 70.75},
+    // {4.39, 2060, 68.25}
     {1.8, 1710, 83},
-    {3.05, 1880, 73.25},
-    {3.7, 1990, 70.75},
+    {3.05, 1860, 74.1},
     {4.39, 2060, 68.25}
   });
 
-  private static double erosion = 0.985;
+  private static double erosion = 1;
 
   private boolean hoodDirection;
   int highCurrentCount = 0;

@@ -46,17 +46,18 @@ public class NewFourBallAuto extends SequentialCommandGroup {
       new ResetOdometry(drive, new Pose2d(new Translation2d(0,0), new Rotation2d(-2.35))),
       new ResetEncoder(shooter),
       new ParallelDeadlineGroup(
-        new WaitCommand(2.9), 
+        new WaitCommand(3.2), 
         // new ActionCommand(new ImageAction(Robot.fiveBallAutoImage, 0.02, ImageAction.FOREVER).brightness(0.7).oscillate()),
         new TrajectoryFollower(drive, new NewFourPartOne()),
         new FastIntake(intake),
         new SequentialCommandGroup(
-          new WaitCommand(1.25),
+          new WaitCommand(1.5),
           new PullTrigger(shooter, intake)
         ),
-        new FlywheelController(shooter, 1980, 72)),
+        new FlywheelController(shooter, 1840, 75)),
       new ParallelDeadlineGroup(
         new TrajectoryFollower(drive, new NewFourPartTwo()),
+        new FastIntake(intake),
         new StopTrigger(shooter, intake),
         new StopShooter(shooter)
       ),
@@ -65,7 +66,7 @@ public class NewFourBallAuto extends SequentialCommandGroup {
         new WaitCommand(5),
         new SequentialCommandGroup(
           new WaitCommand(1.75),
-          new FlywheelController(shooter, 1795, 76.0)
+          new FlywheelController(shooter, 1745, 79.0)
         ),
         new SequentialCommandGroup(
           new TrajectoryFollower(drive, new NewFourPartThree()),

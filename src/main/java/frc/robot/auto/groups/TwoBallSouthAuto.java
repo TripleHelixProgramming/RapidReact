@@ -48,7 +48,7 @@ public class TwoBallSouthAuto extends SequentialCommandGroup{
                     new WaitCommand(1.5), // Give shooter time to spin up & hood to move
                     new PullTrigger(shooter, intake),
                     new WaitCommand(2)),
-                new FlywheelController(shooter, 1805, 78.25),
+                new FlywheelController(shooter, 1725, 81),
                 new RetractIntake(intake)),
             new StopTrigger(shooter, intake),
             new StopShooter(shooter),
@@ -61,7 +61,7 @@ public class TwoBallSouthAuto extends SequentialCommandGroup{
                     new WaitCommand(1.5), // Give shooter time to spin up & hood to move
                     new PullTrigger(shooter, intake),
                     new WaitCommand(2)),
-                new FlywheelController(shooter, 650, 60),
+                new FlywheelController(shooter, 550, 60),
                 new RetractIntake(intake)),
             new StopShooter(shooter),
             new StopTrigger(shooter, intake),

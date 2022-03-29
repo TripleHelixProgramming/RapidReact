@@ -49,6 +49,7 @@ import frc.robot.auto.groups.FiveBallAuto;
 import frc.robot.auto.groups.FourBallAuto;
 import frc.robot.auto.groups.NewFiveBallAuto;
 import frc.robot.auto.groups.NewFourBallAuto;
+import frc.robot.auto.groups.SuperRudeAuto;
 import frc.robot.auto.groups.TwoBallEastAuto;
 import frc.robot.auto.groups.TwoBallSouthAuto;
 import frc.robot.climber.Climber;
@@ -105,8 +106,8 @@ public class RobotContainer {
   private final DigitalInput zeroSwitch = new DigitalInput(0);
   private final DigitalInput twoBallSouthSwitch = new DigitalInput(1);
   private final DigitalInput twoBallEastSwitch = new DigitalInput(2);
-  private final DigitalInput fiveBallSwitch = new DigitalInput(3);
-  private final DigitalInput fourBallSwitch = new DigitalInput(4);
+  private final DigitalInput fourBallSwitch = new DigitalInput(3);
+  private final DigitalInput fiveBallSwitch = new DigitalInput(4);
 
   /*
    * private final Indexer mIndexer = new Indexer();
@@ -149,7 +150,7 @@ public class RobotContainer {
     // return new FourBallAuto(mDrive, mIntake, mShooter);
     // return new TrajectoryFollower(mDrive, new CollectSecondBall());
     Command autoCommand = null;
-
+    
     try {
       if(!fiveBallSwitch.get()){
         autoCommand = new NewFiveBallAuto(mDrive, mShooter, mIntake, mLimelight, joysticks);
@@ -171,9 +172,14 @@ public class RobotContainer {
       // twoBallEastAuto.close();
       // fourBallAuto.close();
     }
+    // autoCommand = new SuperRudeAuto(mDrive, mIntake, mShooter);
     return autoCommand;
   }
 
+  public void resetSwitch() {
+    this.mDIOSwitch = -2;
+  }
+  
   public void displaySwitch() {
     int cur_switch = -1;
     try {

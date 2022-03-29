@@ -111,7 +111,7 @@ public class Intake extends SubsystemBase {
 
   // Status of the intake arm's extended state.
   public boolean isExtended() {
-    // return solenoid.get() == Value.kForward;
-    return false;
+    return solenoid.get() == Value.kForward;
+    // return false;
   }
 }

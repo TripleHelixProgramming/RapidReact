@@ -134,6 +134,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     new SetColor(Status.getInstance(), Color.kBlack).schedule();
     mRobotContainer.enableLights();
+    mRobotContainer.resetSwitch();
   }
 
   @Override
