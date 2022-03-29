@@ -16,21 +16,22 @@ public class VisionShooter extends CommandBase {
     Shooter shooter;
     Limelight limelight;
     double lastPosition, lastTime, hoodAngle;
-    double rpm;
-    private Timer timer = new Timer();
+    double distance;
+    double rpm, rpmDelta;
+    Timer timer = new Timer();
     Notifier controller = new Notifier(this::controller);
-    private DCMotor flywheel = new DCMotor(0.002081897, 0, 0.302);
-    private PIDController flywheelController = new PIDController(0.015, 0, 0);
+    DCMotor flywheel = new DCMotor(0.002081897, 0, 0.302);
+    PIDController flywheelController = new PIDController(0.015, 0, 0);
     boolean closeToTarget = false;
     double velocity = 0;
 
     public VisionShooter(Shooter shooter, Limelight limelight) {
         this.shooter = shooter;
         this.limelight = limelight;
-        lastPosition = shooter.getEncoderPosition();
-        lastTime = 0;
-        timer.reset();
-        timer.start();
+        this.lastPosition = shooter.getEncoderPosition();
+        this.lastTime = 0;
+        this.timer.reset();
+        this.timer.start();
         addRequirements(shooter);
     }
 
@@ -56,13 +57,12 @@ public class VisionShooter extends CommandBase {
         }
         velocity = (position - lastPosition) / (dt) * 60;
 
-        double distance = limelight.getState().distance;
-        double rpm = Shooter.lookupVelocity(distance);
-        double hoodAngle = Shooter.lookupHoodAngle(distance);
+        distance = limelight.getState().distance;
+        rpm = Shooter.lookupVelocity(distance);
+        hoodAngle = Shooter.lookupHoodAngle(distance);
 
         shooter.setHoodPosition(hoodAngle);
         flywheelController.setReference(rpm);
-        SmartDashboard.putNumber("Estimated velocity", velocity);
 
         double voltage = flywheel.solveFeedforward(rpm, 0) + flywheelController.calculate(velocity, dt);
         // double voltage = flywheel.solveFeedforward(rpm, 0);
@@ -75,14 +75,15 @@ public class VisionShooter extends CommandBase {
 
     @Override
     public void execute() {
-        double targetDelta = Math.abs(rpm - velocity);
+        rpmDelta = Math.abs(rpm - velocity);
 
-        SmartDashboard.putNumber("Vision RPM Delta", targetDelta);
+        SmartDashboard.putNumber("Estimated velocity", velocity);
+        SmartDashboard.putNumber("Vision RPM Delta", rpmDelta);
         
-        if (targetDelta < 50 ) {
+        if (rpmDelta < 50 ) {
             closeToTarget = true;
             Status.getInstance().fillLEDs();
-        } else if (targetDelta > 100) {
+        } else if (rpmDelta > 100) {
             closeToTarget = false;
             Color cur_color = Status.getInstance().getLedData().getLED(0);
             Status.getInstance().setColor(cur_color, 255, 50);

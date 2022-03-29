@@ -1,16 +1,8 @@
 package frc.robot.shooter.commands;
 
-import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.lib.control.DCMotor;
-import frc.lib.control.PIDController;
 import frc.robot.drive.Drivetrain;
 import frc.robot.intake.Intake;
 import frc.robot.shooter.Shooter;
-import frc.robot.status.Status;
 import frc.robot.vision.Limelight;
 
 public class VisionAutoShooter extends VisionShooter {
@@ -23,11 +15,9 @@ public class VisionAutoShooter extends VisionShooter {
         this.intake = intake;
     }
 
-
     @Override
     public void execute() {
         super.execute();
-        double targetDelta = Math.abs(rpm - velocity);
 
         // Stopped?
         boolean stopped = drivetrain.getTranlationalVelocity() < 0.1;
@@ -36,16 +26,13 @@ public class VisionAutoShooter extends VisionShooter {
         boolean onTarget = limelight.hasTarget() && (limelight.getState().xOffset < 5.0);
 
         // Within range
-        double range = limelight.getState().distance;
-        boolean inRange = (range > 1.5) && (range < 3.5);
+        boolean inRange = (distance > 1.5) && (distance < 3.5);
 
-        boolean upToSpeed = targetDelta < 50;
+        boolean upToSpeed = rpmDelta < 50;
 
         if (stopped && onTarget && inRange && upToSpeed) {
             shooter.startTrigger();
             intake.setPushCargo(true);
         }
-
     }
-
 }
