@@ -68,6 +68,8 @@ public class Drivetrain extends SubsystemBase {
   //target pose and controller
   Pose2d m_targetPose;
   PIDController m_thetaController = new PIDController(1.0, 0.0, 0.05);
+
+  private ChassisSpeeds speeds;
     
   /** Creates a new DriveSubsystem. */
   public Drivetrain() {
@@ -142,6 +144,10 @@ public class Drivetrain extends SubsystemBase {
     lastDistances = distances;
   }
 
+
+  public double getTranlationalVelocity() {
+    return Math.hypot(this.speeds.vxMetersPerSecond, this.speeds.vyMetersPerSecond);
+  }
   /**
    * Returns the currently-estimated pose of the robot.
    *
@@ -208,6 +214,8 @@ public class Drivetrain extends SubsystemBase {
   @SuppressWarnings("ParameterName")
   public void drive(ChassisSpeeds speeds, boolean normalize) {
 
+    this.speeds = speeds;
+
     if (speeds.vxMetersPerSecond == 0 && speeds.vyMetersPerSecond == 0 && speeds.omegaRadiansPerSecond == 0) {
       brake();
       return;
@@ -222,6 +230,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void openLoopDrive(ChassisSpeeds speeds) {
+    this.speeds = speeds;
     if (speeds.vxMetersPerSecond == 0 && speeds.vyMetersPerSecond == 0 && speeds.omegaRadiansPerSecond == 0) {
       brake();
       return;

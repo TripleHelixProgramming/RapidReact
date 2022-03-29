@@ -75,14 +75,14 @@ public class VisionShooter extends CommandBase {
 
     @Override
     public void execute() {
-        double targetDelta = rpm - velocity;
+        double targetDelta = Math.abs(rpm - velocity);
 
         SmartDashboard.putNumber("Vision RPM Delta", targetDelta);
         
-        if ((Math.abs(targetDelta) <= 40) ) {
+        if (targetDelta < 50 ) {
             closeToTarget = true;
             Status.getInstance().fillLEDs();
-        } else if ((Math.abs(targetDelta) > 50)) {
+        } else if (targetDelta > 100) {
             closeToTarget = false;
             Color cur_color = Status.getInstance().getLedData().getLED(0);
             Status.getInstance().setColor(cur_color, 255, 50);
