@@ -75,6 +75,7 @@ import frc.robot.shooter.commands.ResetHood;
 import frc.robot.shooter.commands.SetShooterState;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
+import frc.robot.shooter.commands.VisionAutoShooter;
 import frc.robot.shooter.commands.VisionShooter;
 import frc.robot.status.Status;
 import frc.robot.status.commands.DIOSwitchStatus;
@@ -162,6 +163,8 @@ public class RobotContainer {
       //   autoCommand = new FourBallAuto(mDrive, mIntake, mShooter);
       } else if (!fourBallSwitch.get()) {
         autoCommand = new NewFourBallAuto(mDrive, mShooter, mIntake, mLimelight, joysticks);
+      } else if (!zeroSwitch.get()) {
+        autoCommand = new SuperRudeAuto(mDrive, mIntake, mShooter);
       } else {
         autoCommand = new NewFiveBallAuto(mDrive, mShooter, mIntake, mLimelight, joysticks);
       }
@@ -346,10 +349,15 @@ public void resetShooter() {
       // X_BOX_RIGHT_STICK_BUTTON);
 
       JoystickButton xBoxA = new JoystickButton(operator, X_BOX_A);
+
       xBoxA.whenPressed( new PresetFlywheelController(mShooter,"BUF")
                           .alongWith(new TurnOnLEDs(mLimelight))                
                           .alongWith(new XBoxButtonCommand(X_BOX_A))); // baseline, upper goal, front shot
-                          
+
+      // xBoxA.whenHeld(new VisionAutoShooter(mShooter, mLimelight, mDrive, mIntake)
+      // .alongWith(new TurnOnLEDs(mLimelight))
+      // .alongWith(new XBoxButtonCommand(X_BOX_A)));
+
       xBoxA.whenReleased(new StopShooter(mShooter)
                             .alongWith(new TurnOffLEDs(mLimelight))
                             .alongWith(new IdleCommand()));
@@ -374,7 +382,7 @@ public void resetShooter() {
                             .alongWith(new IdleCommand()));
 
       JoystickButton xBoxY = new JoystickButton(operator, X_BOX_Y);
-      xBoxY.whenHeld(new PresetFlywheelController(mShooter, "TUR")
+      xBoxY.whenHeld(new PresetFlywheelController(mShooter, "SAF")
                           // .alongWith(new TurnOnLEDs(mLimelight))
                           .alongWith(new XBoxButtonCommand(X_BOX_Y))); // tarmac, upper goal, rear shot    
 
@@ -394,9 +402,9 @@ public void resetShooter() {
         public boolean get() {
           return (operator.getPOV() == 0);
         }
-      }.whenPressed(new PresetFlywheelController(mShooter, "BLP")
-        .alongWith(new PullTrigger(mShooter, mIntake)))
-        .whenReleased(new StopShooter(mShooter).alongWith(new StopTrigger(mShooter, mIntake)));
+      }.whenHeld(new PresetFlywheelController(mShooter, "TUR"))
+        .whenReleased(new StopShooter(mShooter)
+        .alongWith(new IdleCommand()));
 
       new Button() {
         @Override

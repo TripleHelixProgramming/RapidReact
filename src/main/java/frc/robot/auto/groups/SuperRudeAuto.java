@@ -43,7 +43,25 @@ public class SuperRudeAuto extends SequentialCommandGroup{
             new TrajectoryFollower(drive, new TwoBallPartOne()),
             new FastIntake(intake)
           ),
-          new TrajectoryFollower(drive, new SuperRude())
+          new ParallelDeadlineGroup( // Shoot the balls
+              new SequentialCommandGroup(
+                  new WaitCommand(1.5), // Give shooter time to spin up & hood to move
+                  new PullTrigger(shooter, intake),
+                  new WaitCommand(2)),
+              new FlywheelController(shooter, 1735, 81)),
+              // new RetractIntake(intake)),
+          new StopTrigger(shooter, intake),
+          new StopShooter(shooter),
+          new ParallelDeadlineGroup(
+            new TrajectoryFollower(drive, new SuperRude()),
+            new FastIntake(intake)),
+          new ParallelDeadlineGroup( // Toss red ball away
+              new SequentialCommandGroup(
+                  new WaitCommand(0.5), // Give shooter time to spin up & hood to move
+                  new PullTrigger(shooter, intake),
+                  new WaitCommand(2)),
+              new FlywheelController(shooter, 550, 60),
+              new RetractIntake(intake))
         );
     }    
 }

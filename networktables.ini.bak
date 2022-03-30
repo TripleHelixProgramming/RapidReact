@@ -1,0 +1,12 @@
+[NetworkTables Storage 3.0]
+string "/Preferences/.type"="RobotPreferences"
+double "/Preferences/BUF.Angle"=83
+double "/Preferences/BUF.Velocity"=1710
+double "/Preferences/BUR.Angle"=74.1
+double "/Preferences/BUR.Velocity"=1860
+double "/Preferences/SAF.Angle"=71
+double "/Preferences/SAF.Velocity"=1990
+double "/Preferences/TLR.Angle"=110
+double "/Preferences/TLR.Velocity"=1000
+double "/Preferences/TUR.Angle"=105
+double "/Preferences/TUR.Velocity"=1400

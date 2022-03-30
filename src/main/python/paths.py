@@ -12,7 +12,7 @@ def main():
         # Mass/moi
         46.7,5.6,
         # Max velocity/force
-        80, 2,
+        50, 1.55,
         # 73, 1,
         # 50, 1,
         # Wheel radius
@@ -57,8 +57,9 @@ def main():
     generator.generate([
                 [0.35,-0.35,2.32],
                 [0.5,-1.2,math.pi/2],
-                [0.5,2,math.pi],
-                [2,2.4,math.pi]],
+                [0.85,2,math.pi],
+                [2,2.3,math.pi],
+                [3.6,2.3,6.45/4*math.pi]],
                 "SuperRude")
     
     # generator.generate([

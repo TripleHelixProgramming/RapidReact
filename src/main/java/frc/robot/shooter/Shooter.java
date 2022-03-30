@@ -9,6 +9,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 
+import org.apache.commons.math3.analysis.function.Constant;
+
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -192,7 +194,7 @@ public class Shooter extends SubsystemBase {
 
   public void setHoodPosition(double degrees) {
     // degrees = Math.min(Math.max(degrees, ShooterConstants.kHoodMinAngle), ShooterConstants.kHoodMaxAngle);
-    double reference = Math.max(60, Math.min(100, degrees));
+    double reference = Math.max(ShooterConstants.kHoodMinAngle, Math.min(ShooterConstants.kHoodMaxAngle, degrees));
     hoodController.setReference(reference, ControlType.kPosition, 0, 0.0, ArbFFUnits.kPercentOut);
   }
 

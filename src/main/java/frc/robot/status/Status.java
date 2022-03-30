@@ -341,10 +341,6 @@ public class Status extends SubsystemBase {
         green = (int) (green * b);
         blue = (int) (blue * b);
 
-        System.out.println (red);
-        System.out.println (green);
-        System.out.println (blue);
-
         // Create a buffer for all the LEDs, set all of them to the same value, and
         // output the buffer.
         final AddressableLEDBuffer buffer = new AddressableLEDBuffer(ADDRESSABLE_LED_COUNT);
