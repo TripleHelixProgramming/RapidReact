@@ -44,7 +44,7 @@ public class NewFiveBallAuto extends SequentialCommandGroup {
       new ResetEncoder(shooter),
       new ParallelDeadlineGroup(
         new WaitCommand(2.9), 
-        // new ActionCommand(new ImageAction(Robot.fiveBallAutoImage, 0.02, ImageAction.FOREVER).brightness(0.7).oscillate()),
+        new ActionCommand(new ImageAction(Robot.fiveBallAutoImage, 0.02, ImageAction.FOREVER).brightness(0.7).oscillate()),
         new TrajectoryFollower(drive, new NewAutoPartOne()),
         new FastIntake(intake),
         new SequentialCommandGroup(

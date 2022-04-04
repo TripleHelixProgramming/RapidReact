@@ -49,6 +49,7 @@ import frc.robot.auto.groups.FiveBallAuto;
 import frc.robot.auto.groups.FourBallAuto;
 import frc.robot.auto.groups.NewFiveBallAuto;
 import frc.robot.auto.groups.NewFourBallAuto;
+import frc.robot.auto.groups.SecondSuperRudeAuto;
 import frc.robot.auto.groups.SuperRudeAuto;
 import frc.robot.auto.groups.TwoBallEastAuto;
 import frc.robot.auto.groups.TwoBallSouthAuto;
@@ -65,6 +66,7 @@ import frc.robot.drive.commands.ZeroHeading;
 import frc.robot.intake.Intake;
 import frc.robot.intake.commands.EjectIntake;
 import frc.robot.intake.commands.FastIntake;
+import frc.robot.intake.commands.OpenIntake;
 import frc.robot.intake.commands.RetractIntake;
 import frc.robot.shooter.Shooter;
 import frc.robot.shooter.commands.EjectTrigger;
@@ -105,10 +107,10 @@ public class RobotContainer {
 
   private int mDIOSwitch = -2;
   private final DigitalInput zeroSwitch = new DigitalInput(0);
-  private final DigitalInput twoBallSouthSwitch = new DigitalInput(1);
-  private final DigitalInput twoBallEastSwitch = new DigitalInput(2);
-  private final DigitalInput fourBallSwitch = new DigitalInput(3);
-  private final DigitalInput fiveBallSwitch = new DigitalInput(4);
+  private final DigitalInput oneSwitch = new DigitalInput(1);
+  private final DigitalInput twoSwitch = new DigitalInput(2);
+  private final DigitalInput threeSwitch = new DigitalInput(3);
+  private final DigitalInput fourSwitch = new DigitalInput(4);
 
   /*
    * private final Indexer mIndexer = new Indexer();
@@ -122,6 +124,12 @@ public class RobotContainer {
   private HelixJoysticks op_joysticks;
 
   private boolean limelightEnabled = false;
+
+  private Command innerRudeAuto;
+  private Command outerRudeAuto;
+  private Command friendlyFourBallAuto;
+  private Command fourBallAuto;
+  private Command fiveBallAuto;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -138,6 +146,12 @@ public class RobotContainer {
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Reset Encoders", new ResetEncoders(mDrive));
+
+    innerRudeAuto = new SuperRudeAuto(mDrive, mIntake, mShooter);
+    outerRudeAuto = new SecondSuperRudeAuto(mDrive, mIntake, mShooter);
+    friendlyFourBallAuto = new FourBallAuto(mDrive, mIntake, mShooter, mLimelight, joysticks);
+    fourBallAuto = new NewFourBallAuto(mDrive, mShooter, mIntake, mLimelight, joysticks);
+    fiveBallAuto = new NewFiveBallAuto(mDrive, mShooter, mIntake, mLimelight, joysticks);
   }
 
   /**
@@ -153,20 +167,18 @@ public class RobotContainer {
     Command autoCommand = null;
     
     try {
-      if(!fiveBallSwitch.get()){
-        autoCommand = new NewFiveBallAuto(mDrive, mShooter, mIntake, mLimelight, joysticks);
-      } else if (!twoBallSouthSwitch.get()) {
-        autoCommand = new TwoBallSouthAuto(mDrive, mIntake, mShooter);
-      } else if (!twoBallEastSwitch.get()) {
-        autoCommand = new TwoBallEastAuto(mDrive, mIntake, mShooter);
-      // } else if (!fourBallAuto.get()) {
-      //   autoCommand = new FourBallAuto(mDrive, mIntake, mShooter);
-      } else if (!fourBallSwitch.get()) {
-        autoCommand = new NewFourBallAuto(mDrive, mShooter, mIntake, mLimelight, joysticks);
+      if(!fourSwitch.get()){
+        autoCommand = fiveBallAuto;
+      } else if (!threeSwitch.get()) {
+        autoCommand = fourBallAuto;
+      } else if (!twoSwitch.get()) {
+        autoCommand = friendlyFourBallAuto;
+      } else if (!oneSwitch.get()) {
+        autoCommand = outerRudeAuto;
       } else if (!zeroSwitch.get()) {
-        autoCommand = new SuperRudeAuto(mDrive, mIntake, mShooter);
+        autoCommand = innerRudeAuto;
       } else {
-        autoCommand = new NewFiveBallAuto(mDrive, mShooter, mIntake, mLimelight, joysticks);
+        autoCommand = fiveBallAuto;
       }
     } finally {
       // Don't close these. It prevents anything else from reading them.
@@ -186,14 +198,14 @@ public class RobotContainer {
   public void displaySwitch() {
     int cur_switch = -1;
     try {
-      if(!fiveBallSwitch.get()){
-        cur_switch = fiveBallSwitch.getChannel();
-      } else if (!twoBallSouthSwitch.get()) {
-        cur_switch = twoBallSouthSwitch.getChannel();
-      } else if (!twoBallEastSwitch.get()) {
-        cur_switch = twoBallEastSwitch.getChannel();
-      } else if (!fourBallSwitch.get()) {
-        cur_switch = fourBallSwitch.getChannel();
+      if(!fourSwitch.get()){
+        cur_switch = fourSwitch.getChannel();
+      } else if (!threeSwitch.get()) {
+        cur_switch = threeSwitch.getChannel();
+      } else if (!twoSwitch.get()) {
+        cur_switch = twoSwitch.getChannel();
+      } else if (!oneSwitch.get()) {
+        cur_switch = oneSwitch.getChannel();
       } else if (!zeroSwitch.get()) {
         cur_switch = zeroSwitch.getChannel();      
       } else {
@@ -229,17 +241,11 @@ public void resetShooter() {
   }
 
   public void enableLights() {
-    if (!limelightEnabled) {
-      mLimelight.turnOnLEDs();
-    }
-    limelightEnabled = true;
+    mLimelight.turnOnLEDs();
   }
 
   public void disableLights() {
-    if (limelightEnabled) {
-      mLimelight.turnOffLEDs();
-    }
-    limelightEnabled = false;
+    mLimelight.turnOffLEDs();
   }
 
   public void configureButtonBindings() {
@@ -350,8 +356,8 @@ public void resetShooter() {
 
       JoystickButton xBoxA = new JoystickButton(operator, X_BOX_A);
 
-      xBoxA.whenPressed( new PresetFlywheelController(mShooter,"BUF")
-                          .alongWith(new TurnOnLEDs(mLimelight))                
+      xBoxA.whileHeld(new TurnOnLEDs(mLimelight));
+      xBoxA.whenPressed(new PresetFlywheelController(mShooter,"BUF")          
                           .alongWith(new XBoxButtonCommand(X_BOX_A))); // baseline, upper goal, front shot
 
       // xBoxA.whenHeld(new VisionAutoShooter(mShooter, mLimelight, mDrive, mIntake)
@@ -363,8 +369,9 @@ public void resetShooter() {
                             .alongWith(new IdleCommand()));
 
       JoystickButton xBoxB = new JoystickButton(operator, X_BOX_B);
+
+      xBoxB.whileHeld(new TurnOnLEDs(mLimelight));
       xBoxB.whenHeld(new PresetFlywheelController(mShooter, "BUR")
-                          .alongWith(new TurnOnLEDs(mLimelight))
                           .alongWith(new XBoxButtonCommand(X_BOX_B))); // baseline, upper goal, rear shot
 
       xBoxB.whenReleased(new StopShooter(mShooter)
@@ -373,8 +380,8 @@ public void resetShooter() {
 
       JoystickButton xBoxX = new JoystickButton(operator, X_BOX_X);
 
+      xBoxX.whileHeld(new TurnOnLEDs(mLimelight));
       xBoxX.whenHeld(new VisionShooter(mShooter, mLimelight)
-                    .alongWith(new TurnOnLEDs(mLimelight))
                     .alongWith(new XBoxButtonCommand(X_BOX_X)));
 
       xBoxX.whenReleased(new StopShooter(mShooter)
@@ -382,8 +389,9 @@ public void resetShooter() {
                             .alongWith(new IdleCommand()));
 
       JoystickButton xBoxY = new JoystickButton(operator, X_BOX_Y);
+
+      xBoxY.whileHeld(new TurnOnLEDs(mLimelight));
       xBoxY.whenHeld(new PresetFlywheelController(mShooter, "SAF")
-                          // .alongWith(new TurnOnLEDs(mLimelight))
                           .alongWith(new XBoxButtonCommand(X_BOX_Y))); // tarmac, upper goal, rear shot    
 
       xBoxY.whenReleased(new StopShooter(mShooter)
@@ -414,6 +422,13 @@ public void resetShooter() {
       }.whenPressed(new PresetFlywheelController(mShooter, "BLP")
         .alongWith(new PullTrigger(mShooter, mIntake)))
         .whenReleased(new StopShooter(mShooter).alongWith(new StopTrigger(mShooter, mIntake)));
+
+      new Button() {
+        @Override
+        public boolean get() {
+          return (operator.getPOV() == 270);
+        }
+      }.whenHeld(new OpenIntake(mIntake));
 
         // .and(new JoystickButton(operator, X_BOX_LOGO_LEFT))
         // .whenActive(new ToggleClimber(mClimber));

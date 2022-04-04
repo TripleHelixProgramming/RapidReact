@@ -12,7 +12,7 @@ def main():
         # Mass/moi
         46.7,5.6,
         # Max velocity/force
-        50, 1.55,
+        70, 1.9,
         # 73, 1,
         # 50, 1,
         # Wheel radius
@@ -54,13 +54,22 @@ def main():
     #             [0.9,-1.52,0]],
     #             "TwoBallPartTwo")
 
-    generator.generate([
-                [0.35,-0.35,2.32],
-                [0.5,-1.2,math.pi/2],
-                [0.85,2,math.pi],
-                [2,2.3,math.pi],
-                [3.6,2.3,6.45/4*math.pi]],
-                "SuperRude")
+    # generator.generate([
+    #             [0.35,-0.35,2.32],
+    #             [0.5,-1.2,math.pi/2],
+    #             [0.85,2,math.pi],
+    #             [2,2.3,math.pi],
+    #             [3.6,2.3,6.45/4*math.pi]],
+    #             "SuperRude")
+    
+    # generator.generate([
+    #             [0.35,-0.35,2.32],
+    #             [0.7,-1.2,math.pi/2],
+    #             # [2.5,0.5,3/2*math.pi],
+    #             [2.8,1.45,3.4/2*math.pi],
+    #             [2.4,2,3.4/2*math.pi],
+    #             [3.4,2,3.4/2*math.pi]],
+    #             "SuperRudeTwo")
     
     # generator.generate([
     #                 [0,0,-1.95],
@@ -69,18 +78,19 @@ def main():
     #                 [6.35,0.0,-2.1]],
     #                 "FourBallPartTwo")
 
-    # generator.generate([
-    #                 [0,0,-1.95],
-    #                 [2.5,0.85,-1.95],
-    #                 [5.7,-0.3,-2.1],
-    #                 [6.15,0.15,-2.3]],
-    #                 "FourBallPartTwo")
+    generator.generate([
+                    [0,0,-1.95],
+                    [2.5,0.85,-1.95],
+                    [6,-0.3,-2.1],
+                    [6.3,0,-2.3],
+                    [6,-0.3,-2.3]],
+                    "FourBallPartTwo")
 
-    # generator.generate([
-    #                 [6.35,0.0,-2.1],
-    #                 [2.5,0.85,-2.1],
-    #                 [-0.3,-0.3,-1.95]],
-    #                 "FourBallPartThree")
+    generator.generate([
+                    [6,-0.3,-2.3],
+                    [2.5,0.85,-2.1],
+                    [-0.3,0,-1.95]],
+                    "FourBallPartThree")
 
     # generator.generate([
     #                 [6.15,0.15,-2.3],

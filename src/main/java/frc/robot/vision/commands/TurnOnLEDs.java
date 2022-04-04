@@ -8,15 +8,16 @@ public class TurnOnLEDs extends CommandBase {
 
   public TurnOnLEDs(Limelight limelight) {
     this.limelight = limelight;
+    addRequirements(limelight);
   }
 
   @Override
-  public void initialize() {
+  public void execute() {
     limelight.turnOnLEDs();
   }
 
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }
