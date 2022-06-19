@@ -4,13 +4,11 @@
 
 package frc.robot;
 
-import static com.team2363.utilities.ControllerMap.*;
-
 import static com.team2363.utilities.ControllerMap.RMZ_A_IN;
 import static com.team2363.utilities.ControllerMap.RMZ_D_IN;
+import static com.team2363.utilities.ControllerMap.RMZ_F_UP;
 import static com.team2363.utilities.ControllerMap.RMZ_G_IN;
 import static com.team2363.utilities.ControllerMap.RMZ_H_IN;
-import static com.team2363.utilities.ControllerMap.RMZ_F_UP;
 import static com.team2363.utilities.ControllerMap.RM_SB_BACK;
 import static com.team2363.utilities.ControllerMap.RM_SB_FRONT;
 import static com.team2363.utilities.ControllerMap.RM_SC_BACK;
@@ -32,35 +30,36 @@ import static com.team2363.utilities.ControllerMap.X_BOX_RIGHT_STICK_Y;
 import static com.team2363.utilities.ControllerMap.X_BOX_X;
 import static com.team2363.utilities.ControllerMap.X_BOX_Y;
 
+import java.io.File;
+
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.Button;
 // import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.lib.ControllerPatroller;
 import frc.lib.HelixJoysticks;
+import frc.paths.Path;
+import frc.paths.TrajectoriesManager;
 // import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.auto.groups.FiveBallAuto;
 import frc.robot.auto.groups.FourBallAuto;
 import frc.robot.auto.groups.NewFiveBallAuto;
 import frc.robot.auto.groups.NewFourBallAuto;
 import frc.robot.auto.groups.SecondSuperRudeAuto;
 import frc.robot.auto.groups.SuperRudeAuto;
-import frc.robot.auto.groups.TwoBallEastAuto;
-import frc.robot.auto.groups.TwoBallSouthAuto;
 import frc.robot.climber.Climber;
 import frc.robot.climber.commands.DeployClimber;
 import frc.robot.climber.commands.RetractClimber;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.AbsoluteOrientation;
 import frc.robot.drive.commands.JoystickDrive;
-import frc.robot.drive.commands.RelativeOrientation;
 import frc.robot.drive.commands.ResetEncoders;
+import frc.robot.drive.commands.TrajectoryFollower;
 import frc.robot.drive.commands.TurnToAngle;
 import frc.robot.drive.commands.ZeroHeading;
 import frc.robot.intake.Intake;
@@ -70,19 +69,16 @@ import frc.robot.intake.commands.OpenIntake;
 import frc.robot.intake.commands.RetractIntake;
 import frc.robot.shooter.Shooter;
 import frc.robot.shooter.commands.EjectTrigger;
-import frc.robot.shooter.commands.FlywheelController;
 import frc.robot.shooter.commands.PresetFlywheelController;
 import frc.robot.shooter.commands.PullTrigger;
 import frc.robot.shooter.commands.ResetHood;
 import frc.robot.shooter.commands.SetShooterState;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
-import frc.robot.shooter.commands.VisionAutoShooter;
 import frc.robot.shooter.commands.VisionShooter;
 import frc.robot.status.Status;
 import frc.robot.status.commands.DIOSwitchStatus;
 import frc.robot.status.commands.IdleCommand;
-import frc.robot.status.commands.SetColor;
 import frc.robot.status.commands.XBoxButtonCommand;
 import frc.robot.vision.Limelight;
 import frc.robot.vision.commands.TurnOffLEDs;
@@ -131,6 +127,9 @@ public class RobotContainer {
   private Command fourBallAuto;
   private Command fiveBallAuto;
 
+  private final TrajectoriesManager trajectoriesManager = 
+      new TrajectoriesManager(new File(Filesystem.getDeployDirectory(), "trajectories/"));
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -142,7 +141,7 @@ public class RobotContainer {
     mIntake.setDefaultCommand(new RetractIntake(mIntake));
     // mShooter.setDefaultCommand(new StopShooter(mShooter));
     // mShooter.setDefaultCommand(new FlywheelController(mShooter, 0));
-//    mClimber.setDefaultCommand(new RetractClimber(mClimber));
+    // mClimber.setDefaultCommand(new RetractClimber(mClimber));
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Reset Encoders", new ResetEncoders(mDrive));
@@ -152,6 +151,8 @@ public class RobotContainer {
     friendlyFourBallAuto = new FourBallAuto(mDrive, mIntake, mShooter, mLimelight, joysticks);
     fourBallAuto = new NewFourBallAuto(mDrive, mShooter, mIntake, mLimelight, joysticks);
     fiveBallAuto = new NewFiveBallAuto(mDrive, mShooter, mIntake, mLimelight, joysticks);
+
+    trajectoriesManager.loadAllTrajectories();
   }
 
   /**
@@ -178,7 +179,13 @@ public class RobotContainer {
       } else if (!zeroSwitch.get()) {
         autoCommand = innerRudeAuto;
       } else {
-        autoCommand = fiveBallAuto;
+        // We can use the extra slots for testing file reading
+        // autoCommand = fiveBallAuto;
+        String selectedAuto = "straight_line";
+        if (trajectoriesManager.contains(selectedAuto)) {
+          Path path = trajectoriesManager.get(selectedAuto);
+          autoCommand = new TrajectoryFollower(mDrive, path);
+        }
       }
     } finally {
       // Don't close these. It prevents anything else from reading them.

@@ -1,7 +1,18 @@
 package frc.lib.control;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -19,6 +30,11 @@ public class SwerveTrajectory {
                 new Vector3d(state[4], state[5], state[6])
             ));
         }
+    }
+
+    @JsonCreator
+    public SwerveTrajectory(List<State> states) {
+        trajectory = states;
     }
 
     public Pose2d getInitialPose() {
@@ -60,10 +76,14 @@ public class SwerveTrajectory {
     }
 
     public static class State {
+        @JsonProperty("ts")
+        @JsonAlias("t")
         public double t;
+
         public Pose2d pose;
         public Vector3d velocity;
 
+        @JsonCreator
         public State(double t, Pose2d pose, Vector3d velocity) {
             this.t = t;
             this.pose = pose;
@@ -81,6 +101,26 @@ public class SwerveTrajectory {
                 newPose,
                 newVelocity
             );
+        }
+
+        public class Deserializer extends StdDeserializer<State> {
+
+            public Deserializer() {
+                this(null);
+            }
+
+            public Deserializer(Class<?> vc) {
+                super(vc);
+            }
+
+            @Override
+            public State deserialize(JsonParser p, DeserializationContext ctxt)
+                    throws IOException, JsonProcessingException {
+                JsonNode node = p.getCodec().readTree(p);
+                Pose2d pose = new Pose2d(node.get("x").asDouble(), node.get("y").asDouble(), new Rotation2d(node.get("heading").asDouble()));
+                Vector3d velocity = new Vector3d(node.get("vx").asDouble(), node.get("vy").asDouble(), node.get("omega").asDouble());
+                return new State(node.get("ts").asDouble(), pose, velocity);
+            }
         }
     }
 }
