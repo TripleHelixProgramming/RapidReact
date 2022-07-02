@@ -1,5 +1,6 @@
 package frc.lib.control;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,16 +8,19 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Filesystem;
+import frc.lib.control.SwerveTrajectory.State.Deserializer;
 
 public class SwerveTrajectory {
     private final List<State> trajectory;
@@ -75,6 +79,7 @@ public class SwerveTrajectory {
         return previousState.interpolate(currentState, (time - previousState.t) / (currentState.t - previousState.t));
     }
 
+    @JsonDeserialize(using = Deserializer.class)
     public static class State {
         @JsonProperty("ts")
         @JsonAlias("t")
@@ -83,7 +88,6 @@ public class SwerveTrajectory {
         public Pose2d pose;
         public Vector3d velocity;
 
-        @JsonCreator
         public State(double t, Pose2d pose, Vector3d velocity) {
             this.t = t;
             this.pose = pose;
@@ -103,7 +107,18 @@ public class SwerveTrajectory {
             );
         }
 
-        public class Deserializer extends StdDeserializer<State> {
+        // public static void main(String[] args) {
+        //     File deployDir = new File(Filesystem.getDeployDirectory(), "trajectories");
+        //     ObjectMapper mapper = new ObjectMapper();
+        //     try {
+        //         mapper.readValue(jsonString, State.class);
+        //         System.out.println("success");
+        //     } catch (IOException e) {
+        //         System.out.println(e.getMessage());
+        //     }
+        // }
+
+        public static class Deserializer extends StdDeserializer<State> {
 
             public Deserializer() {
                 this(null);

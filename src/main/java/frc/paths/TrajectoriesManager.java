@@ -2,6 +2,7 @@ package frc.paths;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.control.SwerveTrajectory;
 import frc.lib.control.SwerveTrajectory.State;
 
@@ -36,9 +38,13 @@ public class TrajectoriesManager {
                 Path trajectory = new ImportedTrajectory(new SwerveTrajectory(states));
                 trajectoriesMap.put(name, trajectory);
             } catch (JsonParseException e) {
+                SmartDashboard.putString("JSONERROR", e.getMessage());
                 // use these for debugging later
             } catch (JsonMappingException e) {
+                // SmartDashboard.putString("JSONMAPERROR", "Unfortunate");
+                SmartDashboard.putString("JSONMapError", e.getMessage());
             } catch (IOException e) {
+                SmartDashboard.putString("Fileerror", e.getMessage());
             }
         }
     }
