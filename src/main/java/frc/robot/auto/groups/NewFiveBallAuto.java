@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.auto.groups;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -15,6 +11,7 @@ import frc.paths.NewAutoPartFour;
 import frc.paths.NewAutoPartOne;
 import frc.paths.NewAutoPartThree;
 import frc.paths.NewAutoPartTwo;
+import frc.paths.TrajectoriesManager;
 import frc.robot.Robot;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.ResetOdometry;
@@ -33,12 +30,9 @@ import frc.robot.status.actions.ImageAction;
 import frc.robot.status.commands.ActionCommand;
 import frc.robot.vision.Limelight;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class NewFiveBallAuto extends SequentialCommandGroup {
-  /** Creates a new NewAuto. */
-  public NewFiveBallAuto(Drivetrain drive, Shooter shooter, Intake intake, Limelight limelight, HelixJoysticks joysticks) {
+
+  public NewFiveBallAuto(TrajectoriesManager trajectoriesManager, Drivetrain drive, Shooter shooter, Intake intake, Limelight limelight, HelixJoysticks joysticks) {
     addCommands(
       new ResetOdometry(drive, new Pose2d(new Translation2d(0,0), new Rotation2d(-2.35))),
       new ResetEncoder(shooter),

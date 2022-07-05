@@ -11,14 +11,10 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.HelixJoysticks;
-import frc.paths.NewAutoPartFour;
-import frc.paths.NewAutoPartOne;
-import frc.paths.NewAutoPartThree;
-import frc.paths.NewAutoPartTwo;
 import frc.paths.NewFourPartOne;
 import frc.paths.NewFourPartThree;
 import frc.paths.NewFourPartTwo;
-import frc.robot.Robot;
+import frc.paths.TrajectoriesManager;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.commands.ResetOdometry;
 import frc.robot.drive.commands.TrajectoryFollower;
@@ -32,8 +28,6 @@ import frc.robot.shooter.commands.PullTrigger;
 import frc.robot.shooter.commands.ResetEncoder;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
-import frc.robot.status.actions.ImageAction;
-import frc.robot.status.commands.ActionCommand;
 import frc.robot.vision.Limelight;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -41,7 +35,7 @@ import frc.robot.vision.Limelight;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class NewFourBallAuto extends SequentialCommandGroup {
   /** Creates a new NewAuto. */
-  public NewFourBallAuto(Drivetrain drive, Shooter shooter, Intake intake, Limelight limelight, HelixJoysticks joysticks) {
+  public NewFourBallAuto(TrajectoriesManager trajectoriesManager, Drivetrain drive, Shooter shooter, Intake intake, Limelight limelight, HelixJoysticks joysticks) {
     addCommands(
       new ResetOdometry(drive, new Pose2d(new Translation2d(0,0), new Rotation2d(-2.35))),
       new ResetEncoder(shooter),

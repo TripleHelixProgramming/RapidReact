@@ -149,11 +149,11 @@ public class RobotContainer {
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Reset Encoders", new ResetEncoders(mDrive));
 
-    innerRudeAuto = new SuperRudeAuto(mDrive, mIntake, mShooter);
-    outerRudeAuto = new SecondSuperRudeAuto(mDrive, mIntake, mShooter);
-    friendlyFourBallAuto = new FourBallAuto(mDrive, mIntake, mShooter, mLimelight, joysticks);
-    fourBallAuto = new NewFourBallAuto(mDrive, mShooter, mIntake, mLimelight, joysticks);
-    fiveBallAuto = new NewFiveBallAuto(mDrive, mShooter, mIntake, mLimelight, joysticks);
+    innerRudeAuto = new SuperRudeAuto(trajectoriesManager, mDrive, mIntake, mShooter);
+    outerRudeAuto = new SecondSuperRudeAuto(trajectoriesManager, mDrive, mIntake, mShooter);
+    friendlyFourBallAuto = new FourBallAuto(trajectoriesManager, mDrive, mIntake, mShooter, mLimelight, joysticks);
+    fourBallAuto = new NewFourBallAuto(trajectoriesManager, mDrive, mShooter, mIntake, mLimelight, joysticks);
+    fiveBallAuto = new NewFiveBallAuto(trajectoriesManager, mDrive, mShooter, mIntake, mLimelight, joysticks);
 
     reloadTrajectories();
   }
@@ -173,39 +173,40 @@ public class RobotContainer {
     // return new FourBallAuto(mDrive, mIntake, mShooter);
     // return new TrajectoryFollower(mDrive, new CollectSecondBall());
     Command autoCommand = null;
-    String selectedAuto = "test_path";
-    SmartDashboard.putBoolean("isPathFound", trajectoriesManager.contains(selectedAuto));
-    if (trajectoriesManager.contains(selectedAuto)) {
-      Path path = trajectoriesManager.get(selectedAuto);
-      autoCommand = new SequentialCommandGroup(new ResetOdometry(mDrive, path.getPath().getInitialPose()), new TrajectoryFollower(mDrive, path));
-    }
-    // try {
-    //   if(!fourSwitch.get()){
-    //     autoCommand = fiveBallAuto;
-    //   } else if (!threeSwitch.get()) {
-    //     autoCommand = fourBallAuto;
-    //   } else if (!twoSwitch.get()) {
-    //     autoCommand = friendlyFourBallAuto;
-    //   } else if (!oneSwitch.get()) {
-    //     autoCommand = outerRudeAuto;
-    //   } else if (!zeroSwitch.get()) {
-    //     autoCommand = innerRudeAuto;
-    //   } else {
-    //     // We can use the extra slots for testing file reading
-    //     // autoCommand = fiveBallAuto;
-    //     String selectedAuto = "test_path";
-    //     if (trajectoriesManager.contains(selectedAuto)) {
-    //       Path path = trajectoriesManager.get(selectedAuto);
-    //       autoCommand = new TrajectoryFollower(mDrive, path);
-    //     }
-    //   }
-    // } finally {
+    // SmartDashboard.putBoolean("isPathFound", trajectoriesManager.contains(selectedAuto));
+    // if (trajectoriesManager.contains(selectedAuto)) {
+    //   Path path = trajectoriesManager.get(selectedAuto);
+    //   autoCommand = new SequentialCommandGroup(new ResetOdometry(mDrive, path.getPath().getInitialPose()), new TrajectoryFollower(mDrive, path));
+    // }
+    try {
+      if(!fourSwitch.get()){
+        autoCommand = fiveBallAuto;
+      } else if (!threeSwitch.get()) {
+        autoCommand = fourBallAuto;
+      } else if (!twoSwitch.get()) {
+        autoCommand = friendlyFourBallAuto;
+      } else if (!oneSwitch.get()) {
+        autoCommand = outerRudeAuto;
+      } else if (!zeroSwitch.get()) {
+        autoCommand = innerRudeAuto;
+      } else {
+        // We can use the extra slots for testing file reading
+        autoCommand = fiveBallAuto;
+        // String selectedAuto = "test_path";
+        // if (trajectoriesManager.contains(selectedAuto)) {
+        //   Path path = trajectoriesManager.get(selectedAuto);
+        //   autoCommand = new TrajectoryFollower(mDrive, path);
+        // } else {
+        //   autoCommand = fiveBallAuto;
+        // }
+      }
+    } finally {
     //   // Don't close these. It prevents anything else from reading them.
     //   // fiveBallAuto.close();
     //   // twoBallSouthAuto.close();
     //   // twoBallEastAuto.close();
     //   // fourBallAuto.close();
-    // }
+    }
     // autoCommand = new SuperRudeAuto(mDrive, mIntake, mShooter);
     return autoCommand;
   }

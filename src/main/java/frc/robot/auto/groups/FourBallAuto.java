@@ -1,18 +1,16 @@
 package frc.robot.auto.groups;
 
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.HelixJoysticks;
-import frc.paths.CollectSecondBall;
 import frc.paths.FourBallPartThree;
 import frc.paths.FourBallPartTwo;
-import frc.paths.GoHome;
-import frc.paths.OnePointEightMetersForward;
+import frc.paths.TrajectoriesManager;
 import frc.paths.WeirdAutoPartOne;
 import frc.robot.Robot;
 import frc.robot.drive.Drivetrain;
@@ -37,7 +35,7 @@ import frc.robot.vision.Limelight;
 
 public class FourBallAuto extends SequentialCommandGroup{
 
-    public FourBallAuto(Drivetrain drive, Intake intake, Shooter shooter, Limelight limelight, HelixJoysticks joysticks) {
+    public FourBallAuto(TrajectoriesManager trajectoriesManager, Drivetrain drive, Intake intake, Shooter shooter, Limelight limelight, HelixJoysticks joysticks) {
         addCommands(
             new ActionCommand(new ImageAction(Robot.fourBallAutoImage,0.02, ImageAction.FOREVER).oscillate().brightness(0.7)),
             new ResetOdometry(drive, new Pose2d(new Translation2d(0,0),Rotation2d.fromDegrees(-90))),
