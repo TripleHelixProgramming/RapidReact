@@ -28,15 +28,14 @@ public class TrajectoriesManager {
         this.trajectoriesDir = trajectoriesDir;
     }
 
-    public void loadAllTrajectories() {
-        File[] files = trajectoriesDir.listFiles();
-        for (File file : files) {
+    public Path loadTrajectory(String name) {
+        File trajectoryFile = new File(trajectoriesDir, name + ".json");
+        if (trajectoryFile.exists()) {
             try {
-                String name = file.getName();
-                name = name.substring(0, name.indexOf("."));
-                List<State> states = objectMapper.readValue(file, STATE_LIST_TYPE);
+                List<State> states = objectMapper.readValue(trajectoryFile, STATE_LIST_TYPE);
                 Path trajectory = new ImportedTrajectory(new SwerveTrajectory(states));
                 trajectoriesMap.put(name, trajectory);
+                return trajectory;
             } catch (JsonParseException e) {
                 SmartDashboard.putString("JSONERROR", e.getMessage());
                 // use these for debugging later
@@ -46,6 +45,17 @@ public class TrajectoriesManager {
             } catch (IOException e) {
                 SmartDashboard.putString("Fileerror", e.getMessage());
             }
+            return null;
+        }
+        return null;
+    }
+
+    public void loadAllTrajectories() {
+        File[] files = trajectoriesDir.listFiles();
+        for (File file : files) {
+            String name = file.getName();
+            name = name.substring(0, name.indexOf("."));
+            loadTrajectory(name);
         }
     }
 

@@ -2,9 +2,11 @@ package frc.robot.auto.groups;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.paths.Path;
 import frc.paths.SuperRude;
 import frc.paths.TrajectoriesManager;
 import frc.paths.TwoBallPartOne;
@@ -20,12 +22,15 @@ import frc.robot.shooter.commands.PullTrigger;
 import frc.robot.shooter.commands.StopShooter;
 import frc.robot.shooter.commands.StopTrigger;
 
-public class SuperRudeAuto extends SequentialCommandGroup{
+public class SuperRudeAuto extends SequentialCommandGroup {
     public SuperRudeAuto(TrajectoriesManager trajectoriesManager, Drivetrain drive, Intake intake, Shooter shooter) {
+        Path innerRude1 = trajectoriesManager.loadTrajectory("inner_rude_1");
+        Path innerRude2 = trajectoriesManager.loadTrajectory("inner_rude_2");
+        SmartDashboard.putNumber("initial auto heading", innerRude1.getPath().getInitialPose().getRotation().getRadians());
         addCommands(
-          new ResetOdometry(drive, new Pose2d(0,0,new Rotation2d(2.32))),
+          new ResetOdometry(drive, innerRude1.getPath().getInitialPose()),
           new ParallelDeadlineGroup(
-            new TrajectoryFollower(drive, new TwoBallPartOne()),
+            new TrajectoryFollower(drive, innerRude1),
             new FastIntake(intake)
           ),
           new ParallelDeadlineGroup( // Shoot the balls
@@ -38,7 +43,7 @@ public class SuperRudeAuto extends SequentialCommandGroup{
           new StopTrigger(shooter, intake),
           new StopShooter(shooter),
           new ParallelDeadlineGroup(
-            new TrajectoryFollower(drive, new SuperRude()),
+            new TrajectoryFollower(drive, innerRude2),
             new FastIntake(intake)),
           new ParallelDeadlineGroup( // Toss red ball away
               new SequentialCommandGroup(

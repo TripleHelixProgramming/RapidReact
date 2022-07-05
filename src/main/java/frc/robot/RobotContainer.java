@@ -154,12 +154,6 @@ public class RobotContainer {
     friendlyFourBallAuto = new FourBallAuto(trajectoriesManager, mDrive, mIntake, mShooter, mLimelight, joysticks);
     fourBallAuto = new NewFourBallAuto(trajectoriesManager, mDrive, mShooter, mIntake, mLimelight, joysticks);
     fiveBallAuto = new NewFiveBallAuto(trajectoriesManager, mDrive, mShooter, mIntake, mLimelight, joysticks);
-
-    reloadTrajectories();
-  }
-
-  public void reloadTrajectories() {
-    trajectoriesManager.loadAllTrajectories();
   }
 
   /**

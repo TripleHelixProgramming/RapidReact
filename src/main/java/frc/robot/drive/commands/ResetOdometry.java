@@ -10,7 +10,7 @@ public class ResetOdometry extends CommandBase {
   /** Creates a new ResetOdometry. */
   public ResetOdometry(Drivetrain drive, Pose2d pose) {
     this.drive = drive;
-    this.pose = new Pose2d(pose.getTranslation().times(-1), pose.getRotation().times(-1));
+    this.pose = new Pose2d(pose.getTranslation().times(-1), pose.getRotation().times(1));
   }
 
   // Called when the command is initially scheduled.

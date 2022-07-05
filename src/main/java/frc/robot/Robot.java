@@ -164,8 +164,6 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     new SetColor(Status.getInstance(), Color.kBlack).schedule();
 
-    mRobotContainer.reloadTrajectories();
-
     m_autonomousCommand = mRobotContainer.getAutonomousCommand();
 
     /*
