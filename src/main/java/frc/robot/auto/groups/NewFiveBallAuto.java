@@ -11,6 +11,7 @@ import frc.paths.NewAutoPartFour;
 import frc.paths.NewAutoPartOne;
 import frc.paths.NewAutoPartThree;
 import frc.paths.NewAutoPartTwo;
+import frc.paths.Path;
 import frc.paths.TrajectoriesManager;
 import frc.robot.Robot;
 import frc.robot.drive.Drivetrain;
@@ -33,13 +34,17 @@ import frc.robot.vision.Limelight;
 public class NewFiveBallAuto extends SequentialCommandGroup {
 
   public NewFiveBallAuto(TrajectoriesManager trajectoriesManager, Drivetrain drive, Shooter shooter, Intake intake, Limelight limelight, HelixJoysticks joysticks) {
+    Path newFiveBall1 = trajectoriesManager.loadTrajectory("new_five_ball_1");
+    Path newFiveBall2 = trajectoriesManager.loadTrajectory("new_five_ball_2");
+    Path newFiveBall3 = trajectoriesManager.loadTrajectory("new_five_ball_3");
+    Path newFiveBall4 = trajectoriesManager.loadTrajectory("new_five_ball_4");
     addCommands(
-      new ResetOdometry(drive, new Pose2d(new Translation2d(0,0), new Rotation2d(-2.35))),
+      new ResetOdometry(drive, newFiveBall1.getPath().getInitialPose()),
       new ResetEncoder(shooter),
       new ParallelDeadlineGroup(
         new WaitCommand(2.9), 
         new ActionCommand(new ImageAction(Robot.fiveBallAutoImage, 0.02, ImageAction.FOREVER).brightness(0.7).oscillate()),
-        new TrajectoryFollower(drive, new NewAutoPartOne()),
+        new TrajectoryFollower(drive, newFiveBall1),
         new FastIntake(intake),
         new SequentialCommandGroup(
           new WaitCommand(1.25),
@@ -47,7 +52,7 @@ public class NewFiveBallAuto extends SequentialCommandGroup {
         ),
         new FlywheelController(shooter, 1840, 75)),
       new ParallelDeadlineGroup(
-        new TrajectoryFollower(drive, new NewAutoPartTwo()),
+        new TrajectoryFollower(drive, newFiveBall2),
         new FastIntake(intake),
         new StopTrigger(shooter, intake),
         new StopShooter(shooter)
@@ -60,7 +65,7 @@ public class NewFiveBallAuto extends SequentialCommandGroup {
           new FlywheelController(shooter, 1730, 81.0)
         ),
         new SequentialCommandGroup(
-          new TrajectoryFollower(drive, new NewAutoPartThree()),
+          new TrajectoryFollower(drive, newFiveBall3),
           new TurnToAngle(drive, limelight, joysticks)
         ),
         new SequentialCommandGroup(
@@ -74,7 +79,7 @@ public class NewFiveBallAuto extends SequentialCommandGroup {
       ),
       new ParallelDeadlineGroup(
         new WaitCommand(3.0),
-        new TrajectoryFollower(drive, new NewAutoPartFour()),
+        new TrajectoryFollower(drive, newFiveBall4),
         new FlywheelController(shooter, 1710, 80),
         new SequentialCommandGroup(
           new StopTrigger(shooter, intake),

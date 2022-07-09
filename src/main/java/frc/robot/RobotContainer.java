@@ -4,31 +4,7 @@
 
 package frc.robot;
 
-import static com.team2363.utilities.ControllerMap.RMZ_A_IN;
-import static com.team2363.utilities.ControllerMap.RMZ_D_IN;
-import static com.team2363.utilities.ControllerMap.RMZ_F_UP;
-import static com.team2363.utilities.ControllerMap.RMZ_G_IN;
-import static com.team2363.utilities.ControllerMap.RMZ_H_IN;
-import static com.team2363.utilities.ControllerMap.RM_SB_BACK;
-import static com.team2363.utilities.ControllerMap.RM_SB_FRONT;
-import static com.team2363.utilities.ControllerMap.RM_SC_BACK;
-import static com.team2363.utilities.ControllerMap.RM_SD_FRONT;
-import static com.team2363.utilities.ControllerMap.RM_SE_DOWN;
-import static com.team2363.utilities.ControllerMap.RM_SE_UP;
-import static com.team2363.utilities.ControllerMap.RM_SG_DOWN;
-import static com.team2363.utilities.ControllerMap.RM_SG_UP;
-import static com.team2363.utilities.ControllerMap.RM_SH;
-import static com.team2363.utilities.ControllerMap.X_BOX_A;
-import static com.team2363.utilities.ControllerMap.X_BOX_B;
-import static com.team2363.utilities.ControllerMap.X_BOX_LB;
-import static com.team2363.utilities.ControllerMap.X_BOX_LEFT_STICK_X;
-import static com.team2363.utilities.ControllerMap.X_BOX_LOGO_LEFT;
-import static com.team2363.utilities.ControllerMap.X_BOX_LOGO_RIGHT;
-import static com.team2363.utilities.ControllerMap.X_BOX_RB;
-import static com.team2363.utilities.ControllerMap.X_BOX_RIGHT_STICK_X;
-import static com.team2363.utilities.ControllerMap.X_BOX_RIGHT_STICK_Y;
-import static com.team2363.utilities.ControllerMap.X_BOX_X;
-import static com.team2363.utilities.ControllerMap.X_BOX_Y;
+import static com.team2363.utilities.ControllerMap.*;
 
 import java.io.File;
 

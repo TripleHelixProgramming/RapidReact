@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.HelixJoysticks;
 import frc.paths.FourBallPartThree;
 import frc.paths.FourBallPartTwo;
+import frc.paths.Path;
 import frc.paths.TrajectoriesManager;
 import frc.paths.WeirdAutoPartOne;
 import frc.robot.Robot;
@@ -36,9 +37,12 @@ import frc.robot.vision.Limelight;
 public class FourBallAuto extends SequentialCommandGroup{
 
     public FourBallAuto(TrajectoriesManager trajectoriesManager, Drivetrain drive, Intake intake, Shooter shooter, Limelight limelight, HelixJoysticks joysticks) {
+        Path friendlyFourBall1 = trajectoriesManager.loadTrajectory("friendly_four_ball_1");
+        Path friendlyFourBall2 = trajectoriesManager.loadTrajectory("friendly_four_ball_2");
+        Path friendlyFourBall3 = trajectoriesManager.loadTrajectory("friendly_four_ball_3");
         addCommands(
             new ActionCommand(new ImageAction(Robot.fourBallAutoImage,0.02, ImageAction.FOREVER).oscillate().brightness(0.7)),
-            new ResetOdometry(drive, new Pose2d(new Translation2d(0,0),Rotation2d.fromDegrees(-90))),
+            new ResetOdometry(drive, friendlyFourBall1.getPath().getInitialPose()),
             new ResetEncoder(shooter),
             new ParallelDeadlineGroup(
                 new WaitCommand(4.25),
@@ -49,7 +53,7 @@ public class FourBallAuto extends SequentialCommandGroup{
                 new SequentialCommandGroup(
                     new WaitCommand(3.25),
                     new PullTrigger(shooter, intake)),
-                new TrajectoryFollower(drive, new WeirdAutoPartOne()),
+                new TrajectoryFollower(drive, friendlyFourBall1),
                 new SequentialCommandGroup(
                     new ParallelDeadlineGroup(
                         new WaitCommand(1.95),
@@ -58,7 +62,7 @@ public class FourBallAuto extends SequentialCommandGroup{
             new StopTrigger(shooter, intake),
             new StopShooter(shooter),
             new ParallelDeadlineGroup(
-                new TrajectoryFollower(drive, new FourBallPartTwo()),
+                new TrajectoryFollower(drive, friendlyFourBall2),
                 new FastIntake(intake)),
             new WaitCommand(0.5),
             new ParallelDeadlineGroup( 
@@ -73,7 +77,7 @@ public class FourBallAuto extends SequentialCommandGroup{
                     new WaitCommand(3.35),
                     new PullTrigger(shooter, intake)),
                 new SequentialCommandGroup(
-                    new TrajectoryFollower(drive, new FourBallPartThree()),
+                    new TrajectoryFollower(drive, friendlyFourBall3),
                     new TurnToAngle(drive, limelight, joysticks)
                 )),
             new StopShooter(shooter),
