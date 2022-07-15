@@ -14,9 +14,9 @@
         "default": "2022: Rapid React"
     },
     "robot_configuration": {
-        "motor_max_torque": 1.9,
+        "motor_max_torque": 3.0,
         "wheel_radius": 0.051,
-        "motor_max_angular_speed": 70.0,
+        "motor_max_angular_speed": 90.0,
         "mass": 46.7,
         "team_number": 2363,
         "wheel_vertical_distance": 0.572,
@@ -576,8 +576,8 @@
             ]
         }
     ],
-    "zoom_translate_x": -387.7418797939981,
-    "zoom_scale": 52.11027527201926,
-    "zoom_translate_y": 7.893295832679018,
+    "zoom_translate_x": -285.10060717165715,
+    "zoom_scale": 62.54592971748269,
+    "zoom_translate_y": 44.86782449552778,
     "selected_path_index": 18
 }
