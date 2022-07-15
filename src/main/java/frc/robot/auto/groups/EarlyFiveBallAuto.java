@@ -51,9 +51,9 @@ public class EarlyFiveBallAuto extends SequentialCommandGroup {
         double shot1Velocity = Shooter.lookupVelocity(shot1Dist);
         double shot2Velocity = Shooter.lookupVelocity(shot2Dist);
         double shot3Velocity = Shooter.lookupVelocity(shot3Dist);
-        double shot1Angle = Shooter.lookupVelocity(shot1Dist);
-        double shot2Angle = Shooter.lookupVelocity(shot2Dist);
-        double shot3Angle = Shooter.lookupVelocity(shot3Dist);
+        double shot1Angle = Shooter.lookupHoodAngle(shot1Dist);
+        double shot2Angle = Shooter.lookupHoodAngle(shot2Dist);
+        double shot3Angle = Shooter.lookupHoodAngle(shot3Dist);
         addCommands(
             new ResetOdometry(drive, earlyFiveBall1.getPath().getInitialPose()),
             new ResetEncoder(shooter),
