@@ -25,6 +25,7 @@ import frc.paths.Path;
 import frc.paths.TrajectoriesManager;
 // import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.auto.groups.EarlyFiveBallAuto;
 import frc.robot.auto.groups.FourBallAuto;
 import frc.robot.auto.groups.NewFiveBallAuto;
 import frc.robot.auto.groups.NewFourBallAuto;
@@ -130,6 +131,7 @@ public class RobotContainer {
     friendlyFourBallAuto = new FourBallAuto(trajectoriesManager, mDrive, mIntake, mShooter, mLimelight, joysticks);
     fourBallAuto = new NewFourBallAuto(trajectoriesManager, mDrive, mShooter, mIntake, mLimelight, joysticks);
     fiveBallAuto = new NewFiveBallAuto(trajectoriesManager, mDrive, mShooter, mIntake, mLimelight, joysticks);
+    // fiveBallAuto = new EarlyFiveBallAuto(trajectoriesManager, mDrive, mShooter, mIntake, mLimelight);
   }
 
   /**

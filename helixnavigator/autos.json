@@ -18,12 +18,12 @@
         "wheel_radius": 0.051,
         "motor_max_angular_speed": 70.0,
         "mass": 46.7,
-        "wheel_vertical_distance": 0.572,
         "team_number": 2363,
-        "moment_of_inertia": 5.6,
+        "wheel_vertical_distance": 0.572,
         "bumper_length": 0.954,
-        "wheel_horizontal_distance": 0.622,
-        "bumper_width": 0.903
+        "moment_of_inertia": 5.6,
+        "bumper_width": 0.903,
+        "wheel_horizontal_distance": 0.622
     },
     "paths": [
         {
@@ -445,10 +445,139 @@
                     "y": 2.5
                 }
             ]
+        },
+        {
+            "obstacles": [
+                {
+                    "safety_distance": 0.0,
+                    "obstacle_type": "circle",
+                    "name": "0",
+                    "radius": 0.6,
+                    "center_y": 0.0,
+                    "center_x": 0.0
+                }
+            ],
+            "name": "bumpers",
+            "waypoints": []
+        },
+        {
+            "obstacles": [],
+            "name": "early_five_ball_1",
+            "waypoints": [
+                {
+                    "waypoint_type": "hard",
+                    "heading": 1.5707963267948966,
+                    "x": 0.6,
+                    "name": "Hard Waypoint 0",
+                    "y": 2.3
+                },
+                {
+                    "waypoint_type": "hard",
+                    "heading": 1.5707963267948966,
+                    "x": 0.6,
+                    "name": "Hard Waypoint 1",
+                    "y": 3.3
+                },
+                {
+                    "waypoint_type": "hard",
+                    "heading": 1.1915926535897932,
+                    "x": 0.6,
+                    "name": "Hard Waypoint 2",
+                    "y": 2.3
+                }
+            ]
+        },
+        {
+            "obstacles": [],
+            "name": "early_five_ball_2",
+            "waypoints": [
+                {
+                    "waypoint_type": "hard",
+                    "heading": 1.1915926535897932,
+                    "x": 0.6,
+                    "name": "Hard Waypoint 0",
+                    "y": 2.3
+                },
+                {
+                    "waypoint_type": "hard",
+                    "heading": 0.5915926535897933,
+                    "x": 2.7,
+                    "name": "Hard Waypoint 1",
+                    "y": 1.9
+                },
+                {
+                    "waypoint_type": "hard",
+                    "heading": 0.5915926535897933,
+                    "x": 2.55,
+                    "name": "Hard Waypoint 2",
+                    "y": 1.75
+                }
+            ]
+        },
+        {
+            "obstacles": [],
+            "name": "early_five_ball_3",
+            "waypoints": [
+                {
+                    "waypoint_type": "hard",
+                    "heading": 0.5915926535897933,
+                    "x": 2.55,
+                    "name": "Hard Waypoint 0",
+                    "y": 1.75
+                },
+                {
+                    "waypoint_type": "hard",
+                    "heading": 1.041592653589793,
+                    "x": 6.6,
+                    "name": "Hard Waypoint 1",
+                    "y": 1.9999999999999998
+                },
+                {
+                    "waypoint_type": "hard",
+                    "heading": 0.8415926535897933,
+                    "x": 6.8999999999999995,
+                    "name": "Hard Waypoint 2",
+                    "y": 2.3
+                },
+                {
+                    "waypoint_type": "hard",
+                    "heading": 0.8415926535897933,
+                    "x": 6.6,
+                    "name": "Hard Waypoint 3",
+                    "y": 1.9999999999999998
+                }
+            ]
+        },
+        {
+            "obstacles": [],
+            "name": "early_five_ball_4",
+            "waypoints": [
+                {
+                    "waypoint_type": "hard",
+                    "heading": 0.8415926535897933,
+                    "x": 6.6,
+                    "name": "Hard Waypoint 0",
+                    "y": 1.9999999999999998
+                },
+                {
+                    "waypoint_type": "hard",
+                    "heading": 1.041592653589793,
+                    "x": 3.1,
+                    "name": "Hard Waypoint 1",
+                    "y": 3.15
+                },
+                {
+                    "waypoint_type": "hard",
+                    "heading": 1.1915926535897932,
+                    "x": 0.3,
+                    "name": "Hard Waypoint 2",
+                    "y": 2.3
+                }
+            ]
         }
     ],
-    "zoom_translate_x": -174.3214671720738,
-    "zoom_scale": 64.93677540247681,
-    "zoom_translate_y": 25.788945020435214,
-    "selected_path_index": 13
+    "zoom_translate_x": -387.7418797939981,
+    "zoom_scale": 52.11027527201926,
+    "zoom_translate_y": 7.893295832679018,
+    "selected_path_index": 18
 }

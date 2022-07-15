@@ -45,6 +45,10 @@ public class SwerveTrajectory {
         return trajectory.get(0).pose;
     }
 
+    public Pose2d getFinalPose() {
+        return trajectory.get(trajectory.size() - 1).pose;
+    }
+
     public double getTotalTime() {
         return trajectory.get(trajectory.size() - 1).t;
     }
