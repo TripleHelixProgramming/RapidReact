@@ -25,7 +25,6 @@ import frc.paths.Path;
 import frc.paths.TrajectoriesManager;
 // import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.auto.groups.EarlyFiveBallAuto;
 import frc.robot.auto.groups.FourBallAuto;
 import frc.robot.auto.groups.NewFiveBallAuto;
 import frc.robot.auto.groups.NewFourBallAuto;
