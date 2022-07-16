@@ -385,7 +385,7 @@
                 },
                 {
                     "waypoint_type": "hard",
-                    "heading": -2.275,
+                    "heading": 0.866592653589794,
                     "x": 6.800000000000001,
                     "name": "Hard Waypoint 2",
                     "y": 2.35
@@ -576,8 +576,8 @@
             ]
         }
     ],
-    "zoom_translate_x": -285.10060717165715,
-    "zoom_scale": 62.54592971748269,
-    "zoom_translate_y": 44.86782449552778,
-    "selected_path_index": 18
+    "zoom_translate_x": -700.0183455310626,
+    "zoom_scale": 147.02950238946363,
+    "zoom_translate_y": 199.20702282639357,
+    "selected_path_index": 11
 }
