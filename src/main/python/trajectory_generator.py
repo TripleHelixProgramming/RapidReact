@@ -53,6 +53,20 @@ class trajectory_generator:
       for k in range(self.N):
          x_next = self.X[:, k] + dynamics(self.X[:, k], self.U[:, k]) * dts[int(k / self.N_per_segment)]
          self.opti.subject_to(self.X[:, k + 1] == x_next)
+         
+      # Dynamics constraint
+      for k in range(num_vars):
+        # RK4 integration
+        h = dts[int(k / vars_per_segment)]
+        x_k = X[:, k]
+        u_k = U[:, k]
+        x_k1 = X[:, k + 1]
+
+        k1 = self.f(x_k, u_k)
+        k2 = self.f(x_k + h / 2 * k1, u_k)
+        k3 = self.f(x_k + h / 2 * k2, u_k)
+        k4 = self.f(x_k + h * k3, u_k)
+        self.opti.subject_to(x_k1 == x_k + h / 6 * (k1 + 2 * k2 + 2 * k3 + k4))
 
       # Set initial guess
       x_init, y_init, theta_init = trajectory_util.generate_initial_trajectory(
