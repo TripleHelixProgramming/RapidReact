@@ -55,7 +55,7 @@ class trajectory_generator:
          self.opti.subject_to(self.X[:, k + 1] == x_next)
          
       # Dynamics constraint
-      for k in range(num_vars):
+      for k in range(self.N):
         # RK4 integration
         h = dts[int(k / vars_per_segment)]
         x_k = X[:, k]
